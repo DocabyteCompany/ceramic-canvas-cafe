@@ -373,9 +373,9 @@ const Index = () => {
       {/* Footer */}
       <footer className="bg-beige border-t border-warm-gray-200">
         <div className="container mx-auto px-6 py-20">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
-            {/* Logo and CTA */}
-            <div className="md:col-span-1 text-center md:text-left">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 relative">
+            {/* Logo and Description */}
+            <div className="md:col-span-1 text-center md:text-left relative md:border-r md:border-warm-gray-300 md:pr-8">
               <img 
                 src={ceramicoLogo} 
                 alt="Cerámico, Arte & Café logo" 
@@ -384,16 +384,35 @@ const Index = () => {
               <p className="text-warm-gray-700 mb-8 text-base leading-relaxed font-medium">
                 ¿Tienes alguna pregunta? ¡Nuestro equipo está aquí para ayudarte a vivir una experiencia única!
               </p>
-              <Button 
-                onClick={() => scrollToSection('contacto')}
-                className="bg-terracotta hover:bg-terracotta-dark text-white px-8 py-3 rounded-full font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 w-full sm:w-auto"
-              >
-                Contáctanos
-              </Button>
+              
+              {/* Social Links */}
+              <div className="mt-8">
+                <h3 className="font-display text-xl font-bold text-terracotta mb-6">Social</h3>
+                <div className="flex items-center gap-6 justify-center md:justify-start">
+                  <a 
+                    href="https://instagram.com/ceramico_arte_cafe" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-warm-gray-500 hover:text-terracotta transition-all duration-300 transform hover:scale-110 hover:-translate-y-1"
+                    aria-label="Instagram"
+                  >
+                    <Instagram className="h-6 w-6" />
+                  </a>
+                  <a 
+                    href="https://wa.me/573001234567" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-warm-gray-500 hover:text-terracotta transition-all duration-300 transform hover:scale-110 hover:-translate-y-1"
+                    aria-label="WhatsApp"
+                  >
+                    <MessageCircle className="h-6 w-6" />
+                  </a>
+                </div>
+              </div>
             </div>
 
             {/* Navigation */}
-            <div className="text-center md:text-left">
+            <div className="text-center md:text-left md:pl-8">
               <h3 className="font-display text-xl font-bold text-terracotta mb-6">Navegación</h3>
               <ul className="space-y-4">
                 <li>
@@ -504,28 +523,11 @@ const Index = () => {
           <div className="container mx-auto px-6 py-8">
             <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
               <p className="text-sm text-warm-gray-600 text-center sm:text-left font-medium">
-                © 2025 | All Rights Reserved to Cerámico, Arte & Café | Web Design by Docabyte
+                Designed by Docabyte
               </p>
-              <div className="flex items-center gap-6">
-                <a 
-                  href="https://instagram.com/ceramico_arte_cafe" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-warm-gray-500 hover:text-terracotta transition-all duration-300 transform hover:scale-110 hover:-translate-y-1"
-                  aria-label="Instagram"
-                >
-                  <Instagram className="h-6 w-6" />
-                </a>
-                <a 
-                  href="https://wa.me/573001234567" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-warm-gray-500 hover:text-terracotta transition-all duration-300 transform hover:scale-110 hover:-translate-y-1"
-                  aria-label="WhatsApp"
-                >
-                  <MessageCircle className="h-6 w-6" />
-                </a>
-              </div>
+              <p className="text-sm text-warm-gray-600 text-center sm:text-right font-medium">
+                © 2025 | All Rights Reserved to Cerámico, Arte & Café
+              </p>
             </div>
           </div>
         </div>
