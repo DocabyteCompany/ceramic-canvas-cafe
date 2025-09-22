@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
+import ceramicoLogo from '../assets/ceramico-logo-new.png';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,8 +16,12 @@ const Navigation = () => {
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="font-display text-2xl font-bold text-primary">
-            Cerámico
+          <div className="flex items-center">
+            <img 
+              src={ceramicoLogo} 
+              alt="Cerámico Logo" 
+              className="h-10 w-auto"
+            />
           </div>
 
           {/* Desktop Menu */}

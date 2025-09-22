@@ -6,7 +6,7 @@ import { Clock, Users, Palette, Coffee, MapPin, Phone, Instagram, MessageCircle,
 import heroImage from '@/assets/hero-ceramica.jpg';
 import ceramicsCollection from '@/assets/ceramicas-collection.jpg';
 import paintingProcess from '@/assets/painting-process.jpg';
-import ceramicoLogo from '@/assets/ceramico-logo.png';
+import ceramicoLogo from '@/assets/ceramico-logo-new.png';
 
 const Index = () => {
   const scrollToSection = (sectionId: string) => {
@@ -382,7 +382,7 @@ const Index = () => {
                 <img 
                   src={ceramicoLogo} 
                   alt="Cerámico, Arte & Café logo" 
-                  className="h-12 mb-4"
+                  className="h-24 mb-4"
                 />
                 <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
                   ¿Tienes alguna pregunta? ¡Nuestro equipo está aquí para ayudarte a vivir una experiencia única!
