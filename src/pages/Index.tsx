@@ -373,9 +373,9 @@ const Index = () => {
       {/* Footer */}
       <footer className="bg-beige border-t border-warm-gray-200">
         <div className="container mx-auto px-6 py-20">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 relative">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-6 relative">
             {/* Logo and Description */}
-            <div className="md:col-span-1 text-center md:text-left relative md:border-r md:border-warm-gray-300 md:pr-8">
+            <div className="md:col-span-6 text-center md:text-left relative md:border-r md:border-warm-gray-300 md:pr-8">
               <img 
                 src={ceramicoLogo} 
                 alt="Cerámico, Arte & Café logo" 
@@ -387,8 +387,8 @@ const Index = () => {
               
               {/* Social Links */}
               <div className="mt-8">
-                <h3 className="font-display text-xl font-bold text-terracotta mb-6">Social</h3>
-                <div className="flex items-center gap-6 justify-center md:justify-start">
+                <div className="flex items-center gap-4 justify-center md:justify-start">
+                  <h3 className="font-display text-xl font-bold text-terracotta">Social</h3>
                   <a 
                     href="https://instagram.com/ceramico_arte_cafe" 
                     target="_blank" 
@@ -411,109 +411,112 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Navigation */}
-            <div className="text-center md:text-left md:pl-8">
-              <h3 className="font-display text-xl font-bold text-terracotta mb-6">Navegación</h3>
-              <ul className="space-y-4">
-                <li>
-                  <button 
-                    onClick={() => scrollToSection('hero')}
-                    className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-base font-medium hover:translate-x-1 transform block"
-                  >
-                    Inicio
-                  </button>
-                </li>
-                <li>
-                  <button 
-                    onClick={() => scrollToSection('nosotros')}
-                    className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-base font-medium hover:translate-x-1 transform block"
-                  >
-                    Quiénes Somos
-                  </button>
-                </li>
-                <li>
-                  <button 
-                    onClick={() => scrollToSection('experiencia')}
-                    className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-base font-medium hover:translate-x-1 transform block"
-                  >
-                    Experiencia
-                  </button>
-                </li>
-                <li>
-                  <button 
-                    onClick={() => scrollToSection('galeria')}
-                    className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-base font-medium hover:translate-x-1 transform block"
-                  >
-                    Galería
-                  </button>
-                </li>
-              </ul>
-            </div>
+            {/* Navigation Columns - Compact and Right Aligned */}
+            <div className="md:col-span-6 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4 md:pl-8 md:ml-auto md:max-w-lg">
+              {/* Navigation */}
+              <div className="text-center md:text-left">
+                <h3 className="font-display text-lg font-bold text-terracotta mb-4">Navegación</h3>
+                <ul className="space-y-3">
+                  <li>
+                    <button 
+                      onClick={() => scrollToSection('hero')}
+                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block"
+                    >
+                      Inicio
+                    </button>
+                  </li>
+                  <li>
+                    <button 
+                      onClick={() => scrollToSection('nosotros')}
+                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block"
+                    >
+                      Quiénes Somos
+                    </button>
+                  </li>
+                  <li>
+                    <button 
+                      onClick={() => scrollToSection('experiencia')}
+                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block"
+                    >
+                      Experiencia
+                    </button>
+                  </li>
+                  <li>
+                    <button 
+                      onClick={() => scrollToSection('galeria')}
+                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block"
+                    >
+                      Galería
+                    </button>
+                  </li>
+                </ul>
+              </div>
 
-            {/* Experience */}
-            <div className="text-center md:text-left">
-              <h3 className="font-display text-xl font-bold text-terracotta mb-6">Experiencia</h3>
-              <ul className="space-y-4">
-                <li>
-                  <button 
-                    onClick={() => scrollToSection('reservaciones')}
-                    className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-base font-medium hover:translate-x-1 transform block"
-                  >
-                    Reservaciones
-                  </button>
-                </li>
-                <li>
-                  <button 
-                    onClick={() => scrollToSection('menu')}
-                    className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-base font-medium hover:translate-x-1 transform block"
-                  >
-                    Menú
-                  </button>
-                </li>
-                <li>
-                  <button 
-                    onClick={() => scrollToSection('galeria')}
-                    className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-base font-medium hover:translate-x-1 transform block"
-                  >
-                    Proceso de Cerámica
-                  </button>
-                </li>
-              </ul>
-            </div>
+              {/* Experience */}
+              <div className="text-center md:text-left">
+                <h3 className="font-display text-lg font-bold text-terracotta mb-4">Experiencia</h3>
+                <ul className="space-y-3">
+                  <li>
+                    <button 
+                      onClick={() => scrollToSection('reservaciones')}
+                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block"
+                    >
+                      Reservaciones
+                    </button>
+                  </li>
+                  <li>
+                    <button 
+                      onClick={() => scrollToSection('menu')}
+                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block"
+                    >
+                      Menú
+                    </button>
+                  </li>
+                  <li>
+                    <button 
+                      onClick={() => scrollToSection('galeria')}
+                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block"
+                    >
+                      Proceso de Cerámica
+                    </button>
+                  </li>
+                </ul>
+              </div>
 
-            {/* Contact */}
-            <div className="text-center md:text-left">
-              <h3 className="font-display text-xl font-bold text-terracotta mb-6">Contacto</h3>
-              <ul className="space-y-4">
-                <li>
-                  <a 
-                    href="https://maps.google.com/?q=Cra+45+%2326-85,+Bogotá"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-base font-medium flex items-center gap-3 justify-center md:justify-start hover:translate-x-1 transform"
-                  >
-                    <MapPin className="h-5 w-5 text-olive" />
-                    Ubicación
-                  </a>
-                </li>
-                <li>
-                  <span className="text-warm-gray-600 text-base font-medium flex items-center gap-3 justify-center md:justify-start">
-                    <Clock className="h-5 w-5 text-olive" />
-                    Lun-Dom: 9:00-22:00
-                  </span>
-                </li>
-                <li>
-                  <a 
-                    href="https://wa.me/573001234567"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-base font-medium flex items-center gap-3 justify-center md:justify-start hover:translate-x-1 transform"
-                  >
-                    <MessageCircle className="h-5 w-5 text-olive" />
-                    WhatsApp
-                  </a>
-                </li>
-              </ul>
+              {/* Contact */}
+              <div className="text-center md:text-left">
+                <h3 className="font-display text-lg font-bold text-terracotta mb-4">Contacto</h3>
+                <ul className="space-y-3">
+                  <li>
+                    <a 
+                      href="https://maps.google.com/?q=Cra+45+%2326-85,+Bogotá"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium flex items-center gap-2 justify-center md:justify-start hover:translate-x-1 transform"
+                    >
+                      <MapPin className="h-4 w-4 text-olive" />
+                      Ubicación
+                    </a>
+                  </li>
+                  <li>
+                    <span className="text-warm-gray-600 text-sm font-medium flex items-center gap-2 justify-center md:justify-start">
+                      <Clock className="h-4 w-4 text-olive" />
+                      Lun-Dom: 9:00-22:00
+                    </span>
+                  </li>
+                  <li>
+                    <a 
+                      href="https://wa.me/573001234567"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium flex items-center gap-2 justify-center md:justify-start hover:translate-x-1 transform"
+                    >
+                      <MessageCircle className="h-4 w-4 text-olive" />
+                      WhatsApp
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
