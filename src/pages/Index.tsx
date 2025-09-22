@@ -412,7 +412,7 @@ const Index = () => {
             </div>
 
             {/* Navigation Columns - Compact and Right Aligned */}
-            <div className="md:col-span-6 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4 md:pl-8 md:ml-auto md:max-w-lg">
+            <div className="md:col-span-6 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-8 md:pl-8 md:ml-auto md:max-w-2xl">
               {/* Navigation */}
               <div className="text-center md:text-left">
                 <h3 className="font-display text-lg font-bold text-terracotta mb-4">Navegación</h3>
