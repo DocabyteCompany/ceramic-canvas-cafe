@@ -6,6 +6,7 @@ import { Clock, Users, Palette, Coffee, MapPin, Phone, Instagram, MessageCircle,
 import heroImage from '@/assets/hero-ceramica.jpg';
 import ceramicsCollection from '@/assets/ceramicas-collection.jpg';
 import paintingProcess from '@/assets/painting-process.jpg';
+import ceramicoLogo from '@/assets/ceramico-logo.png';
 
 const Index = () => {
   const scrollToSection = (sectionId: string) => {
@@ -368,6 +369,22 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="ceramic-texture py-12 border-t border-border/20">
+        <div className="container mx-auto px-4 text-center">
+          <div className="mb-6">
+            <img 
+              src={ceramicoLogo} 
+              alt="Cerámico, Arte & Café logo" 
+              className="h-16 mx-auto"
+            />
+          </div>
+          <p className="text-muted-foreground text-sm">
+            Copyright © 2025 | All Rights Reserved to Cerámico, Arte & Café | Web Design by Docabyte
+          </p>
+        </div>
+      </footer>
 
       {/* Sticky CTA */}
       <div className="fixed bottom-4 right-4 z-40 md:hidden">
