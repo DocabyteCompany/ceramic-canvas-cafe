@@ -2,95 +2,78 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Cerámico Arte & Café Design System */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Brand Colors - Cerámico Arte & Café */
+    --terracotta: 22 42% 39%;           /* #8B5E3C - Primary brand color */
+    --terracotta-light: 22 42% 50%;     /* Lighter variant */
+    --beige: 38 50% 93%;                /* #F5F0E6 - Background */
+    --beige-dark: 38 30% 85%;           /* Darker beige for accents */
+    --olive: 54 14% 61%;                /* #A6A48D - Details, hover states */
+    --olive-dark: 54 14% 50%;           /* Darker olive */
+    --pure-white: 0 0% 100%;            /* #FFFFFF - Clean sections */
+    --warm-gray: 30 8% 25%;             /* Dark text */
+    --warm-gray-light: 30 8% 65%;      /* Muted text */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Design System Tokens */
+    --background: var(--beige);
+    --foreground: var(--warm-gray);
+    --card: var(--pure-white);
+    --card-foreground: var(--warm-gray);
+    --popover: var(--pure-white);
+    --popover-foreground: var(--warm-gray);
+    --primary: var(--terracotta);
+    --primary-foreground: var(--pure-white);
+    --secondary: var(--olive);
+    --secondary-foreground: var(--warm-gray);
+    --muted: var(--beige-dark);
+    --muted-foreground: var(--warm-gray-light);
+    --accent: var(--olive);
+    --accent-foreground: var(--pure-white);
+    --destructive: 0 65% 51%;
+    --destructive-foreground: var(--pure-white);
+    --border: var(--beige-dark);
+    --input: var(--beige-dark);
+    --ring: var(--terracotta);
+    --radius: 0.75rem;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Custom Ceramica Gradients */
+    --gradient-warm: linear-gradient(135deg, hsl(var(--terracotta)), hsl(var(--terracotta-light)));
+    --gradient-soft: linear-gradient(180deg, hsl(var(--beige)), hsl(var(--pure-white)));
+    --gradient-overlay: linear-gradient(rgba(139, 94, 60, 0.8), rgba(139, 94, 60, 0.6));
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Shadows */
+    --shadow-soft: 0 4px 20px hsl(var(--terracotta) / 0.1);
+    --shadow-warm: 0 8px 30px hsl(var(--terracotta) / 0.15);
+    
+    /* Typography Scale */
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Poppins', sans-serif;
+    
+    /* Animations */
+    --transition-smooth: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: var(--warm-gray);
+    --foreground: var(--beige);
+    --card: hsl(30 8% 20%);
+    --card-foreground: var(--beige);
+    --popover: hsl(30 8% 20%);
+    --popover-foreground: var(--beige);
+    --primary: var(--terracotta-light);
+    --primary-foreground: var(--pure-white);
+    --secondary: var(--olive);
+    --secondary-foreground: var(--beige);
+    --muted: hsl(30 8% 30%);
+    --muted-foreground: var(--warm-gray-light);
+    --accent: var(--olive);
+    --accent-foreground: var(--pure-white);
+    --border: hsl(30 8% 30%);
+    --input: hsl(30 8% 30%);
+    --ring: var(--terracotta-light);
   }
 }
 
@@ -101,5 +84,74 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer components {
+  /* Ceramic texture pattern */
+  .ceramic-texture {
+    background-image: 
+      radial-gradient(circle at 25% 25%, hsl(var(--terracotta) / 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, hsl(var(--olive) / 0.05) 0%, transparent 50%);
+  }
+
+  /* Warm button variants */
+  .btn-ceramica {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 
+           px-8 py-4 rounded-lg font-medium transition-all duration-150
+           shadow-[0_4px_14px_0_hsl(var(--terracotta)/0.2)]
+           hover:shadow-[0_6px_20px_0_hsl(var(--terracotta)/0.3)]
+           hover:-translate-y-0.5;
+  }
+
+  .btn-ceramica-outline {
+    @apply border-2 border-primary text-primary bg-transparent
+           hover:bg-primary hover:text-primary-foreground
+           px-8 py-4 rounded-lg font-medium transition-all duration-150
+           hover:-translate-y-0.5;
+  }
+
+  /* Section spacing */
+  .section-padding {
+    @apply py-16 lg:py-24;
+  }
+
+  /* Smooth animations */
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out forwards;
+  }
+}
+
+@layer utilities {
+  /* Custom animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
