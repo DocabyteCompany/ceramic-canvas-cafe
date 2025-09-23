@@ -1,5 +1,5 @@
 import Navigation from '@/components/Navigation';
-import ReservationForm from '@/components/ReservationForm';
+import ReservationWizard from '@/components/ReservationWizard';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Clock, Users, Palette, Coffee, MapPin, Phone, Instagram, MessageCircle, CheckCircle, Heart, Sparkles } from 'lucide-react';
@@ -164,7 +164,7 @@ const Index = () => {
       {/* Reservaciones */}
       <section id="reservaciones" className="section-padding ceramic-texture">
         <div className="container mx-auto px-4">
-          <ReservationForm />
+          <ReservationWizard />
         </div>
       </section>
 
