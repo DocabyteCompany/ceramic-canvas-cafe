@@ -36,24 +36,6 @@ const Index = () => {
     }
   ];
 
-  const menuItems = [
-    {
-      category: "Cafés Especiales",
-      items: [
-        { name: "Café de Olla", price: "$45", description: "Con canela y piloncillo" },
-        { name: "Cappuccino Artesanal", price: "$65", description: "Con espuma cremosa" },
-        { name: "Latte de Vainilla", price: "$70", description: "Con extracto natural" }
-      ]
-    },
-    {
-      category: "Postres Caseros",
-      items: [
-        { name: "Cheesecake de Frutos Rojos", price: "$85", description: "Cremoso y fresco" },
-        { name: "Brownie Tibio", price: "$75", description: "Con helado de vainilla" },
-        { name: "Galletas Artesanales", price: "$35", description: "Recién horneadas" }
-      ]
-    }
-  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -186,111 +168,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Galería & Testimonios */}
-      <section id="galeria" className="section-padding bg-card">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="font-display text-4xl md:text-5xl font-bold text-primary mb-4">
-              Momentos que ya han cobrado vida
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Descubre la inspiración de quienes ya pintaron con nosotros
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            <div className="relative group overflow-hidden rounded-2xl">
-              <img 
-                src={paintingProcess} 
-                alt="Proceso de pintura de cerámica" 
-                className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-            </div>
-            <div className="relative group overflow-hidden rounded-2xl">
-              <img 
-                src={ceramicsCollection} 
-                alt="Piezas terminadas" 
-                className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-            </div>
-            <div className="relative group overflow-hidden rounded-2xl">
-              <img 
-                src={heroImage} 
-                alt="Taller de cerámica" 
-                className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-            </div>
-          </div>
-
-          {/* Testimonios */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <Card className="border-border/50">
-              <CardContent className="p-6">
-                <p className="text-muted-foreground italic mb-4">
-                  "Una experiencia maravillosa. El ambiente es súper relajante y el café delicioso. 
-                  Mi hija y yo pasamos una tarde increíble creando juntas."
-                </p>
-                <div className="font-medium text-foreground">— María González</div>
-              </CardContent>
-            </Card>
-            <Card className="border-border/50">
-              <CardContent className="p-6">
-                <p className="text-muted-foreground italic mb-4">
-                  "Perfecto para una cita diferente. Nos encantó poder crear algo único mientras 
-                  disfrutábamos de un cappuccino perfecto."
-                </p>
-                <div className="font-medium text-foreground">— Carlos y Ana</div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Menú de Café y Postres */}
-      <section id="menu" className="section-padding ceramic-texture">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="font-display text-4xl md:text-5xl font-bold text-primary mb-4">
-              Acompaña tu creatividad
-            </h2>
-            <p className="text-xl text-muted-foreground mb-2">
-              Con un sabor especial
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Los alimentos y bebidas se pagan por separado
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-4xl mx-auto">
-            {menuItems.map((category, categoryIndex) => (
-              <Card key={categoryIndex} className="border-border/50 shadow-soft">
-                <CardContent className="p-8">
-                  <h3 className="font-display text-2xl font-bold text-primary mb-6 text-center">
-                    {category.category}
-                  </h3>
-                  <div className="space-y-4">
-                    {category.items.map((item, itemIndex) => (
-                      <div key={itemIndex} className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <h4 className="font-medium text-foreground">{item.name}</h4>
-                          <p className="text-sm text-muted-foreground">{item.description}</p>
-                        </div>
-                        <div className="font-bold text-primary ml-4">{item.price}</div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          
-          <div className="text-center mt-8">
-            <p className="text-muted-foreground">
-              Nuestros postres y bebidas son el complemento perfecto para tu experiencia
-            </p>
-          </div>
-        </div>
-      </section>
 
       {/* Contacto y Ubicación */}
       <section id="contacto" className="section-padding bg-card">
@@ -411,15 +288,15 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Navigation Columns - Compact and Right Aligned */}
-            <div className="md:col-span-6 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-8 md:pl-8 md:ml-auto md:max-w-2xl">
+            {/* Navigation Columns - 2 Column Layout */}
+            <div className="md:col-span-6 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 md:pl-8 md:ml-auto md:max-w-xl">
               {/* Navigation */}
               <div className="text-center md:text-left">
                 <h3 className="font-display text-lg font-bold text-terracotta mb-4">Navegación</h3>
                 <ul className="space-y-3">
                   <li>
                     <button 
-                      onClick={() => scrollToSection('hero')}
+                      onClick={() => scrollToSection('inicio')}
                       className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block"
                     >
                       Inicio
@@ -443,41 +320,10 @@ const Index = () => {
                   </li>
                   <li>
                     <button 
-                      onClick={() => scrollToSection('galeria')}
-                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block"
-                    >
-                      Galería
-                    </button>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Experience */}
-              <div className="text-center md:text-left">
-                <h3 className="font-display text-lg font-bold text-terracotta mb-4">Experiencia</h3>
-                <ul className="space-y-3">
-                  <li>
-                    <button 
                       onClick={() => scrollToSection('reservaciones')}
                       className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block"
                     >
                       Reservaciones
-                    </button>
-                  </li>
-                  <li>
-                    <button 
-                      onClick={() => scrollToSection('menu')}
-                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block"
-                    >
-                      Menú
-                    </button>
-                  </li>
-                  <li>
-                    <button 
-                      onClick={() => scrollToSection('galeria')}
-                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block"
-                    >
-                      Proceso de Cerámica
                     </button>
                   </li>
                 </ul>

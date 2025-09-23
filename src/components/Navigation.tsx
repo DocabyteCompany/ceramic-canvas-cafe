@@ -29,12 +29,6 @@ const Navigation = () => {
             >
               Experiencia
             </button>
-            <button 
-              onClick={() => scrollToSection('galeria')}
-              className="nav-link"
-            >
-              Galería
-            </button>
           </div>
 
           {/* Centered Logo */}
@@ -53,12 +47,6 @@ const Navigation = () => {
 
           {/* Right Navigation */}
           <div className="flex items-center justify-end space-x-6">
-            <button 
-              onClick={() => scrollToSection('menu')}
-              className="nav-link"
-            >
-              Menú
-            </button>
             <button 
               onClick={() => scrollToSection('contacto')}
               className="nav-link"
@@ -109,18 +97,6 @@ const Navigation = () => {
               className="block w-full text-left text-foreground hover:text-primary transition-colors"
             >
               Experiencia
-            </button>
-            <button 
-              onClick={() => scrollToSection('galeria')}
-              className="block w-full text-left text-foreground hover:text-primary transition-colors"
-            >
-              Galería
-            </button>
-            <button 
-              onClick={() => scrollToSection('menu')}
-              className="block w-full text-left text-foreground hover:text-primary transition-colors"
-            >
-              Menú
             </button>
             <button 
               onClick={() => scrollToSection('contacto')}
