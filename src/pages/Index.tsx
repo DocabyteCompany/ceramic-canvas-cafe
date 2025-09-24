@@ -89,7 +89,7 @@ const Index = () => {
           
           {/* Contenido */}
           <div className="absolute bottom-0 left-0 p-5 md:p-14 text-white max-w-2xl">
-            <h1 className="font-display text-5xl md:text-7xl font-bold mb-4 leading-tight tracking-tight">
+            <h1 className="font-display text-3xl md:text-5xl font-bold mb-4 leading-tight tracking-tight">
               Crea, <em className="italic transform skew-x-12 inline-block">pinta</em> y disfruta
             </h1>
             <p className="font-body text-lg md:text-xl font-light mb-4 opacity-95 leading-relaxed">
