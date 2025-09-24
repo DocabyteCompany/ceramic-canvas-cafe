@@ -59,7 +59,7 @@ const Index = () => {
             className="w-full h-full"
             plugins={[
               Autoplay({
-                delay: 5000,
+                delay: 6000,
                 stopOnInteraction: false,
                 stopOnMouseEnter: true,
               }),
@@ -76,7 +76,7 @@ const Index = () => {
                     <img 
                       src={image.src} 
                       alt={image.alt}
-                      className="w-full h-full object-cover transition-opacity duration-1000"
+                      className="w-full h-full object-cover transition-all duration-1500 ease-in-out"
                     />
                     
                     {/* Overlay gradiente */}
@@ -89,14 +89,11 @@ const Index = () => {
           
           {/* Contenido */}
           <div className="absolute bottom-0 left-0 p-5 md:p-14 text-white max-w-2xl">
-            <h1 className="font-display text-4xl md:text-6xl font-bold mb-4 leading-tight tracking-tight">
-              Crea, <em className="italic not-italic font-light">pinta</em> y disfruta
+            <h1 className="font-display text-5xl md:text-7xl font-bold mb-4 leading-tight tracking-tight">
+              Crea, <em className="italic transform skew-x-12 inline-block">pinta</em> y disfruta
             </h1>
             <p className="font-body text-lg md:text-xl font-light mb-4 opacity-95 leading-relaxed">
-              La creatividad y el café se encuentran en un solo lugar. Un espacio único donde cada pincelada cobra vida acompañada del aroma del mejor café.
-            </p>
-            <p className="font-body text-base md:text-lg font-light opacity-90 leading-relaxed">
-              Sumérgete en una experiencia sensorial completa donde el arte y el sabor se fusionan para crear momentos inolvidables.
+              La creatividad y el café se encuentran en un solo lugar.
             </p>
           </div>
         </div>
