@@ -42,8 +42,8 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section id="inicio" className="min-h-[80vh] md:min-h-[90vh] bg-[#F5F0E6] flex items-center justify-center px-[4vw] md:px-[6vw] py-8">
-        <div className="relative w-full max-w-[720px] md:max-w-[1440px] h-[70vh] md:h-[80vh] rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.18)] animate-fade-in">
+      <section id="inicio" className="min-h-[80vh] md:min-h-[90vh] bg-[#F5F0E6] flex items-center justify-center px-[2vw] md:px-[3vw] py-12 md:py-16">
+        <div className="relative w-full max-w-[720px] md:max-w-[1440px] h-[75vh] md:h-[82vh] rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.18)] animate-fade-in">
           <img 
             src={heroImage} 
             alt="Personas pintando cerámica mientras toman café"
