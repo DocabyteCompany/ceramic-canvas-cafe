@@ -42,44 +42,33 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section id="inicio" className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroImage})` }}
-        >
-          <div className="absolute inset-0 bg-gradient-overlay"></div>
-        </div>
-        
-        <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
-          <div className="font-display text-6xl md:text-8xl font-bold mb-6 animate-fade-in">
-            Cerámico
-          </div>
-          <h1 className="font-display text-4xl md:text-6xl font-medium mb-6 animate-slide-up">
-            Crea, pinta y disfruta
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 font-light animate-slide-up opacity-90">
-            Vive una experiencia única: café, postres y arte en un solo lugar
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up">
+      <section id="inicio" className="min-h-[80vh] md:min-h-[90vh] bg-[#F5F0E6] flex items-center justify-center px-[4vw] md:px-[6vw] py-8">
+        <div className="relative w-full max-w-[720px] md:max-w-[1440px] h-[70vh] md:h-[80vh] rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.18)] animate-fade-in">
+          <img 
+            src={heroImage} 
+            alt="Personas pintando cerámica mientras toman café"
+            className="w-full h-full object-cover"
+          />
+          
+          {/* Overlay gradiente */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/10 to-transparent"></div>
+          
+          {/* Contenido */}
+          <div className="absolute bottom-0 left-0 p-5 md:p-14 text-white max-w-lg">
+            <h1 className="font-display text-4xl md:text-6xl font-bold mb-4 leading-tight tracking-tight">
+              Crea, pinta y disfruta
+            </h1>
+            <p className="font-body text-lg md:text-xl font-light mb-6 opacity-95">
+              La creatividad y el café se encuentran en un solo lugar.
+            </p>
             <Button 
               onClick={() => scrollToSection('reservaciones')}
-              size="lg"
-              className="btn-ceramica text-lg px-8 py-6"
+              size="lg" 
+              className="bg-[#8B5E3C] hover:bg-[#A6A48D] text-white font-medium px-8 py-3 rounded-lg transition-colors duration-200"
             >
               Reservar ahora
             </Button>
-            <Button 
-              onClick={() => scrollToSection('nosotros')}
-              variant="outline"
-              size="lg"
-              className="btn-ceramica-outline text-lg px-8 py-6"
-            >
-              Conoce nuestra experiencia
-            </Button>
           </div>
-          <p className="text-sm mt-6 opacity-75">
-            Reserva tu lugar y crea tu próxima obra maestra
-          </p>
         </div>
       </section>
 
