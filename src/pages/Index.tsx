@@ -1,14 +1,25 @@
+import { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
 import ReservationWizard from '@/components/ReservationWizard';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { Clock, Users, Palette, Coffee, MapPin, Phone, Instagram, MessageCircle, CheckCircle, Heart, Sparkles } from 'lucide-react';
 import heroImage from '@/assets/hero-ceramica.jpg';
 import ceramicsCollection from '@/assets/ceramicas-collection.jpg';
 import paintingProcess from '@/assets/painting-process.jpg';
 import ceramicoLogo from '@/assets/ceramico-logo-new.png';
+import Autoplay from 'embla-carousel-autoplay';
 
 const Index = () => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  const heroImages = [
+    { src: heroImage, alt: "Personas pintando cerámica mientras toman café" },
+    { src: ceramicsCollection, alt: "Colección de piezas de cerámica artesanales" },
+    { src: paintingProcess, alt: "Proceso de pintado de cerámica" }
+  ];
+
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -42,32 +53,51 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section id="inicio" className="min-h-[80vh] md:min-h-[90vh] bg-[#F5F0E6] flex items-center justify-center px-[2vw] md:px-[3vw] py-12 md:py-16">
+      <section id="inicio" className="min-h-[80vh] md:min-h-[90vh] bg-[#F5F0E6] flex items-center justify-center px-[2vw] md:px-[3vw] py-20 md:py-24">
         <div className="relative w-full max-w-[720px] md:max-w-[1440px] h-[75vh] md:h-[82vh] rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.18)] animate-fade-in">
-          <img 
-            src={heroImage} 
-            alt="Personas pintando cerámica mientras toman café"
-            className="w-full h-full object-cover"
-          />
-          
-          {/* Overlay gradiente */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/10 to-transparent"></div>
+          <Carousel 
+            className="w-full h-full"
+            plugins={[
+              Autoplay({
+                delay: 5000,
+                stopOnInteraction: false,
+                stopOnMouseEnter: true,
+              }),
+            ]}
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+          >
+            <CarouselContent className="h-full">
+              {heroImages.map((image, index) => (
+                <CarouselItem key={index} className="h-full">
+                  <div className="relative h-full">
+                    <img 
+                      src={image.src} 
+                      alt={image.alt}
+                      className="w-full h-full object-cover transition-opacity duration-1000"
+                    />
+                    
+                    {/* Overlay gradiente */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
           
           {/* Contenido */}
-          <div className="absolute bottom-0 left-0 p-5 md:p-14 text-white max-w-lg">
+          <div className="absolute bottom-0 left-0 p-5 md:p-14 text-white max-w-2xl">
             <h1 className="font-display text-4xl md:text-6xl font-bold mb-4 leading-tight tracking-tight">
-              Crea, pinta y disfruta
+              Crea, <em className="italic not-italic font-light">pinta</em> y disfruta
             </h1>
-            <p className="font-body text-lg md:text-xl font-light mb-6 opacity-95">
-              La creatividad y el café se encuentran en un solo lugar.
+            <p className="font-body text-lg md:text-xl font-light mb-4 opacity-95 leading-relaxed">
+              La creatividad y el café se encuentran en un solo lugar. Un espacio único donde cada pincelada cobra vida acompañada del aroma del mejor café.
             </p>
-            <Button 
-              onClick={() => scrollToSection('reservaciones')}
-              size="lg" 
-              className="bg-[#8B5E3C] hover:bg-[#A6A48D] text-white font-medium px-8 py-3 rounded-lg transition-colors duration-200"
-            >
-              Reservar ahora
-            </Button>
+            <p className="font-body text-base md:text-lg font-light opacity-90 leading-relaxed">
+              Sumérgete en una experiencia sensorial completa donde el arte y el sabor se fusionan para crear momentos inolvidables.
+            </p>
           </div>
         </div>
       </section>
