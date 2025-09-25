@@ -352,7 +352,7 @@ const Index = () => {
                 <ul className="space-y-3">
                   <li>
                     <a 
-                      href="https://maps.google.com/?q=Cra+45+%2326-85,+Bogotá"
+                      href="https://maps.app.goo.gl/RfBAbxjatFm2uQGo9"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium flex items-center gap-2 justify-center md:justify-start hover:translate-x-1 transform"
