@@ -10,63 +10,80 @@ import ceramicsCollection from '@/assets/ceramicas-collection.jpg';
 import paintingProcess from '@/assets/painting-process.jpg';
 import ceramicoLogo from '@/assets/ceramico-logo-new.png';
 import Autoplay from 'embla-carousel-autoplay';
+
 const Index = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const heroImages = [{
-    src: heroImage,
-    alt: "Personas pintando cerámica mientras toman café"
-  }, {
-    src: ceramicsCollection,
-    alt: "Colección de piezas de cerámica artesanales"
-  }, {
-    src: paintingProcess,
-    alt: "Proceso de pintado de cerámica"
-  }];
+  
+  const heroImages = [
+    { src: heroImage, alt: "Personas pintando cerámica mientras toman café" },
+    { src: ceramicsCollection, alt: "Colección de piezas de cerámica artesanales" },
+    { src: paintingProcess, alt: "Proceso de pintado de cerámica" }
+  ];
+
   const scrollToSection = (sectionId: string) => {
-    document.getElementById(sectionId)?.scrollIntoView({
-      behavior: 'smooth'
-    });
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
   };
-  const importantInfo = [{
-    icon: <Clock className="h-6 w-6" />,
-    title: "Duración de la sesión",
-    description: "Cada reserva dura 1 hora y 45 minutos, tiempo perfecto para crear tu obra maestra."
-  }, {
-    icon: <Palette className="h-6 w-6" />,
-    title: "Proceso de esmaltado",
-    description: "Las piezas deben dejarse de 1 a 3 semanas para esmaltado y horneado profesional."
-  }, {
-    icon: <CheckCircle className="h-6 w-6" />,
-    title: "Para recoger tu pieza",
-    description: "Debes mostrar una foto de la misma. Las piezas se guardan por 30 días después de estar listas."
-  }, {
-    icon: <Coffee className="h-6 w-6" />,
-    title: "Bebidas y postres",
-    description: "No incluidos en el precio de la cerámica. Disfruta nuestro menú por separado."
-  }];
-  return <div className="min-h-screen bg-background">
+
+  const importantInfo = [
+    {
+      icon: <Clock className="h-6 w-6" />,
+      title: "Duración de la sesión",
+      description: "Cada reserva dura 1 hora y 45 minutos, tiempo perfecto para crear tu obra maestra."
+    },
+    {
+      icon: <Palette className="h-6 w-6" />,
+      title: "Proceso de esmaltado",
+      description: "Las piezas deben dejarse de 1 a 3 semanas para esmaltado y horneado profesional."
+    },
+    {
+      icon: <CheckCircle className="h-6 w-6" />,
+      title: "Para recoger tu pieza",
+      description: "Debes mostrar una foto de la misma. Las piezas se guardan por 30 días después de estar listas."
+    },
+    {
+      icon: <Coffee className="h-6 w-6" />,
+      title: "Bebidas y postres",
+      description: "No incluidos en el precio de la cerámica. Disfruta nuestro menú por separado."
+    }
+  ];
+
+
+  return (
+    <div className="min-h-screen bg-background">
       <Navigation />
       
       {/* Hero Section */}
       <section id="inicio" className="min-h-[80vh] md:min-h-[90vh] bg-background ceramic-texture flex items-center justify-center px-[2vw] md:px-[3vw] py-20 md:py-24">
         <div className="relative w-full max-w-[720px] md:max-w-[1440px] h-[75vh] md:h-[82vh] rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.18)] animate-fade-in">
-          <Carousel className="w-full h-full" plugins={[Autoplay({
-          delay: 6000,
-          stopOnInteraction: false,
-          stopOnMouseEnter: true
-        })]} opts={{
-          align: "start",
-          loop: true
-        }}>
+          <Carousel 
+            className="w-full h-full"
+            plugins={[
+              Autoplay({
+                delay: 6000,
+                stopOnInteraction: false,
+                stopOnMouseEnter: true,
+              }),
+            ]}
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+          >
             <CarouselContent className="h-full">
-              {heroImages.map((image, index) => <CarouselItem key={index} className="h-full">
+              {heroImages.map((image, index) => (
+                <CarouselItem key={index} className="h-full">
                   <div className="relative h-full">
-                    <img src={image.src} alt={image.alt} className="w-full h-full object-cover transition-all duration-1500 ease-in-out" />
+                    <img 
+                      src={image.src} 
+                      alt={image.alt}
+                      className="w-full h-full object-cover transition-all duration-1500 ease-in-out"
+                    />
                     
                     {/* Overlay gradiente */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
                   </div>
-                </CarouselItem>)}
+                </CarouselItem>
+              ))}
             </CarouselContent>
           </Carousel>
           
@@ -107,7 +124,11 @@ const Index = () => {
               </div>
             </div>
             <div className="relative">
-              <img src={ceramicsCollection} alt="Colección de piezas de cerámica artesanales" className="rounded-2xl shadow-warm w-full" />
+              <img 
+                src={ceramicsCollection} 
+                alt="Colección de piezas de cerámica artesanales" 
+                className="rounded-2xl shadow-warm w-full"
+              />
             </div>
           </div>
         </div>
@@ -126,7 +147,8 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {importantInfo.map((info, index) => <Card key={index} className="border-border/50 shadow-soft hover:shadow-warm transition-all duration-300 hover:-translate-y-1">
+            {importantInfo.map((info, index) => (
+              <Card key={index} className="border-border/50 shadow-soft hover:shadow-warm transition-all duration-300 hover:-translate-y-1">
                 <CardContent className="p-6">
                   <div className="flex items-start gap-4">
                     <div className="flex-shrink-0 p-3 rounded-full bg-primary/10 text-primary">
@@ -142,7 +164,8 @@ const Index = () => {
                     </div>
                   </div>
                 </CardContent>
-              </Card>)}
+              </Card>
+            ))}
           </div>
           
           <div className="text-center mt-12">
@@ -211,7 +234,10 @@ const Index = () => {
                   </div>
                   
                   <div className="flex gap-4 mt-8">
-                    
+                    <Button variant="outline" size="sm" className="flex items-center gap-2">
+                      <MessageCircle className="h-4 w-4" />
+                      WhatsApp
+                    </Button>
                     <Button variant="outline" size="sm" className="flex items-center gap-2">
                       <Instagram className="h-4 w-4" />
                       Instagram
@@ -223,9 +249,16 @@ const Index = () => {
             
             {/* Mapa */}
             <div className="h-96 rounded-2xl overflow-hidden">
-              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d234.7719984506018!2d-101.1749372379003!3d19.697633502308957!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842d0e08f422531d%3A0x23444ea7533127a8!2sAv%20Acueducto%20902%2C%20Chapultepec%20Nte.%2C%2058260%20Morelia%2C%20Mich.!5e0!3m2!1ses-419!2smx!4v1758754203742!5m2!1ses-419!2smx" width="100%" height="100%" style={{
-              border: 0
-            }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="Ubicación de Cerámico Arte & Café" />
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d234.7719984506018!2d-101.1749372379003!3d19.697633502308957!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842d0e08f422531d%3A0x23444ea7533127a8!2sAv%20Acueducto%20902%2C%20Chapultepec%20Nte.%2C%2058260%20Morelia%2C%20Mich.!5e0!3m2!1ses-419!2smx!4v1758754203742!5m2!1ses-419!2smx" 
+                width="100%" 
+                height="100%" 
+                style={{border: 0}} 
+                allowFullScreen 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Ubicación de Cerámico Arte & Café"
+              />
             </div>
           </div>
         </div>
@@ -237,7 +270,11 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-6 relative">
             {/* Logo and Description */}
             <div className="md:col-span-6 text-center md:text-left relative md:border-r md:border-warm-gray-300 md:pr-8">
-              <img src={ceramicoLogo} alt="Cerámico, Arte & Café logo" className="h-28 mb-6 mx-auto md:mx-0 transition-transform duration-300 hover:scale-105" />
+              <img 
+                src={ceramicoLogo} 
+                alt="Cerámico, Arte & Café logo" 
+                className="h-28 mb-6 mx-auto md:mx-0 transition-transform duration-300 hover:scale-105"
+              />
               <p className="text-warm-gray-700 mb-8 text-base leading-relaxed font-medium">
                 ¿Tienes alguna pregunta? ¡Nuestro equipo está aquí para ayudarte a vivir una experiencia única!
               </p>
@@ -246,10 +283,24 @@ const Index = () => {
               <div className="mt-8">
                 <div className="flex items-center gap-4 justify-center md:justify-start">
                   <h3 className="font-display text-xl font-bold text-terracotta">Social</h3>
-                  <a href="https://instagram.com/ceramico_arte_cafe" target="_blank" rel="noopener noreferrer" className="text-warm-gray-500 hover:text-terracotta transition-all duration-300 transform hover:scale-110 hover:-translate-y-1" aria-label="Instagram">
+                  <a 
+                    href="https://instagram.com/ceramico_arte_cafe" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-warm-gray-500 hover:text-terracotta transition-all duration-300 transform hover:scale-110 hover:-translate-y-1"
+                    aria-label="Instagram"
+                  >
                     <Instagram className="h-6 w-6" />
                   </a>
-                  
+                  <a 
+                    href="https://wa.me/573001234567" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-warm-gray-500 hover:text-terracotta transition-all duration-300 transform hover:scale-110 hover:-translate-y-1"
+                    aria-label="WhatsApp"
+                  >
+                    <MessageCircle className="h-6 w-6" />
+                  </a>
                 </div>
               </div>
             </div>
@@ -261,22 +312,34 @@ const Index = () => {
                 <h3 className="font-display text-lg font-bold text-terracotta mb-4">Navegación</h3>
                 <ul className="space-y-3">
                   <li>
-                    <button onClick={() => scrollToSection('inicio')} className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block">
+                    <button 
+                      onClick={() => scrollToSection('inicio')}
+                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block"
+                    >
                       Inicio
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => scrollToSection('nosotros')} className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block">
+                    <button 
+                      onClick={() => scrollToSection('nosotros')}
+                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block"
+                    >
                       Quiénes Somos
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => scrollToSection('experiencia')} className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block">
+                    <button 
+                      onClick={() => scrollToSection('experiencia')}
+                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block"
+                    >
                       Experiencia
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => scrollToSection('reservaciones')} className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block">
+                    <button 
+                      onClick={() => scrollToSection('reservaciones')}
+                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block"
+                    >
                       Reservaciones
                     </button>
                   </li>
@@ -288,7 +351,12 @@ const Index = () => {
                 <h3 className="font-display text-lg font-bold text-terracotta mb-4">Contacto</h3>
                 <ul className="space-y-3">
                   <li>
-                    <a href="https://maps.app.goo.gl/RfBAbxjatFm2uQGo9" target="_blank" rel="noopener noreferrer" className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium flex items-center gap-2 justify-center md:justify-start hover:translate-x-1 transform">
+                    <a 
+                      href="https://maps.app.goo.gl/RfBAbxjatFm2uQGo9"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium flex items-center gap-2 justify-center md:justify-start hover:translate-x-1 transform"
+                    >
                       <MapPin className="h-4 w-4 text-olive" />
                       Ubicación
                     </a>
@@ -300,7 +368,12 @@ const Index = () => {
                     </span>
                   </li>
                   <li>
-                    <a href="https://wa.me/573001234567" target="_blank" rel="noopener noreferrer" className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium flex items-center gap-2 justify-center md:justify-start hover:translate-x-1 transform">
+                    <a 
+                      href="https://wa.me/573001234567"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium flex items-center gap-2 justify-center md:justify-start hover:translate-x-1 transform"
+                    >
                       <MessageCircle className="h-4 w-4 text-olive" />
                       WhatsApp
                     </a>
@@ -328,10 +401,16 @@ const Index = () => {
 
       {/* Sticky CTA */}
       <div className="fixed bottom-4 right-4 z-40 md:hidden">
-        <Button onClick={() => scrollToSection('reservaciones')} className="btn-ceramica shadow-warm" size="lg">
+        <Button 
+          onClick={() => scrollToSection('reservaciones')}
+          className="btn-ceramica shadow-warm"
+          size="lg"
+        >
           Reservar
         </Button>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
