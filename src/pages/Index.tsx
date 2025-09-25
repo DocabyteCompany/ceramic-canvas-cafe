@@ -56,8 +56,8 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section id="inicio" className="min-h-[65vh] sm:min-h-[72vh] md:min-h-[85vh] bg-background ceramic-texture flex items-center justify-center px-4 sm:px-[2vw] md:px-[3vw] py-20 md:py-24">
-        <div className="relative w-full max-w-[95vw] sm:max-w-[720px] md:max-w-[1440px] h-[60vh] sm:h-[68vh] md:h-[80vh] rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.18)] animate-fade-in">
+      <section id="inicio" className="bg-background ceramic-texture flex items-center justify-center px-4 sm:px-[2vw] md:px-[3vw] py-20 md:py-24">
+        <div className="relative hero-container shadow-[0_20px_60px_rgba(0,0,0,0.18)] animate-fade-in">
           <Carousel 
             className="w-full h-full"
             plugins={[
@@ -79,7 +79,7 @@ const Index = () => {
                     <img 
                       src={image.src} 
                       alt={image.alt}
-                      className="w-full h-full object-cover object-center transition-all duration-1500 ease-in-out"
+                      className="hero-image transition-all duration-1500 ease-in-out"
                     />
                     
                     {/* Overlay gradiente */}
