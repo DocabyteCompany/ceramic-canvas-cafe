@@ -105,15 +105,18 @@ const ReservationWizard = () => {
 
   return (
     <>
+      {/* Section Title & Subtitle - outside card for visual homogeneity */}
+      <div className="text-center mb-12">
+        <h2 className="font-display text-4xl md:text-5xl font-bold text-primary mb-4">
+          Aparta tu lugar
+        </h2>
+        <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          Deja que la creatividad fluya en una experiencia única
+        </p>
+      </div>
+
       <Card className="max-w-4xl mx-auto shadow-warm">
         <CardHeader className="text-center pb-8">
-          <CardTitle className="font-display text-4xl text-primary mb-3">
-            Aparta tu lugar
-          </CardTitle>
-          <CardDescription className="text-xl text-muted-foreground">
-            Deja que la creatividad fluya en una experiencia única
-          </CardDescription>
-          
           <div className="mt-8">
             <ProgressBar currentStep={currentStep} totalSteps={3} />
           </div>

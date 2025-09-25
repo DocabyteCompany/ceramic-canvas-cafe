@@ -5,6 +5,9 @@ import { CalendarIcon, Clock, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 import type { ReservationData } from '../ReservationWizard';
 
 interface DateTimeSelectionProps {
@@ -12,25 +15,38 @@ interface DateTimeSelectionProps {
   onComplete: (data: Partial<ReservationData>) => void;
 }
 
-// Mock data for available time slots
-const timeSlots = [
+// Time slots for different days
+const weekdayTimeSlots = [
   { value: '10:00', label: '10:00 AM - 11:45 AM', available: 16, maxCapacity: 20 },
   { value: '12:00', label: '12:00 PM - 1:45 PM', available: 12, maxCapacity: 20 },
-  { value: '14:15', label: '2:15 PM - 4:00 PM', available: 8, maxCapacity: 20 },
-  { value: '16:30', label: '4:30 PM - 6:15 PM', available: 6, maxCapacity: 20 },
+  { value: '14:00', label: '2:00 PM - 3:45 PM', available: 8, maxCapacity: 20 },
+  { value: '16:00', label: '4:00 PM - 5:45 PM', available: 6, maxCapacity: 20 },
+  { value: '18:15', label: '6:15 PM - 8:00 PM', available: 4, maxCapacity: 20 },
+];
+
+const sundayTimeSlots = [
+  { value: '10:00', label: '10:00 AM - 11:45 AM', available: 12, maxCapacity: 15 },
+  { value: '11:45', label: '11:45 AM - 1:30 PM', available: 8, maxCapacity: 15 },
+  { value: '13:30', label: '1:30 PM - 3:00 PM', available: 5, maxCapacity: 15 },
 ];
 
 // Mock function to get availability for a specific date
 const getAvailabilityForDate = (date: Date) => {
-  // Simulate different availability patterns
   const dayOfWeek = date.getDay();
   const randomFactor = Math.sin(date.getTime()) * 0.3 + 0.7; // Creates variation
   
-  return timeSlots.map(slot => ({
+  // Monday (1) and Saturday (6) are closed
+  if (dayOfWeek === 1 || dayOfWeek === 6) {
+    return [];
+  }
+  
+  // Sunday (0) has special hours
+  const slots = dayOfWeek === 0 ? sundayTimeSlots : weekdayTimeSlots;
+  
+  return slots.map(slot => ({
     ...slot,
     available: Math.max(0, Math.floor(slot.available * randomFactor)),
-    // Sundays closed
-    isAvailable: dayOfWeek !== 0 && slot.available > 0
+    isAvailable: slot.available > 0
   }));
 };
 
@@ -38,10 +54,11 @@ export const DateTimeSelection = ({ reservationData, onComplete }: DateTimeSelec
   const [selectedDate, setSelectedDate] = useState<Date | null>(reservationData.date);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<{value: string; label: string; available: number} | null>(reservationData.timeSlot);
 
-  // Generate next 7 days (excluding Sundays)
-  const availableDates = Array.from({ length: 10 }, (_, i) => addDays(new Date(), i))
-    .filter(date => date.getDay() !== 0) // Exclude Sundays
-    .slice(0, 6); // Take 6 weekdays
+  // Disable Mondays and Saturdays (business closed days)
+  const isDateDisabled = (date: Date) => {
+    const dayOfWeek = date.getDay();
+    return dayOfWeek === 1 || dayOfWeek === 6 || date < startOfDay(new Date());
+  };
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
@@ -82,43 +99,57 @@ export const DateTimeSelection = ({ reservationData, onComplete }: DateTimeSelec
         </p>
       </div>
 
-      {/* Date Selection */}
+      {/* Date Selection with Calendar */}
       <div>
         <h4 className="flex items-center gap-2 font-medium text-lg mb-4">
           <CalendarIcon size={20} className="text-primary" />
           Fecha disponible
         </h4>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {availableDates.map((date, index) => {
-            const isSelected = selectedDate && isSameDay(date, selectedDate);
-            const isToday = isSameDay(date, new Date());
-            
-            return (
-              <Button
-                key={index}
-                variant="outline"
-                className={`p-4 h-auto flex flex-col items-center gap-2 transition-all duration-150 ${
-                  isSelected 
-                    ? 'border-primary bg-primary/10 text-primary' 
-                    : 'hover:border-primary/50'
-                }`}
-                onClick={() => handleDateSelect(date)}
-              >
-                <span className="text-sm font-medium">
-                  {format(date, 'EEEE', { locale: es })}
-                </span>
-                <span className="text-lg font-semibold">
-                  {format(date, 'd')}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {format(date, 'MMM', { locale: es })}
-                  {isToday && ' (hoy)'}
-                </span>
-              </Button>
-            );
-          })}
-        </div>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "w-full justify-start text-left font-normal",
+                !selectedDate && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {selectedDate ? (
+                format(selectedDate, 'EEEE, d MMMM yyyy', { locale: es })
+              ) : (
+                <span>Selecciona una fecha</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={selectedDate || undefined}
+              onSelect={(date) => date && handleDateSelect(date)}
+              disabled={isDateDisabled}
+              initialFocus
+              className={cn("p-3 pointer-events-auto")}
+              locale={es}
+            />
+          </PopoverContent>
+        </Popover>
+        
+        {selectedDate && (
+          <div className="mt-2 text-sm text-muted-foreground text-center">
+            {selectedDate.getDay() === 0 && (
+              <span className="text-primary font-medium">
+                Domingo - Horarios especiales disponibles
+              </span>
+            )}
+            {selectedDate.getDay() >= 2 && selectedDate.getDay() <= 5 && (
+              <span>
+                Horarios completos disponibles
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Time Selection */}
@@ -145,12 +176,12 @@ export const DateTimeSelection = ({ reservationData, onComplete }: DateTimeSelec
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <h5 className="font-semibold text-lg">{slot.label}</h5>
-                          <span className="text-sm text-muted-foreground">
-                            1h 45m
-                          </span>
-                        </div>
+                         <div className="flex items-center gap-3 mb-2">
+                           <h5 className="font-semibold text-lg">{slot.label}</h5>
+                           <span className="text-sm text-muted-foreground">
+                             {selectedDate?.getDay() === 0 && slot.value === '13:30' ? '1h 30m' : '1h 45m'}
+                           </span>
+                         </div>
                         
                         <div className="flex items-center gap-4">
                           <div className="flex items-center gap-1 text-sm">
