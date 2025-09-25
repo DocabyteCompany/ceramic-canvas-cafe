@@ -211,7 +211,7 @@ const Index = () => {
                       <MapPin className="h-5 w-5 text-primary flex-shrink-0" />
                       <div>
                         <p className="font-medium text-foreground">Dirección</p>
-                        <p className="text-muted-foreground">Calle Artesanos 123, Centro, Ciudad</p>
+                        <p className="text-muted-foreground">Plaza Acueducto, Morelia, Mich.</p>
                       </div>
                     </div>
                     
@@ -248,16 +248,17 @@ const Index = () => {
             </div>
             
             {/* Mapa */}
-            <div className="h-96 bg-muted rounded-2xl flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="h-12 w-12 text-primary mx-auto mb-4" />
-                <p className="text-muted-foreground">
-                  Mapa interactivo próximamente
-                </p>
-                <Button className="mt-4 btn-ceramica">
-                  Cómo llegar
-                </Button>
-              </div>
+            <div className="h-96 rounded-2xl overflow-hidden">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d234.7719984506018!2d-101.1749372379003!3d19.697633502308957!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842d0e08f422531d%3A0x23444ea7533127a8!2sAv%20Acueducto%20902%2C%20Chapultepec%20Nte.%2C%2058260%20Morelia%2C%20Mich.!5e0!3m2!1ses-419!2smx!4v1758754203742!5m2!1ses-419!2smx" 
+                width="100%" 
+                height="100%" 
+                style={{border: 0}} 
+                allowFullScreen 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Ubicación de Cerámico Arte & Café"
+              />
             </div>
           </div>
         </div>
