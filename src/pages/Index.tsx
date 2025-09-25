@@ -227,20 +227,18 @@ const Index = () => {
                       <Clock className="h-5 w-5 text-primary flex-shrink-0" />
                       <div>
                         <p className="font-medium text-foreground">Horarios</p>
-                        <p className="text-muted-foreground">Mar - Dom: 10:00 AM - 7:00 PM</p>
-                        <p className="text-muted-foreground text-sm">Lunes cerrado</p>
+                        <p className="text-muted-foreground">Mar - Vie: 10:00 AM - 8:00 PM, Dom: 10:00 AM - 3:00 PM</p>
+                        <p className="text-muted-foreground text-sm">Lunes y Sábados cerrado</p>
                       </div>
                     </div>
                   </div>
                   
                   <div className="flex gap-4 mt-8">
-                    <Button variant="outline" size="sm" className="flex items-center gap-2">
-                      <MessageCircle className="h-4 w-4" />
-                      WhatsApp
-                    </Button>
-                    <Button variant="outline" size="sm" className="flex items-center gap-2">
-                      <Instagram className="h-4 w-4" />
-                      Instagram
+                    <Button variant="outline" size="sm" className="flex items-center gap-2" asChild>
+                      <a href="https://www.instagram.com/ceramico_mx?igsh=ZGhmbXk3c2c4eTBj" target="_blank" rel="noopener noreferrer">
+                        <Instagram className="h-4 w-4" />
+                        Instagram
+                      </a>
                     </Button>
                   </div>
                 </CardContent>
@@ -284,22 +282,13 @@ const Index = () => {
                 <div className="flex items-center gap-4 justify-center md:justify-start">
                   <h3 className="font-display text-xl font-bold text-terracotta">Social</h3>
                   <a 
-                    href="https://instagram.com/ceramico_arte_cafe" 
+                    href="https://www.instagram.com/ceramico_mx?igsh=ZGhmbXk3c2c4eTBj" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-warm-gray-500 hover:text-terracotta transition-all duration-300 transform hover:scale-110 hover:-translate-y-1"
                     aria-label="Instagram"
                   >
                     <Instagram className="h-6 w-6" />
-                  </a>
-                  <a 
-                    href="https://wa.me/573001234567" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-warm-gray-500 hover:text-terracotta transition-all duration-300 transform hover:scale-110 hover:-translate-y-1"
-                    aria-label="WhatsApp"
-                  >
-                    <MessageCircle className="h-6 w-6" />
                   </a>
                 </div>
               </div>
@@ -364,18 +353,18 @@ const Index = () => {
                   <li>
                     <span className="text-warm-gray-600 text-sm font-medium flex items-center gap-2 justify-center md:justify-start">
                       <Clock className="h-4 w-4 text-olive" />
-                      Lun-Dom: 9:00-22:00
+                      Mar-Vie: 10:00-20:00, Dom: 10:00-15:00
                     </span>
                   </li>
                   <li>
                     <a 
-                      href="https://wa.me/573001234567"
+                      href="https://www.instagram.com/ceramico_mx?igsh=ZGhmbXk3c2c4eTBj"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium flex items-center gap-2 justify-center md:justify-start hover:translate-x-1 transform"
                     >
-                      <MessageCircle className="h-4 w-4 text-olive" />
-                      WhatsApp
+                      <Instagram className="h-4 w-4 text-olive" />
+                      Instagram
                     </a>
                   </li>
                 </ul>
