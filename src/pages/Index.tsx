@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { Clock, Users, Palette, Coffee, MapPin, Phone, Instagram, MessageCircle, CheckCircle, Heart, Sparkles } from 'lucide-react';
-import heroImage from '@/assets/hero-ceramica.jpg';
-import ceramicsCollection from '@/assets/ceramicas-collection.jpg';
-import paintingProcess from '@/assets/painting-process.jpg';
+import heroImage1 from '@/assets/hero-ceramica-new1.jpg';
+import heroImage2 from '@/assets/hero-ceramica-new2.jpg';
+import heroImage3 from '@/assets/hero-ceramica-new3.jpg';
 import ceramicoLogo from '@/assets/ceramico-logo-new.png';
 import Autoplay from 'embla-carousel-autoplay';
 
@@ -15,9 +15,9 @@ const Index = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   const heroImages = [
-    { src: heroImage, alt: "Personas pintando cerámica mientras toman café" },
-    { src: ceramicsCollection, alt: "Colección de piezas de cerámica artesanales" },
-    { src: paintingProcess, alt: "Proceso de pintado de cerámica" }
+    { src: heroImage1, alt: "Madre e hija pintando cerámica juntas mientras disfrutan de café" },
+    { src: heroImage2, alt: "Pareja sonriente pintando cerámica en ambiente acogedor con café y postres" },
+    { src: heroImage3, alt: "Grupo de amigos creando arte en cerámica mientras comparten café" }
   ];
 
   const scrollToSection = (sectionId: string) => {
@@ -125,7 +125,7 @@ const Index = () => {
             </div>
             <div className="relative">
               <img 
-                src={ceramicsCollection} 
+                src={heroImage2} 
                 alt="Colección de piezas de cerámica artesanales" 
                 className="rounded-2xl shadow-warm w-full"
               />
