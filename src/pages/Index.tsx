@@ -304,9 +304,9 @@ const Index = () => {
                 <h3 className="font-display text-lg font-bold text-terracotta mb-4">Navegación</h3>
                 <ul className="space-y-3">
                   <li>
-                    <button 
+                     <button 
                       onClick={() => scrollToSection('inicio')}
-                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block"
+                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block mx-auto md:mx-0"
                     >
                       Inicio
                     </button>
@@ -314,7 +314,7 @@ const Index = () => {
                   <li>
                     <button 
                       onClick={() => scrollToSection('nosotros')}
-                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block"
+                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block mx-auto md:mx-0"
                     >
                       Quiénes Somos
                     </button>
@@ -322,7 +322,7 @@ const Index = () => {
                   <li>
                     <button 
                       onClick={() => scrollToSection('experiencia')}
-                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block"
+                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block mx-auto md:mx-0"
                     >
                       Experiencia
                     </button>
@@ -330,7 +330,7 @@ const Index = () => {
                   <li>
                     <button 
                       onClick={() => scrollToSection('reservaciones')}
-                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block"
+                      className="text-warm-gray-600 hover:text-terracotta transition-all duration-200 text-sm font-medium hover:translate-x-1 transform block mx-auto md:mx-0"
                     >
                       Reservaciones
                     </button>
