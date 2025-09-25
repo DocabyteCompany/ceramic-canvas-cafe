@@ -5,9 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { Clock, Users, Palette, Coffee, MapPin, Phone, Instagram, MessageCircle, CheckCircle, Heart, Sparkles } from 'lucide-react';
+import heroCoffeeCeramics from '@/assets/hero-coffee-ceramics.jpg';
 import heroImage1 from '@/assets/hero-ceramica-new1.jpg';
 import heroImage2 from '@/assets/hero-ceramica-new2.jpg';
 import heroImage3 from '@/assets/hero-ceramica-new3.jpg';
+import ceramicsCollectionNew from '@/assets/ceramics-collection-new.jpg';
 import ceramicoLogo from '@/assets/ceramico-logo-new.png';
 import Autoplay from 'embla-carousel-autoplay';
 
@@ -15,8 +17,9 @@ const Index = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   const heroImages = [
+    { src: heroCoffeeCeramics, alt: "Manos sosteniendo café humeante con piezas de cerámica pintadas en primer plano" },
     { src: heroImage1, alt: "Madre e hija pintando cerámica juntas mientras disfrutan de café" },
-    { src: heroImage2, alt: "Pareja sonriente pintando cerámica en ambiente acogedor con café y postres" },
+    { src: ceramicsCollectionNew, alt: "Colección artística de jarrones y piezas de cerámica pintadas a mano" },
     { src: heroImage3, alt: "Grupo de amigos creando arte en cerámica mientras comparten café" }
   ];
 
@@ -53,8 +56,8 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section id="inicio" className="min-h-[80vh] md:min-h-[90vh] bg-background ceramic-texture flex items-center justify-center px-[2vw] md:px-[3vw] py-20 md:py-24">
-        <div className="relative w-full max-w-[720px] md:max-w-[1440px] h-[75vh] md:h-[82vh] rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.18)] animate-fade-in">
+      <section id="inicio" className="min-h-[70vh] sm:min-h-[75vh] md:min-h-[90vh] bg-background ceramic-texture flex items-center justify-center px-4 sm:px-[2vw] md:px-[3vw] py-20 md:py-24">
+        <div className="relative w-full max-w-[95vw] sm:max-w-[720px] md:max-w-[1440px] h-[65vh] sm:h-[70vh] md:h-[82vh] rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.18)] animate-fade-in">
           <Carousel 
             className="w-full h-full"
             plugins={[
@@ -76,7 +79,7 @@ const Index = () => {
                     <img 
                       src={image.src} 
                       alt={image.alt}
-                      className="w-full h-full object-cover transition-all duration-1500 ease-in-out"
+                      className="w-full h-full object-contain sm:object-cover transition-all duration-1500 ease-in-out"
                     />
                     
                     {/* Overlay gradiente */}
@@ -88,11 +91,11 @@ const Index = () => {
           </Carousel>
           
           {/* Contenido */}
-          <div className="absolute bottom-0 left-0 p-5 md:p-14 text-white max-w-2xl">
-            <h1 className="font-display text-5xl md:text-7xl font-bold mb-4 leading-tight tracking-tight">
+          <div className="absolute bottom-0 left-0 p-4 sm:p-5 md:p-14 text-white max-w-2xl">
+            <h1 className="font-display text-4xl sm:text-5xl md:text-7xl font-bold mb-4 leading-tight tracking-tight">
               Crea y <em className="italic transform skew-x-12 inline-block">Disfruta</em>
             </h1>
-            <p className="font-body text-lg md:text-xl font-light mb-4 opacity-95 leading-relaxed">
+            <p className="font-body text-base sm:text-lg md:text-xl font-light mb-4 opacity-95 leading-relaxed">
               La creatividad y el café se encuentran en un solo lugar.
             </p>
           </div>
