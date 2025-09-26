@@ -153,42 +153,38 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Imágenes reorganizadas */}
-          <div className="space-y-6">
-            {/* Imagen principal - Centrada, no full width */}
-            <div className="flex justify-center">
-              <div className="w-full max-w-4xl bg-white/50 rounded-2xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center min-h-[250px] md:min-h-[320px]">
+          {/* Layout de imágenes - 2 columnas principales */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Columna izquierda - Imagen destacada con toda la altura */}
+            <div className="bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center h-[400px] md:h-[500px]">
+              <div className="text-center text-terracotta/60">
+                <div className="text-lg font-medium mb-2">Imagen Destacada</div>
+                <div className="text-sm">Subir imagen principal</div>
+              </div>
+            </div>
+
+            {/* Columna derecha - Imagen principal arriba + 2 imágenes horizontales abajo */}
+            <div className="space-y-4">
+              {/* Imagen principal */}
+              <div className="bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center h-[240px] md:h-[240px]">
                 <div className="text-center text-terracotta/60">
                   <div className="text-lg font-medium mb-2">Imagen Principal</div>
                   <div className="text-sm">Subir imagen del taller</div>
                 </div>
               </div>
-            </div>
 
-            {/* Layout inferior: Imagen destacada a la izquierda + dos imágenes apiladas a la derecha */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Imagen destacada - Ocupa 2 columnas en desktop */}
-              <div className="md:col-span-2 bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center h-[280px] md:h-[320px]">
-                <div className="text-center text-terracotta/60">
-                  <div className="text-sm font-medium mb-1">Imagen Destacada</div>
-                  <div className="text-xs">Subir imagen</div>
-                </div>
-              </div>
-              
-              {/* Columna derecha con dos imágenes apiladas */}
-              <div className="md:col-span-1 space-y-4">
-                {/* Segunda imagen */}
-                <div className="bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center h-[135px] md:h-[150px]">
+              {/* Imágenes 2 y 3 lado a lado */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center h-[240px] md:h-[240px]">
                   <div className="text-center text-terracotta/60">
-                    <div className="text-xs font-medium mb-1">Imagen 2</div>
+                    <div className="text-sm font-medium mb-1">Imagen 2</div>
                     <div className="text-xs">Subir</div>
                   </div>
                 </div>
                 
-                {/* Tercera imagen */}
-                <div className="bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center h-[135px] md:h-[150px]">
+                <div className="bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center h-[240px] md:h-[240px]">
                   <div className="text-center text-terracotta/60">
-                    <div className="text-xs font-medium mb-1">Imagen 3</div>
+                    <div className="text-sm font-medium mb-1">Imagen 3</div>
                     <div className="text-xs">Subir</div>
                   </div>
                 </div>
