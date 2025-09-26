@@ -131,69 +131,60 @@ const Navigation = () => {
         aria-modal="true"
       >
         <div className={`${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-95'} transition-transform duration-300 ease-out h-full flex flex-col justify-between`}>
-          {/* Top Section - Close Button and Logo */}
-          <div className="flex flex-col items-center pt-24">
-            {/* Close button */}
-            <div className="absolute top-6 right-6">
-              <button 
-                onClick={() => setIsOpen(false)}
-                className="p-2 text-white hover:text-white/80 transition-all duration-300"
-                aria-label="Close menu"
-              >
-                <X size={24} />
-              </button>
-            </div>
-            
-            {/* Logo */}
+          {/* Close button - Top Right */}
+          <div className="absolute top-6 right-6 z-10">
             <button 
-              onClick={() => scrollToSection('inicio')}
-              className="hover:scale-105 transition-transform duration-200"
+              onClick={() => setIsOpen(false)}
+              className="p-2 text-white hover:text-white/80 transition-all duration-300"
+              aria-label="Close menu"
             >
-              <img 
-                src={ceramicoLogo} 
-                alt="Cerámico Logo" 
-                className="h-12 w-auto"
-              />
+              <X size={28} />
             </button>
           </div>
 
           {/* Center Section - Navigation Links */}
-          <div className="flex-1 flex flex-col justify-center items-center space-y-10 px-6">
+          <div className="flex-1 flex flex-col justify-center items-center space-y-12 px-6">
+            <button 
+              onClick={() => scrollToSection('inicio')}
+              className="text-white text-4xl font-bold uppercase hover:text-white/80 transition-colors duration-200 tracking-wide"
+            >
+              INICIO
+            </button>
             <button 
               onClick={() => scrollToSection('nosotros')}
-              className="text-white text-3xl font-medium hover:text-white/80 transition-colors duration-200"
+              className="text-white text-4xl font-bold uppercase hover:text-white/80 transition-colors duration-200 tracking-wide"
             >
-              Nosotros
+              NOSOTROS
             </button>
             <button 
               onClick={() => scrollToSection('experiencia')}
-              className="text-white text-3xl font-medium hover:text-white/80 transition-colors duration-200"
+              className="text-white text-4xl font-bold uppercase hover:text-white/80 transition-colors duration-200 tracking-wide"
             >
-              Experiencia
+              EXPERIENCIA
             </button>
             <button 
               onClick={() => scrollToSection('contacto')}
-              className="text-white text-3xl font-medium hover:text-white/80 transition-colors duration-200"
+              className="text-white text-4xl font-bold uppercase hover:text-white/80 transition-colors duration-200 tracking-wide"
             >
-              Contacto
+              CONTACTO
             </button>
             <Button 
               onClick={() => scrollToSection('reservaciones')}
-              className="btn-ceramica-white-outline mt-8 px-8 max-w-xs text-3xl font-medium"
+              className="btn-ceramica-white-outline mt-8 px-12 py-4 text-xl font-bold uppercase tracking-wide"
             >
-              Reservar ahora
+              RESERVAR AHORA
             </Button>
           </div>
 
           {/* Bottom Section - Instagram Icon */}
-          <div className="flex justify-center pb-16">
+          <div className="flex justify-center pb-12">
             <a 
               href="https://instagram.com" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-white hover:text-white/80 transition-colors duration-200"
             >
-              <Instagram size={32} />
+              <Instagram size={36} />
             </a>
           </div>
         </div>
