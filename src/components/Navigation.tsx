@@ -40,9 +40,11 @@ const Navigation = () => {
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled 
-        ? 'bg-terracotta/90 backdrop-blur-md border-b border-terracotta/20' 
-        : 'bg-transparent border-b border-transparent'
+      isOpen 
+        ? 'bg-transparent backdrop-blur-0 border-transparent'
+        : isScrolled 
+          ? 'bg-terracotta/90 backdrop-blur-md border-b border-terracotta/20' 
+          : 'bg-transparent border-b border-transparent'
     }`}>
       <div className="container mx-auto px-4 py-3">
         <div className="hidden md:grid md:grid-cols-3 items-center">
