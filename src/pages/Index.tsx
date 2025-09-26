@@ -4,7 +4,7 @@ import ReservationWizard from '@/components/ReservationWizard';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
-import { Clock, Users, Palette, Coffee, MapPin, Phone, Instagram, MessageCircle, CheckCircle, Heart, Sparkles } from 'lucide-react';
+import { Clock, Users, Palette, Coffee, MapPin, Phone, Instagram, MessageCircle, CheckCircle, Heart, Sparkles, ChevronDown } from 'lucide-react';
 import heroCoffeeCeramics from '@/assets/hero-coffee-ceramics.jpg';
 import heroImage1 from '@/assets/hero-ceramica-new1.jpg';
 import heroImage2 from '@/assets/hero-ceramica-new2.jpg';
@@ -53,11 +53,14 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
-      
       {/* Hero Section */}
-      <section id="inicio" className="bg-background ceramic-texture flex items-center justify-center px-4 sm:px-[2vw] md:px-[3vw] py-20 md:py-24">
-        <div className="relative hero-container shadow-[0_20px_60px_rgba(0,0,0,0.18)] animate-fade-in">
+      <section id="inicio" className="relative h-screen w-full">
+        {/* Navigation positioned absolutely over hero */}
+        <div className="absolute top-0 left-0 right-0 z-20">
+          <Navigation />
+        </div>
+        
+        <div className="relative w-full h-full">
           <Carousel 
             className="w-full h-full"
             plugins={[
@@ -79,25 +82,36 @@ const Index = () => {
                     <img 
                       src={image.src} 
                       alt={image.alt}
-                      className="hero-image transition-all duration-1500 ease-in-out"
+                      className="w-full h-full object-cover transition-all duration-1500 ease-in-out"
                     />
                     
-                    {/* Overlay gradiente */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+                    {/* Dark overlay for text legibility */}
+                    <div className="absolute inset-0 bg-black/30"></div>
                   </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
           </Carousel>
           
-          {/* Contenido */}
-          <div className="absolute bottom-0 left-0 p-4 sm:p-5 md:p-14 text-white max-w-2xl">
-            <h1 className="font-display text-4xl sm:text-5xl md:text-7xl font-bold mb-4 leading-tight tracking-tight">
+          {/* Centered Content */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4 z-10">
+            <h1 className="font-display text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold mb-6 leading-tight tracking-tight animate-fade-in">
               Crea y <em className="italic transform skew-x-12 inline-block">Disfruta</em>
             </h1>
-            <p className="font-body text-base sm:text-lg md:text-xl font-light mb-4 opacity-95 leading-relaxed">
+            <p className="font-body text-lg sm:text-xl md:text-2xl font-light opacity-90 leading-relaxed max-w-2xl animate-fade-in" style={{animationDelay: '0.3s'}}>
               La creatividad y el café se encuentran en un solo lugar.
             </p>
+          </div>
+          
+          {/* Scroll Indicator */}
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
+            <button 
+              onClick={() => scrollToSection('nosotros')}
+              className="text-white hover:text-white/80 transition-colors duration-300 group"
+              aria-label="Scroll hacia abajo"
+            >
+              <ChevronDown className="h-8 w-8 animate-bounce" />
+            </button>
           </div>
         </div>
       </section>

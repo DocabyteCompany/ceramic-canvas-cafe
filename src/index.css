@@ -144,14 +144,11 @@
     animation: stepTransition 0.3s ease-out forwards;
   }
 
-  /* Hero Section Containers */
+  /* Hero Section Containers - Full screen layout */
   .hero-container {
     width: 100%;
-    max-width: 1440px;
-    margin: 0 auto;
-    aspect-ratio: 16/9;
-    overflow: hidden;
-    border-radius: 1rem;
+    height: 100%;
+    position: relative;
   }
 
   .hero-image {
@@ -159,27 +156,6 @@
     height: 100%;
     object-fit: cover;
     object-position: center;
-    border-radius: inherit;
-  }
-
-  /* Mobile responsive for hero */
-  @media (max-width: 768px) {
-    .hero-container {
-      aspect-ratio: 4/5;
-      border-radius: 1rem;
-    }
-    
-    .hero-image {
-      object-fit: cover;
-      object-position: center;
-    }
-  }
-
-  /* Desktop enhanced border radius */
-  @media (min-width: 768px) {
-    .hero-container {
-      border-radius: 1.5rem;
-    }
   }
 }
 
