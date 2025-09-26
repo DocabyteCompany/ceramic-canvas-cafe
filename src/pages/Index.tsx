@@ -9,7 +9,7 @@ import heroImage1 from '@/assets/hero-ceramica-new1.jpg';
 import heroImage2 from '@/assets/hero-ceramica-new2.jpg';
 import heroImage3 from '@/assets/hero-ceramica-new3.jpg';
 import ceramicsWorkshopTools from '@/assets/ceramics-workshop-tools.jpg';
-import decorativePill from '@/assets/decorative-pill.png';
+
 import ceramicoLogo from '@/assets/ceramico-logo-new.png';
 import Autoplay from 'embla-carousel-autoplay';
 
@@ -94,22 +94,9 @@ const Index = () => {
           
           {/* Centered Content */}
           <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4 z-10">
-            <div className="flex items-center gap-6 mb-6">
-              <div className="text-left">
-                <h1 className="font-display text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold leading-tight tracking-tight animate-fade-in">
-                  Disfruta y
-                </h1>
-                <h1 className="font-display text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold leading-tight tracking-tight animate-fade-in">
-                  Crea
-                </h1>
-              </div>
-              <img 
-                src={decorativePill} 
-                alt="Café y cerámica" 
-                className="w-20 h-6 sm:w-24 sm:h-7 md:w-32 md:h-9 lg:w-40 lg:h-12 animate-fade-in opacity-90"
-                style={{animationDelay: '0.2s'}}
-              />
-            </div>
+            <h1 className="font-display text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold leading-tight tracking-tight animate-fade-in mb-6">
+              Disfruta y Crea
+            </h1>
             <p className="font-body text-lg sm:text-xl md:text-2xl font-light opacity-90 leading-relaxed max-w-2xl animate-fade-in" style={{animationDelay: '0.4s'}}>
               La creatividad y el café se encuentran en un solo lugar.
             </p>
