@@ -11,6 +11,7 @@
     --terracotta-light: 22 42% 50%;     /* Lighter variant */
     --beige: 38 50% 93%;                /* #F5F0E6 - Background */
     --beige-dark: 38 30% 85%;           /* Darker beige for accents */
+    --beige-translucent: 38 50% 93%;    /* For translucent overlays */
     --olive: 54 14% 61%;                /* #A6A48D - Details, hover states */
     --olive-dark: 54 14% 50%;           /* Darker olive */
     --pure-white: 0 0% 100%;            /* #FFFFFF - Clean sections */
@@ -139,6 +140,10 @@
     animation: slideUp 0.8s ease-out forwards;
   }
 
+  .slide-up-fade {
+    animation: slideUpFade 0.8s ease-out forwards;
+  }
+
   /* Wizard animations */
   .animate-step-transition {
     animation: stepTransition 0.3s ease-out forwards;
@@ -156,7 +161,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
+    object-position: center 20%;
   }
 
   /* Smooth carousel transitions */
@@ -185,6 +190,17 @@
   }
 
   @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUpFade {
     from {
       opacity: 0;
       transform: translateY(40px);

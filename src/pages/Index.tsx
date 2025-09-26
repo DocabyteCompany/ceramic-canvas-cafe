@@ -94,10 +94,23 @@ const Index = () => {
           
           {/* Centered Content */}
           <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4 z-10">
-            <h1 className="font-display text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold leading-tight tracking-tight animate-fade-in mb-6">
+            <h1 
+              className="font-display text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold leading-tight tracking-tight slide-up-fade mb-6 bg-beige/10 backdrop-blur-sm px-6 py-2 rounded-2xl" 
+              style={{
+                color: 'hsl(var(--beige-translucent))',
+                animationDelay: '0.2s'
+              }}
+            >
               Disfruta y Crea
             </h1>
-            <p className="font-body text-lg sm:text-xl md:text-2xl font-light opacity-90 leading-relaxed max-w-2xl animate-fade-in" style={{animationDelay: '0.4s'}}>
+            <p 
+              className="font-body text-lg sm:text-xl md:text-2xl font-light leading-relaxed max-w-2xl slide-up-fade backdrop-blur-sm bg-beige-dark/20 px-4 py-2 rounded-xl" 
+              style={{
+                color: 'hsl(var(--beige-dark))', 
+                opacity: '0.9',
+                animationDelay: '0.6s'
+              }}
+            >
               La creatividad y el café se encuentran en un solo lugar.
             </p>
           </div>
