@@ -78,10 +78,10 @@ const Index = () => {
               {heroImages.map((image, index) => (
                 <CarouselItem key={index} className="h-full">
                   <div className="relative h-full">
-                    <img 
+                     <img 
                       src={image.src} 
                       alt={image.alt}
-                      className="w-full h-full object-cover transition-opacity duration-1000 ease-in-out"
+                      className="w-full h-full object-cover object-center md:object-[center_20%] transition-opacity duration-1000 ease-in-out"
                     />
                     
                     {/* Dark overlay for text legibility */}
