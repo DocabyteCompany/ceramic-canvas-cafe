@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Instagram } from 'lucide-react';
 import ceramicoLogo from '../assets/ceramico-logo-white.png';
 
 const Navigation = () => {
@@ -91,41 +91,74 @@ const Navigation = () => {
 
           <button 
             onClick={() => setIsOpen(!isOpen)}
-            className="p-2 text-white hover:text-white/90"
+            className="p-2 text-white hover:text-white/90 transition-all duration-300"
           >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
+            <div className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : 'rotate-0'}`}>
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </div>
           </button>
         </div>
 
-        {/* Mobile Menu */}
-        {isOpen && (
-          <div className="md:hidden mt-4 pb-4 space-y-4">
-            <button 
-              onClick={() => scrollToSection('nosotros')}
-              className="block w-full text-left text-white hover:text-white/90 transition-colors"
-            >
-              Nosotros
-            </button>
-            <button 
-              onClick={() => scrollToSection('experiencia')}
-              className="block w-full text-left text-white hover:text-white/90 transition-colors"
-            >
-              Experiencia
-            </button>
-            <button 
-              onClick={() => scrollToSection('contacto')}
-              className="block w-full text-left text-white hover:text-white/90 transition-colors"
-            >
-              Contacto
-            </button>
-            <Button 
-              onClick={() => scrollToSection('reservaciones')}
-              className="btn-ceramica-white-outline w-full mt-4"
-            >
-              Reservar ahora
-            </Button>
+        {/* Mobile Menu - Full Screen Overlay */}
+        <div className={`md:hidden fixed inset-0 bg-terracotta z-40 transition-transform duration-500 ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}>
+          <div className="flex flex-col justify-between h-full">
+            {/* Top Section - Logo */}
+            <div className="flex justify-center pt-16">
+              <button 
+                onClick={() => scrollToSection('inicio')}
+                className="hover:scale-105 transition-transform duration-200"
+              >
+                <img 
+                  src={ceramicoLogo} 
+                  alt="Cerámico Logo" 
+                  className="h-12 w-auto"
+                />
+              </button>
+            </div>
+
+            {/* Center Section - Navigation Links */}
+            <div className="flex-1 flex flex-col justify-center items-center space-y-8 px-6">
+              <button 
+                onClick={() => scrollToSection('nosotros')}
+                className="text-white text-3xl font-medium hover:text-white/80 transition-colors duration-200"
+              >
+                Nosotros
+              </button>
+              <button 
+                onClick={() => scrollToSection('experiencia')}
+                className="text-white text-3xl font-medium hover:text-white/80 transition-colors duration-200"
+              >
+                Experiencia
+              </button>
+              <button 
+                onClick={() => scrollToSection('contacto')}
+                className="text-white text-3xl font-medium hover:text-white/80 transition-colors duration-200"
+              >
+                Contacto
+              </button>
+              <Button 
+                onClick={() => scrollToSection('reservaciones')}
+                className="btn-ceramica-white-outline mt-8 px-8 max-w-xs"
+              >
+                Reservar ahora
+              </Button>
+            </div>
+
+            {/* Bottom Section - Instagram Icon */}
+            <div className="flex justify-center pb-12">
+              <a 
+                href="https://instagram.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-white hover:text-white/80 transition-colors duration-200"
+              >
+                <Instagram size={32} />
+              </a>
+            </div>
           </div>
-        )}
+        </div>
       </div>
     </nav>
   );
