@@ -334,7 +334,7 @@ const Index = () => {
                 className="h-28 mb-6 mx-auto md:mx-0 transition-transform duration-300 hover:scale-105"
               />
               <p className="text-warm-gray-700 mb-8 text-base leading-relaxed font-medium">
-                ¿Tienes alguna pregunta? ¡Nuestro equipo está aquí para ayudarte a vivir una experiencia única!
+                ¿Tienes alguna pregunta? ¡Nuestro equipo está<br className="hidden md:block" /> aquí para ayudarte a vivir una experiencia única!
               </p>
               
               {/* Social Links */}
