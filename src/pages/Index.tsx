@@ -128,10 +128,10 @@ const Index = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-16">
             {/* Título - Left side on desktop */}
             <div className="space-y-2">
-              <h2 className="font-display text-5xl md:text-6xl font-bold text-primary leading-none">
+              <h2 className="font-display text-7xl md:text-9xl font-bold text-primary leading-none">
                 Acerca de
               </h2>
-              <h2 className="font-display text-5xl md:text-6xl font-bold text-primary leading-none">
+              <h2 className="font-display text-7xl md:text-9xl font-bold text-primary leading-none">
                 Cerámico
               </h2>
             </div>
