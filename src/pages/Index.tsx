@@ -457,7 +457,7 @@ const Index = () => {
       </footer>
 
       {/* Sticky CTA */}
-      <div className="fixed bottom-4 right-4 z-40 md:hidden">
+      <div className="sticky-cta fixed bottom-4 right-4 z-40 md:hidden">
         <Button 
           onClick={() => scrollToSection('reservaciones')}
           className="btn-ceramica shadow-warm"

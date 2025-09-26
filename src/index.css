@@ -249,3 +249,8 @@
     }
   }
 }
+
+/* Hide sticky CTA when mobile menu is open */
+.menu-open .sticky-cta {
+  display: none !important;
+}

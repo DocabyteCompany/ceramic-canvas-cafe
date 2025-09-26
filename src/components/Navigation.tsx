@@ -16,6 +16,23 @@ const Navigation = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Prevent body scroll when menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.classList.add('menu-open');
+    } else {
+      document.body.style.overflow = 'unset';
+      document.documentElement.classList.remove('menu-open');
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.documentElement.classList.remove('menu-open');
+    };
+  }, [isOpen]);
+
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
     setIsOpen(false);
@@ -100,9 +117,15 @@ const Navigation = () => {
         </div>
 
         {/* Mobile Menu - Full Screen Overlay */}
-        <div className={`md:hidden fixed inset-0 bg-terracotta z-[60] transition-transform duration-500 ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}>
+        <div 
+          className={`md:hidden fixed inset-0 z-[999] transition-transform duration-500 ${
+            isOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+          style={{ 
+            backgroundColor: 'hsl(var(--terracotta))',
+            backgroundImage: 'none'
+          }}
+        >
           <div className="flex flex-col justify-between h-full">
             {/* Top Section - Close Button and Logo */}
             <div className="flex flex-col items-center pt-16">
