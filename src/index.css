@@ -254,3 +254,8 @@
 .menu-open .sticky-cta {
   display: none !important;
 }
+
+/* Mobile menu overlay - force solid terracotta background */
+.mobile-menu-overlay {
+  background-color: #8B5E3C !important;
+}
