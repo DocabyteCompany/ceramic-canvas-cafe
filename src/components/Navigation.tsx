@@ -123,14 +123,14 @@ const Navigation = () => {
 
       {/* Mobile Menu - Full Screen Overlay */}
       <div 
-        className={`md:hidden fixed inset-0 mobile-menu-overlay bg-[#8B5E3C] transition-opacity duration-300 ease-out ${
-          isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        className={`md:hidden fixed inset-0 mobile-menu-overlay bg-[#8B5E3C] transition-all duration-300 ease-out ${
+          isOpen ? 'translate-x-0 opacity-100 pointer-events-auto' : 'translate-x-full opacity-0 pointer-events-none'
         }`}
         style={{ backgroundColor: '#8B5E3C' }}
         role="dialog"
         aria-modal="true"
       >
-        <div className={`${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-95'} transition-transform duration-300 ease-out h-full flex flex-col justify-between`}>
+        <div className="h-full flex flex-col">
           {/* Close button - Top Right */}
           <div className="absolute top-6 right-6 z-10">
             <button 
@@ -138,12 +138,26 @@ const Navigation = () => {
               className="p-2 text-white hover:text-white/80 transition-all duration-300"
               aria-label="Close menu"
             >
-              <X size={28} />
+              <X size={32} />
+            </button>
+          </div>
+
+          {/* Top Section - Logo */}
+          <div className="flex justify-center items-center pt-16 mb-12">
+            <button 
+              onClick={() => scrollToSection('inicio')}
+              className="hover:scale-105 transition-transform duration-200"
+            >
+              <img 
+                src={ceramicoLogo} 
+                alt="Cerámico Logo" 
+                className="h-16 w-auto"
+              />
             </button>
           </div>
 
           {/* Center Section - Navigation Links */}
-          <div className="flex-1 flex flex-col justify-center items-center space-y-12 px-6">
+          <div className="flex-1 flex flex-col justify-center items-center space-y-10 px-6 mb-12">
             <button 
               onClick={() => scrollToSection('inicio')}
               className="text-white text-4xl font-bold uppercase hover:text-white/80 transition-colors duration-200 tracking-wide"
@@ -177,14 +191,14 @@ const Navigation = () => {
           </div>
 
           {/* Bottom Section - Instagram Icon */}
-          <div className="flex justify-center pb-12">
+          <div className="flex justify-center pb-16">
             <a 
               href="https://instagram.com" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-white hover:text-white/80 transition-colors duration-200"
             >
-              <Instagram size={36} />
+              <Instagram size={40} />
             </a>
           </div>
         </div>
