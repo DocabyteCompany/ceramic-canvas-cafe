@@ -100,12 +100,23 @@ const Navigation = () => {
         </div>
 
         {/* Mobile Menu - Full Screen Overlay */}
-        <div className={`md:hidden fixed inset-0 bg-terracotta z-40 transition-transform duration-500 ${
+        <div className={`md:hidden fixed inset-0 bg-terracotta z-[60] transition-transform duration-500 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}>
           <div className="flex flex-col justify-between h-full">
-            {/* Top Section - Logo */}
-            <div className="flex justify-center pt-16">
+            {/* Top Section - Close Button and Logo */}
+            <div className="flex flex-col items-center pt-16">
+              {/* Close button */}
+              <div className="absolute top-6 right-6">
+                <button 
+                  onClick={() => setIsOpen(false)}
+                  className="p-2 text-white hover:text-white/80 transition-all duration-300"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+              
+              {/* Logo */}
               <button 
                 onClick={() => scrollToSection('inicio')}
                 className="hover:scale-105 transition-transform duration-200"
@@ -140,7 +151,7 @@ const Navigation = () => {
               </button>
               <Button 
                 onClick={() => scrollToSection('reservaciones')}
-                className="btn-ceramica-white-outline mt-8 px-8 max-w-xs"
+                className="btn-ceramica-white-outline mt-8 px-8 max-w-xs text-3xl font-medium"
               >
                 Reservar ahora
               </Button>
