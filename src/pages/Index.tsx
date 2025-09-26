@@ -164,9 +164,9 @@ const Index = () => {
             </div>
 
             {/* Grid de 3 imágenes */}
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-              {/* Primera imagen - Más grande (3 columnas) */}
-              <div className="md:col-span-3 bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center min-h-[200px] md:min-h-[250px]">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {/* Primera imagen - Más grande (2 columnas) */}
+              <div className="md:col-span-2 bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center h-[200px] md:h-[250px]">
                 <div className="text-center text-terracotta/60">
                   <div className="text-sm font-medium mb-1">Imagen Destacada</div>
                   <div className="text-xs">Subir imagen</div>
@@ -174,7 +174,7 @@ const Index = () => {
               </div>
               
               {/* Segunda imagen - Más pequeña (1 columna) */}
-              <div className="md:col-span-1 bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center min-h-[200px] md:min-h-[250px]">
+              <div className="md:col-span-1 bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center h-[200px] md:h-[250px]">
                 <div className="text-center text-terracotta/60">
                   <div className="text-xs font-medium mb-1">Imagen 2</div>
                   <div className="text-xs">Subir</div>
@@ -182,7 +182,7 @@ const Index = () => {
               </div>
               
               {/* Tercera imagen - Más pequeña (1 columna) */}
-              <div className="md:col-span-1 bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center min-h-[200px] md:min-h-[250px]">
+              <div className="md:col-span-1 bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center h-[200px] md:h-[250px]">
                 <div className="text-center text-terracotta/60">
                   <div className="text-xs font-medium mb-1">Imagen 3</div>
                   <div className="text-xs">Subir</div>
