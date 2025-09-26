@@ -134,7 +134,20 @@
 
   /* New white outline button for navbar */
   .btn-ceramica-white-outline {
-    @apply px-6 py-2 border-2 border-white text-white bg-transparent rounded-md font-medium transition-all duration-300 hover:bg-white hover:text-terracotta focus:bg-white focus:text-terracotta focus:outline-none focus:ring-2 focus:ring-white/50;
+    @apply px-6 py-2 border-2 border-white text-white rounded-md font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50;
+    background: transparent !important;
+    border-color: white !important;
+    color: white !important;
+  }
+  
+  .btn-ceramica-white-outline:hover {
+    background: white !important;
+    color: hsl(var(--terracotta)) !important;
+  }
+  
+  .btn-ceramica-white-outline:focus {
+    background: white !important;
+    color: hsl(var(--terracotta)) !important;
   }
 
   /* Smooth animations */
