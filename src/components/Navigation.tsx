@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
-import ceramicoLogo from '../assets/ceramico-logo-new.png';
+import ceramicoLogo from '../assets/ceramico-logo-white.png';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,7 +24,7 @@ const Navigation = () => {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled 
-        ? 'bg-white/90 backdrop-blur-md border-b border-gray-200/20' 
+        ? 'bg-terracotta/90 backdrop-blur-md border-b border-terracotta/20' 
         : 'bg-transparent border-b border-transparent'
     }`}>
       <div className="container mx-auto px-4 py-3">
@@ -69,7 +69,7 @@ const Navigation = () => {
             </button>
             <Button 
               onClick={() => scrollToSection('reservaciones')}
-              className="btn-ceramica"
+              className="btn-ceramica-white-outline"
             >
               Reservar ahora
             </Button>
@@ -91,7 +91,7 @@ const Navigation = () => {
 
           <button 
             onClick={() => setIsOpen(!isOpen)}
-            className="p-2 text-foreground hover:text-primary"
+            className="p-2 text-white hover:text-white/90"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -102,25 +102,25 @@ const Navigation = () => {
           <div className="md:hidden mt-4 pb-4 space-y-4">
             <button 
               onClick={() => scrollToSection('nosotros')}
-              className="block w-full text-left text-foreground hover:text-primary transition-colors"
+              className="block w-full text-left text-white hover:text-white/90 transition-colors"
             >
               Nosotros
             </button>
             <button 
               onClick={() => scrollToSection('experiencia')}
-              className="block w-full text-left text-foreground hover:text-primary transition-colors"
+              className="block w-full text-left text-white hover:text-white/90 transition-colors"
             >
               Experiencia
             </button>
             <button 
               onClick={() => scrollToSection('contacto')}
-              className="block w-full text-left text-foreground hover:text-primary transition-colors"
+              className="block w-full text-left text-white hover:text-white/90 transition-colors"
             >
               Contacto
             </button>
             <Button 
               onClick={() => scrollToSection('reservaciones')}
-              className="btn-ceramica w-full mt-4"
+              className="btn-ceramica-white-outline w-full mt-4"
             >
               Reservar ahora
             </Button>

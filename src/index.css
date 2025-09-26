@@ -124,11 +124,17 @@
 
   /* Navigation hover effects */
   .nav-link {
-    @apply relative text-foreground font-medium transition-all duration-300 ease-out;
-    @apply after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-primary;
+    @apply relative text-white font-medium transition-all duration-300 ease-out;
+    @apply after:content-[''] after:absolute after:w-full after:h-0.5;
     @apply after:left-0 after:bottom-[-4px] after:scale-x-0 after:origin-right;
     @apply after:transition-transform after:duration-300 after:ease-out;
-    @apply hover:text-primary hover:after:scale-x-100 hover:after:origin-left;
+    @apply hover:text-white/90 hover:after:scale-x-100 hover:after:origin-left;
+    @apply after:bg-white;
+  }
+
+  /* New white outline button for navbar */
+  .btn-ceramica-white-outline {
+    @apply px-6 py-2 border-2 border-white text-white bg-transparent rounded-md font-medium transition-all duration-300 hover:bg-white hover:text-terracotta focus:bg-white focus:text-terracotta focus:outline-none focus:ring-2 focus:ring-white/50;
   }
 
   /* Smooth animations */
