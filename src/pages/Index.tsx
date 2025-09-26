@@ -153,39 +153,44 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Imágenes - Full width below content */}
+          {/* Imágenes reorganizadas */}
           <div className="space-y-6">
-            {/* Imagen principal - Full width */}
-            <div className="bg-white/50 rounded-2xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center min-h-[300px] md:min-h-[400px]">
-              <div className="text-center text-terracotta/60">
-                <div className="text-lg font-medium mb-2">Imagen Principal</div>
-                <div className="text-sm">Subir imagen del taller</div>
+            {/* Imagen principal - Centrada, no full width */}
+            <div className="flex justify-center">
+              <div className="w-full max-w-4xl bg-white/50 rounded-2xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center min-h-[250px] md:min-h-[320px]">
+                <div className="text-center text-terracotta/60">
+                  <div className="text-lg font-medium mb-2">Imagen Principal</div>
+                  <div className="text-sm">Subir imagen del taller</div>
+                </div>
               </div>
             </div>
 
-            {/* Grid de 3 imágenes */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              {/* Primera imagen - Más grande (2 columnas) */}
-              <div className="md:col-span-2 bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center h-[200px] md:h-[250px]">
+            {/* Layout inferior: Imagen destacada a la izquierda + dos imágenes apiladas a la derecha */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Imagen destacada - Ocupa 2 columnas en desktop */}
+              <div className="md:col-span-2 bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center h-[280px] md:h-[320px]">
                 <div className="text-center text-terracotta/60">
                   <div className="text-sm font-medium mb-1">Imagen Destacada</div>
                   <div className="text-xs">Subir imagen</div>
                 </div>
               </div>
               
-              {/* Segunda imagen - Más pequeña (1 columna) */}
-              <div className="md:col-span-1 bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center h-[200px] md:h-[250px]">
-                <div className="text-center text-terracotta/60">
-                  <div className="text-xs font-medium mb-1">Imagen 2</div>
-                  <div className="text-xs">Subir</div>
+              {/* Columna derecha con dos imágenes apiladas */}
+              <div className="md:col-span-1 space-y-4">
+                {/* Segunda imagen */}
+                <div className="bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center h-[135px] md:h-[150px]">
+                  <div className="text-center text-terracotta/60">
+                    <div className="text-xs font-medium mb-1">Imagen 2</div>
+                    <div className="text-xs">Subir</div>
+                  </div>
                 </div>
-              </div>
-              
-              {/* Tercera imagen - Más pequeña (1 columna) */}
-              <div className="md:col-span-1 bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center h-[200px] md:h-[250px]">
-                <div className="text-center text-terracotta/60">
-                  <div className="text-xs font-medium mb-1">Imagen 3</div>
-                  <div className="text-xs">Subir</div>
+                
+                {/* Tercera imagen */}
+                <div className="bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center h-[135px] md:h-[150px]">
+                  <div className="text-center text-terracotta/60">
+                    <div className="text-xs font-medium mb-1">Imagen 3</div>
+                    <div className="text-xs">Subir</div>
+                  </div>
                 </div>
               </div>
             </div>
