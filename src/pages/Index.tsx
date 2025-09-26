@@ -121,36 +121,57 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Quiénes Somos */}
-      <section id="nosotros" className="section-padding ceramic-texture">
+      {/* Acerca de Cerámico */}
+      <section id="nosotros" className="section-padding bg-[#f8f3ed]">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <h2 className="font-display text-4xl md:text-5xl font-bold text-primary mb-6">
-                Más que una cafetería, un espacio para expresarte
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* Content - Left side on desktop */}
+            <div className="space-y-8 lg:pr-8">
+              <h2 className="font-display text-5xl md:text-6xl font-bold text-primary leading-tight">
+                Acerca de Cerámico
               </h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                En Cerámico creemos que la creatividad se mezcla perfectamente con el sabor. 
-                Cada pincelada es un momento para ti, un respiro del mundo exterior donde puedes 
-                conectar contigo mismo y con tus seres queridos.
-              </p>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                Nuestro taller es un refugio de paz donde las familias se reúnen, los amigos 
-                crean recuerdos y cada persona descubre el artista que lleva dentro. El aroma 
-                del café recién hecho acompaña cada creación, convirtiendo cada visita en una 
-                experiencia sensorial completa.
-              </p>
-              <div className="flex items-center gap-2 text-primary font-medium">
-                <Heart className="h-5 w-5" />
-                <span>Aquí la creatividad se mezcla con el sabor, cada pincelada es un momento para ti.</span>
+              
+              <div className="space-y-6">
+                <p className="text-lg text-terracotta/80 leading-relaxed font-medium">
+                  En Cerámico creemos que la creatividad se mezcla perfectamente con el sabor. 
+                  Cada pincelada es un momento para ti, un respiro del mundo exterior donde puedes 
+                  conectar contigo mismo y con tus seres queridos.
+                </p>
+                
+                <p className="text-lg text-terracotta/80 leading-relaxed font-medium">
+                  Nuestro taller es un refugio de paz donde las familias se reúnen, los amigos 
+                  crean recuerdos y cada persona descubre el artista que lleva dentro. El aroma 
+                  del café recién hecho acompaña cada creación, convirtiendo cada visita en una 
+                  experiencia sensorial completa.
+                </p>
               </div>
             </div>
-            <div className="relative">
-              <img 
-                src={heroImage2} 
-                alt="Colección de piezas de cerámica artesanales" 
-                className="rounded-2xl shadow-warm w-full"
-              />
+
+            {/* Images Grid - Right side on desktop */}
+            <div className="grid grid-cols-2 gap-4 h-full">
+              {/* Placeholder para imagen 1 - Más grande */}
+              <div className="col-span-2 bg-white/50 rounded-2xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center min-h-[240px]">
+                <div className="text-center text-terracotta/60">
+                  <div className="text-sm font-medium mb-1">Imagen Principal</div>
+                  <div className="text-xs">Subir imagen aquí</div>
+                </div>
+              </div>
+              
+              {/* Placeholder para imagen 2 */}
+              <div className="bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center min-h-[140px]">
+                <div className="text-center text-terracotta/60">
+                  <div className="text-sm font-medium mb-1">Imagen 2</div>
+                  <div className="text-xs">Subir imagen</div>
+                </div>
+              </div>
+              
+              {/* Placeholder para imagen 3 */}
+              <div className="bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center min-h-[140px]">
+                <div className="text-center text-terracotta/60">
+                  <div className="text-sm font-medium mb-1">Imagen 3</div>
+                  <div className="text-xs">Subir imagen</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
