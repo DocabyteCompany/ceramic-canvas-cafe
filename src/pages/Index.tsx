@@ -9,6 +9,10 @@ import heroImage1 from '@/assets/hero-ceramica-new1.jpg';
 import heroImage2 from '@/assets/hero-ceramica-new2.jpg';
 import heroImage3 from '@/assets/hero-ceramica-new3.jpg';
 import ceramicsWorkshopTools from '@/assets/ceramics-workshop-tools.jpg';
+import imagenDestacada from '@/assets/imagen-destacada.png';
+import imagenPrincipal from '@/assets/imagen-principal.png';
+import imagen2 from '@/assets/imagen-2.jpg';
+import imagen3 from '@/assets/imagen-3.png';
 
 import ceramicoLogo from '@/assets/ceramico-logo-new.png';
 import Autoplay from 'embla-carousel-autoplay';
@@ -156,37 +160,41 @@ const Index = () => {
           {/* Layout de imágenes - 2 columnas principales */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Columna izquierda - Imagen destacada con toda la altura */}
-            <div className="bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center h-[400px] md:h-[500px]">
-              <div className="text-center text-terracotta/60">
-                <div className="text-lg font-medium mb-2">Imagen Destacada</div>
-                <div className="text-sm">Subir imagen principal</div>
-              </div>
+            <div className="rounded-xl shadow-soft overflow-hidden h-[400px] md:h-[500px]">
+              <img 
+                src={imagenDestacada} 
+                alt="Imagen destacada del taller de cerámica"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+              />
             </div>
 
             {/* Columna derecha - Imagen principal arriba + 2 imágenes horizontales abajo */}
             <div className="space-y-4">
               {/* Imagen principal */}
-              <div className="bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center h-[240px] md:h-[240px]">
-                <div className="text-center text-terracotta/60">
-                  <div className="text-lg font-medium mb-2">Imagen Principal</div>
-                  <div className="text-sm">Subir imagen del taller</div>
-                </div>
+              <div className="rounded-xl shadow-soft overflow-hidden h-[240px] md:h-[240px]">
+                <img 
+                  src={imagenPrincipal} 
+                  alt="Imagen principal del taller"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                />
               </div>
 
               {/* Imágenes 2 y 3 lado a lado */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center h-[240px] md:h-[240px]">
-                  <div className="text-center text-terracotta/60">
-                    <div className="text-sm font-medium mb-1">Imagen 2</div>
-                    <div className="text-xs">Subir</div>
-                  </div>
+                <div className="rounded-xl shadow-soft overflow-hidden h-[240px] md:h-[240px]">
+                  <img 
+                    src={imagen2} 
+                    alt="Ambiente del taller de cerámica"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  />
                 </div>
                 
-                <div className="bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center h-[240px] md:h-[240px]">
-                  <div className="text-center text-terracotta/60">
-                    <div className="text-sm font-medium mb-1">Imagen 3</div>
-                    <div className="text-xs">Subir</div>
-                  </div>
+                <div className="rounded-xl shadow-soft overflow-hidden h-[240px] md:h-[240px]">
+                  <img 
+                    src={imagen3} 
+                    alt="Creaciones de cerámica"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  />
                 </div>
               </div>
             </div>
