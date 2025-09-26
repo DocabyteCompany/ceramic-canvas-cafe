@@ -122,54 +122,70 @@ const Index = () => {
       </section>
 
       {/* Acerca de Cerámico */}
-      <section id="nosotros" className="section-padding bg-[#f8f3ed]">
+      <section id="nosotros" className="section-padding ceramic-texture">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Content - Left side on desktop */}
-            <div className="space-y-8 lg:pr-8">
-              <h2 className="font-display text-5xl md:text-6xl font-bold text-primary leading-tight">
-                Acerca de Cerámico
+          {/* Título y Descripción */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-16">
+            {/* Título - Left side on desktop */}
+            <div className="space-y-2">
+              <h2 className="font-display text-5xl md:text-6xl font-bold text-primary leading-none">
+                Acerca de
               </h2>
+              <h2 className="font-display text-5xl md:text-6xl font-bold text-primary leading-none">
+                Cerámico
+              </h2>
+            </div>
+
+            {/* Descripción - Right side on desktop */}
+            <div className="space-y-6 lg:pt-4">
+              <p className="text-lg text-terracotta/80 leading-relaxed font-medium">
+                En Cerámico creemos que la creatividad se mezcla perfectamente con el sabor. 
+                Cada pincelada es un momento para ti, un respiro del mundo exterior donde puedes 
+                conectar contigo mismo y con tus seres queridos.
+              </p>
               
-              <div className="space-y-6">
-                <p className="text-lg text-terracotta/80 leading-relaxed font-medium">
-                  En Cerámico creemos que la creatividad se mezcla perfectamente con el sabor. 
-                  Cada pincelada es un momento para ti, un respiro del mundo exterior donde puedes 
-                  conectar contigo mismo y con tus seres queridos.
-                </p>
-                
-                <p className="text-lg text-terracotta/80 leading-relaxed font-medium">
-                  Nuestro taller es un refugio de paz donde las familias se reúnen, los amigos 
-                  crean recuerdos y cada persona descubre el artista que lleva dentro. El aroma 
-                  del café recién hecho acompaña cada creación, convirtiendo cada visita en una 
-                  experiencia sensorial completa.
-                </p>
+              <p className="text-lg text-terracotta/80 leading-relaxed font-medium">
+                Nuestro taller es un refugio de paz donde las familias se reúnen, los amigos 
+                crean recuerdos y cada persona descubre el artista que lleva dentro. El aroma 
+                del café recién hecho acompaña cada creación, convirtiendo cada visita en una 
+                experiencia sensorial completa.
+              </p>
+            </div>
+          </div>
+
+          {/* Imágenes - Full width below content */}
+          <div className="space-y-6">
+            {/* Imagen principal - Full width */}
+            <div className="bg-white/50 rounded-2xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center min-h-[300px] md:min-h-[400px]">
+              <div className="text-center text-terracotta/60">
+                <div className="text-lg font-medium mb-2">Imagen Principal</div>
+                <div className="text-sm">Subir imagen del taller</div>
               </div>
             </div>
 
-            {/* Images Grid - Right side on desktop */}
-            <div className="grid grid-cols-2 gap-4 h-full">
-              {/* Placeholder para imagen 1 - Más grande */}
-              <div className="col-span-2 bg-white/50 rounded-2xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center min-h-[240px]">
+            {/* Grid de 3 imágenes */}
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+              {/* Primera imagen - Más grande (3 columnas) */}
+              <div className="md:col-span-3 bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center min-h-[200px] md:min-h-[250px]">
                 <div className="text-center text-terracotta/60">
-                  <div className="text-sm font-medium mb-1">Imagen Principal</div>
-                  <div className="text-xs">Subir imagen aquí</div>
-                </div>
-              </div>
-              
-              {/* Placeholder para imagen 2 */}
-              <div className="bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center min-h-[140px]">
-                <div className="text-center text-terracotta/60">
-                  <div className="text-sm font-medium mb-1">Imagen 2</div>
+                  <div className="text-sm font-medium mb-1">Imagen Destacada</div>
                   <div className="text-xs">Subir imagen</div>
                 </div>
               </div>
               
-              {/* Placeholder para imagen 3 */}
-              <div className="bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center min-h-[140px]">
+              {/* Segunda imagen - Más pequeña (1 columna) */}
+              <div className="md:col-span-1 bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center min-h-[200px] md:min-h-[250px]">
                 <div className="text-center text-terracotta/60">
-                  <div className="text-sm font-medium mb-1">Imagen 3</div>
-                  <div className="text-xs">Subir imagen</div>
+                  <div className="text-xs font-medium mb-1">Imagen 2</div>
+                  <div className="text-xs">Subir</div>
+                </div>
+              </div>
+              
+              {/* Tercera imagen - Más pequeña (1 columna) */}
+              <div className="md:col-span-1 bg-white/50 rounded-xl shadow-soft border-2 border-dashed border-terracotta/20 flex items-center justify-center min-h-[200px] md:min-h-[250px]">
+                <div className="text-center text-terracotta/60">
+                  <div className="text-xs font-medium mb-1">Imagen 3</div>
+                  <div className="text-xs">Subir</div>
                 </div>
               </div>
             </div>
