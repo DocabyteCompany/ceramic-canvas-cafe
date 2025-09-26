@@ -138,13 +138,13 @@ const Index = () => {
 
             {/* Descripción - Right side on desktop */}
             <div className="space-y-6 lg:pt-4">
-              <p className="text-lg text-terracotta/80 leading-relaxed font-medium">
+              <p className="text-sm md:text-base text-terracotta/80 leading-relaxed font-medium">
                 En Cerámico creemos que la creatividad se mezcla perfectamente con el sabor. 
                 Cada pincelada es un momento para ti, un respiro del mundo exterior donde puedes 
                 conectar contigo mismo y con tus seres queridos.
               </p>
               
-              <p className="text-lg text-terracotta/80 leading-relaxed font-medium">
+              <p className="text-sm md:text-base text-terracotta/80 leading-relaxed font-medium">
                 Nuestro taller es un refugio de paz donde las familias se reúnen, los amigos 
                 crean recuerdos y cada persona descubre el artista que lleva dentro. El aroma 
                 del café recién hecho acompaña cada creación, convirtiendo cada visita en una 
