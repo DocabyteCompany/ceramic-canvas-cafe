@@ -1,8 +1,13 @@
+import { useState } from 'react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { CheckCircle, Calendar, Clock, Users, Mail, Phone, MapPin } from 'lucide-react';
+import { CheckCircle, Calendar, Clock, Users, Mail, Phone, MapPin, Loader2, AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useReservations } from '@/hooks/useReservations';
+import { useNotification } from '@/contexts/NotificationContext';
+// Eliminado envío de correo: no se usa emailService
 import type { ReservationData } from '../ReservationWizard';
 
 interface ConfirmationScreenProps {
@@ -11,11 +16,78 @@ interface ConfirmationScreenProps {
 }
 
 export const ConfirmationScreen = ({ reservationData, onComplete }: ConfirmationScreenProps) => {
-  const handleConfirm = () => {
-    // Simulate reservation processing
-    setTimeout(() => {
+  const [isCreatingReservation, setIsCreatingReservation] = useState(false);
+  const [reservationError, setReservationError] = useState<string | null>(null);
+  const [reservationSuccess, setReservationSuccess] = useState(false);
+  const [createdReservationId, setCreatedReservationId] = useState<string | null>(null);
+  // Envío de correo deshabilitado
+
+  const { createReservation } = useReservations();
+  const { showSuccess, showError } = useNotification();
+
+  const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+  const handleConfirm = async () => {
+    if (!reservationData.date || !reservationData.timeSlot) {
+      setReservationError('Datos de reservación incompletos');
+      return;
+    }
+
+    try {
+      setIsCreatingReservation(true);
+      setReservationError(null);
+
+      // Preparar datos para la reservación
+      const reservationPayload = {
+        time_slot_id: reservationData.timeSlot?.id || 1, // Usar el ID real del time slot seleccionado
+        reservation_date: reservationData.date.toISOString().split('T')[0],
+        customer_name: reservationData.name,
+        customer_email: reservationData.email,
+        customer_phone: reservationData.phone,
+        guests: reservationData.guests
+      };
+
+      // Marcar tiempo de inicio para garantizar mínimo 2.5s en éxito
+      const startedAt = performance.now();
+      const { success, data, error } = await createReservation(reservationPayload);
+
+      // Si falla, mostramos error inmediatamente (sin esperar)
+      if (!success || !data) {
+        const errorMessage = error || 'Error al crear la reservación';
+        setReservationError(errorMessage);
+        showError('Error al crear reservación', errorMessage);
+        setIsCreatingReservation(false);
+        return;
+      }
+
+      // Éxito: asegurar mínimo 2.5s en estado "Confirmando…"
+      const elapsedMs = performance.now() - startedAt;
+      const remainingMs = Math.max(0, 2500 - elapsedMs);
+      if (remainingMs > 0) {
+        await sleep(remainingMs);
+      }
+
+      setCreatedReservationId(data.id);
+      setReservationSuccess(true);
+
+      // Salir del estado de carga después del mínimo garantizado
+      setIsCreatingReservation(false);
+
+      // Envío de correo deshabilitado: mostramos éxito sin email
+      showSuccess(
+        '¡Reservación confirmada!',
+        `Tu reservación ha sido creada exitosamente. ID: ${data.id}.`,
+        5000
+      );
+
+      // Continuar al cierre/next step
       onComplete();
-    }, 800);
+    } catch (error: any) {
+      const errorMessage = error.message || 'Error inesperado al crear la reservación';
+      setReservationError(errorMessage);
+      showError('Error inesperado', errorMessage);
+      setIsCreatingReservation(false);
+    }
   };
 
   return (
@@ -23,13 +95,23 @@ export const ConfirmationScreen = ({ reservationData, onComplete }: Confirmation
       {/* Header */}
       <div className="text-center">
         <div className="flex justify-center mb-4">
-          <CheckCircle size={64} className="text-primary" />
+          {reservationSuccess ? (
+            <CheckCircle size={64} className="text-green-500" />
+          ) : isCreatingReservation ? (
+            <Loader2 size={64} className="text-primary animate-spin" />
+          ) : (
+            <CheckCircle size={64} className="text-primary" />
+          )}
         </div>
         <h3 className="font-display text-2xl text-foreground mb-2">
-          ¡Tu lugar ha sido reservado!
+          {reservationSuccess ? '¡Reservación confirmada!' : 
+           isCreatingReservation ? 'Procesando tu reservación...' : 
+           'Confirma tu reservación'}
         </h3>
         <p className="text-muted-foreground text-lg">
-          Te esperamos con café y creatividad
+          {reservationSuccess ? 'Te esperamos con café y creatividad' :
+           isCreatingReservation ? 'Por favor espera mientras procesamos tu solicitud' :
+           'Revisa los detalles y confirma tu experiencia'}
         </p>
       </div>
 
@@ -96,6 +178,26 @@ export const ConfirmationScreen = ({ reservationData, onComplete }: Confirmation
         </CardContent>
       </Card>
 
+      {/* Error Message */}
+      {reservationError && (
+        <Alert className="max-w-md mx-auto border-red-200 bg-red-50">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            <strong>Error:</strong> {reservationError}
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {/* Success Message */}
+      {reservationSuccess && createdReservationId && (
+        <Alert className="max-w-md mx-auto border-green-200 bg-green-50">
+          <CheckCircle className="h-4 w-4" />
+          <AlertDescription>
+            <strong>¡Éxito!</strong> Tu reservación ha sido creada con el ID: {createdReservationId}
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Important Notes */}
       <Card className="max-w-md mx-auto border-olive/30 bg-olive/10">
         <CardContent className="p-6">
@@ -113,11 +215,34 @@ export const ConfirmationScreen = ({ reservationData, onComplete }: Confirmation
       <div className="flex justify-center pt-4">
         <Button 
           onClick={handleConfirm}
-          className="btn-ceramica text-lg px-16 py-6"
+          disabled={isCreatingReservation || isSendingEmail || reservationSuccess}
+          className="btn-ceramica text-lg px-16 py-6 relative overflow-hidden"
         >
-          Confirmar mi experiencia
+          {isCreatingReservation ? (
+            <>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/20 to-primary/10 animate-pulse" />
+              <div className="relative z-10 flex items-center justify-center w-full">
+                <div className="w-full bg-white/40 rounded-full h-2 mr-4 overflow-hidden">
+                  <div 
+                    className="bg-white h-2 rounded-full transition-all duration-1000 ease-out shimmer-2-5s" 
+                    style={{ 
+                      width: '100%',
+                      background: 'linear-gradient(90deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0.8) 100%)'
+                    }} 
+                  />
+                </div>
+                <span className="text-white font-medium">Confirmando...</span>
+              </div>
+            </>
+          ) : reservationSuccess ? (
+            '¡Reservación confirmada!'
+          ) : (
+            'Confirmar mi experiencia'
+          )}
         </Button>
       </div>
+
+      {/* Mensajería de email eliminada */}
     </div>
   );
 };

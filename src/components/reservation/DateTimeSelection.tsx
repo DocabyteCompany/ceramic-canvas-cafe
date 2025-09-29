@@ -1,91 +1,166 @@
-import { useState } from 'react';
+import { useState, useEffect, memo, useCallback } from 'react';
 import { format, addDays, isSameDay, isAfter, startOfDay } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { CalendarIcon, Clock, Users } from 'lucide-react';
+import { CalendarIcon, Clock, Users, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
+import { useTimeSlots } from '@/hooks/useTimeSlots';
+import { useAvailability } from '@/hooks/useAvailability';
 import type { ReservationData } from '../ReservationWizard';
+import type { TimeSlotWithAvailability } from '@/services/timeSlotsService';
 
 interface DateTimeSelectionProps {
   reservationData: ReservationData;
   onComplete: (data: Partial<ReservationData>) => void;
 }
 
-// Time slots for different days
-const weekdayTimeSlots = [
-  { value: '10:00', label: '10:00 AM - 11:45 AM', available: 16, maxCapacity: 20 },
-  { value: '12:00', label: '12:00 PM - 1:45 PM', available: 12, maxCapacity: 20 },
-  { value: '14:00', label: '2:00 PM - 3:45 PM', available: 8, maxCapacity: 20 },
-  { value: '16:00', label: '4:00 PM - 5:45 PM', available: 6, maxCapacity: 20 },
-  { value: '18:15', label: '6:15 PM - 8:00 PM', available: 4, maxCapacity: 20 },
-];
+// Función para formatear time slot para el componente
+const formatTimeSlotForDisplay = (slot: TimeSlotWithAvailability) => {
+  const startTime = slot.start_time.substring(0, 5); // HH:MM
+  const endTime = slot.end_time.substring(0, 5); // HH:MM
+  
+  // Formatear para mostrar
+  const formatTime = (time: string) => {
+    const [hours, minutes] = time.split(':');
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+    return `${displayHour}:${minutes} ${ampm}`;
+  };
 
-const sundayTimeSlots = [
-  { value: '10:00', label: '10:00 AM - 11:45 AM', available: 12, maxCapacity: 15 },
-  { value: '11:45', label: '11:45 AM - 1:30 PM', available: 8, maxCapacity: 15 },
-  { value: '13:30', label: '1:30 PM - 3:00 PM', available: 5, maxCapacity: 15 },
-];
-
-// Mock function to get availability for a specific date
-const getAvailabilityForDate = (date: Date) => {
-  const dayOfWeek = date.getDay();
-  const randomFactor = Math.sin(date.getTime()) * 0.3 + 0.7; // Creates variation
-  
-  // Monday (1) and Saturday (6) are closed
-  if (dayOfWeek === 1 || dayOfWeek === 6) {
-    return [];
-  }
-  
-  // Sunday (0) has special hours
-  const slots = dayOfWeek === 0 ? sundayTimeSlots : weekdayTimeSlots;
-  
-  return slots.map(slot => ({
-    ...slot,
-    available: Math.max(0, Math.floor(slot.available * randomFactor)),
-    isAvailable: slot.available > 0
-  }));
+  return {
+    value: startTime,
+    label: `${formatTime(startTime)} - ${formatTime(endTime)}`,
+    available: slot.available,
+    maxCapacity: slot.max_capacity,
+    isAvailable: slot.isAvailable,
+    occupancyPercentage: slot.occupancyPercentage
+  };
 };
 
-export const DateTimeSelection = ({ reservationData, onComplete }: DateTimeSelectionProps) => {
+const DateTimeSelectionComponent = ({ reservationData, onComplete }: DateTimeSelectionProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(reservationData.date);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<{value: string; label: string; available: number} | null>(reservationData.timeSlot);
+  const [availableTimeSlots, setAvailableTimeSlots] = useState<TimeSlotWithAvailability[]>([]);
+  const [loadingTimeSlots, setLoadingTimeSlots] = useState(false);
+  const [timeSlotsError, setTimeSlotsError] = useState<string | null>(null);
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+
+  const { isDayAvailable } = useTimeSlots();
+  const { getAvailabilityForDate } = useAvailability();
+
+  // Logs para debugging
+  console.log('🔍 DateTimeSelection - Estado actual:', {
+    selectedDate,
+    selectedTimeSlot,
+    availableTimeSlots: availableTimeSlots.length,
+    loadingTimeSlots,
+    timeSlotsError
+  });
 
   // Disable Mondays and Saturdays (business closed days)
   const isDateDisabled = (date: Date) => {
     const dayOfWeek = date.getDay();
-    return dayOfWeek === 1 || dayOfWeek === 6 || date < startOfDay(new Date());
+    const today = startOfDay(new Date());
+    const maxDate = new Date();
+    maxDate.setMonth(maxDate.getMonth() + 3); // Máximo 3 meses en el futuro
+    
+    // No permitir fechas pasadas
+    if (date < today) {
+      return true;
+    }
+    
+    // No permitir fechas más de 3 meses en el futuro
+    if (date > maxDate) {
+      return true;
+    }
+    
+    // No permitir lunes (1) y sábados (6)
+    if (dayOfWeek === 1 || dayOfWeek === 6) {
+      return true;
+    }
+    
+    // Verificar si el día está disponible según las reglas de negocio
+    return !isDayAvailable(dayOfWeek);
   };
 
-  const handleDateSelect = (date: Date) => {
+  const handleDateSelect = useCallback(async (date: Date) => {
+    console.log('📅 handleDateSelect - Fecha seleccionada:', date);
     setSelectedDate(date);
     setSelectedTimeSlot(null); // Reset time selection when date changes
-  };
+    setTimeSlotsError(null);
+    
+    // Cargar time slots disponibles para la fecha seleccionada
+    try {
+      setLoadingTimeSlots(true);
+      const dateString = date.toISOString().split('T')[0]; // YYYY-MM-DD
+      console.log('📅 handleDateSelect - Fecha formateada:', dateString);
+      
+      console.log('📅 handleDateSelect - Llamando a getAvailabilityForDate...');
+      const timeSlots = await getAvailabilityForDate(dateString);
+      console.log('📅 handleDateSelect - Time slots recibidos:', timeSlots);
+      
+      setAvailableTimeSlots(timeSlots);
+      console.log('📅 handleDateSelect - Time slots establecidos en estado');
+    } catch (error: any) {
+      console.error('❌ handleDateSelect - Error:', error);
+      setTimeSlotsError(error.message || 'Error al cargar horarios disponibles');
+      setAvailableTimeSlots([]);
+    } finally {
+      setLoadingTimeSlots(false);
+    }
+  }, [getAvailabilityForDate]);
 
-  const handleTimeSlotSelect = (slot: any) => {
+  const handleTimeSlotSelect = useCallback((slot: TimeSlotWithAvailability) => {
+    // Limpiar timeout anterior si existe
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    
     // Convert the slot back to the expected format
     const timeSlot = {
-      value: slot.value,
-      label: slot.label,
-      available: slot.available
+      value: slot.start_time.substring(0, 5), // HH:MM
+      label: formatTimeSlotForDisplay(slot).label,
+      available: slot.available,
+      id: slot.id // Incluir el ID del time slot
     };
     setSelectedTimeSlot(timeSlot);
-  };
+    
+    // Avanzar automáticamente después de 1.5 segundos
+    const newTimeoutId = setTimeout(() => {
+      if (selectedDate && timeSlot) {
+        onComplete({
+          date: selectedDate,
+          time: timeSlot.value,
+          timeSlot: timeSlot
+        });
+      }
+    }, 1500);
+    
+    setTimeoutId(newTimeoutId);
+  }, [selectedDate, onComplete, timeoutId]);
 
-  const handleContinue = () => {
-    if (selectedDate && selectedTimeSlot) {
-      onComplete({
-        date: selectedDate,
-        time: selectedTimeSlot.value,
-        timeSlot: selectedTimeSlot
-      });
+
+  // Cargar time slots cuando se selecciona una fecha
+  useEffect(() => {
+    if (selectedDate) {
+      handleDateSelect(selectedDate);
     }
-  };
+  }, [selectedDate]);
 
-  const selectedDateAvailability = selectedDate ? getAvailabilityForDate(selectedDate) : [];
+  // Cleanup del timeout cuando el componente se desmonte
+  useEffect(() => {
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [timeoutId]);
 
   return (
     <div className="space-y-8">
@@ -150,6 +225,18 @@ export const DateTimeSelection = ({ reservationData, onComplete }: DateTimeSelec
             )}
           </div>
         )}
+
+        {/* Información sobre días disponibles */}
+        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <h5 className="text-sm font-medium text-blue-800 mb-2">Días disponibles para reservaciones:</h5>
+          <div className="text-xs text-blue-700 space-y-1">
+            <div>• <strong>Martes a Viernes:</strong> 10:00 AM - 8:00 PM (horarios completos)</div>
+            <div>• <strong>Domingo:</strong> 10:00 AM - 3:00 PM (horarios especiales)</div>
+            <div>• <strong>Lunes y Sábado:</strong> Cerrado</div>
+            <div>• <strong>Anticipación:</strong> Máximo 3 meses</div>
+            <div>• <strong>Capacidad:</strong> 20 personas por sesión (máximo 5 por reservación)</div>
+          </div>
+        </div>
       </div>
 
       {/* Time Selection */}
@@ -160,72 +247,96 @@ export const DateTimeSelection = ({ reservationData, onComplete }: DateTimeSelec
             Horario disponible para {format(selectedDate, 'EEEE, d MMMM', { locale: es })}
           </h4>
           
-          <div className="grid gap-4">
-            {selectedDateAvailability.map((slot, index) => {
-              const isSelected = selectedTimeSlot?.value === slot.value;
-              const occupancyPercentage = ((slot.maxCapacity - slot.available) / slot.maxCapacity) * 100;
-              
-              return (
-                <Card
-                  key={index}
-                  className={`cursor-pointer transition-all duration-150 hover:shadow-md ${
-                    isSelected ? 'border-primary bg-primary/5' : ''
-                  } ${!slot.isAvailable ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  onClick={() => slot.isAvailable && handleTimeSlotSelect(slot)}
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                         <div className="flex items-center gap-3 mb-2">
-                           <h5 className="font-semibold text-lg">{slot.label}</h5>
-                           <span className="text-sm text-muted-foreground">
-                             {selectedDate?.getDay() === 0 && slot.value === '13:30' ? '1h 30m' : '1h 45m'}
-                           </span>
-                         </div>
-                        
-                        <div className="flex items-center gap-4">
-                          <div className="flex items-center gap-1 text-sm">
-                            <Users size={16} className="text-primary" />
-                            <span className="font-medium">{slot.available}</span>
-                            <span className="text-muted-foreground">lugares disponibles</span>
+          {/* Loading State */}
+          {loadingTimeSlots && (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin mr-2" />
+              <span>Cargando horarios disponibles...</span>
+            </div>
+          )}
+
+          {/* Error State */}
+          {timeSlotsError && (
+            <Alert className="border-red-200 bg-red-50">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                {timeSlotsError}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {/* Time Slots */}
+          {!loadingTimeSlots && !timeSlotsError && (
+            <div className="grid gap-4">
+              {availableTimeSlots.length === 0 ? (
+                <Alert>
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    No hay horarios disponibles para esta fecha.
+                  </AlertDescription>
+                </Alert>
+              ) : (
+                availableTimeSlots
+                  .filter(slot => slot.start_time && slot.end_time) // Filtrar slots inválidos
+                  .map((slot, index) => {
+                    const isSelected = selectedTimeSlot?.value === slot.start_time.substring(0, 5);
+                    const displaySlot = formatTimeSlotForDisplay(slot);
+                    
+                    return (
+                    <Card
+                      key={slot.id || index}
+                      className={`cursor-pointer transition-all duration-150 hover:shadow-md ${
+                        isSelected ? 'border-primary bg-primary/5' : ''
+                      } ${!slot.isAvailable ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      onClick={() => slot.isAvailable && handleTimeSlotSelect(slot)}
+                    >
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                             <div className="flex items-center gap-3 mb-2">
+                               <h5 className="font-semibold text-lg">{displaySlot.label}</h5>
+                               <span className="text-sm text-muted-foreground">
+                                 {selectedDate?.getDay() === 0 && slot.start_time === '13:30:00' ? '1h 30m' : '1h 45m'}
+                               </span>
+                             </div>
+                            
+                            <div className="flex items-center gap-4">
+                              <div className="flex items-center gap-1 text-sm">
+                                <Users size={16} className="text-primary" />
+                                <span className="font-medium">{slot.available}</span>
+                                <span className="text-muted-foreground">lugares disponibles</span>
+                              </div>
+                              
+                              <div className="flex-1 max-w-32">
+                                <Progress 
+                                  value={slot.occupancyPercentage} 
+                                  className="h-2"
+                                />
+                              </div>
+                            </div>
                           </div>
                           
-                          <div className="flex-1 max-w-32">
-                            <Progress 
-                              value={occupancyPercentage} 
-                              className="h-2"
-                            />
-                          </div>
+                          <Button
+                            variant={isSelected ? "default" : "outline"}
+                            disabled={!slot.isAvailable}
+                            className={isSelected ? "bg-primary" : ""}
+                          >
+                            {!slot.isAvailable ? 'Lleno' : isSelected ? 'Seleccionado' : 'Reservar'}
+                          </Button>
                         </div>
-                      </div>
-                      
-                      <Button
-                        variant={isSelected ? "default" : "outline"}
-                        disabled={!slot.isAvailable}
-                        className={isSelected ? "bg-primary" : ""}
-                      >
-                        {!slot.isAvailable ? 'Lleno' : isSelected ? 'Seleccionado' : 'Reservar'}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })
+              )}
+            </div>
+          )}
         </div>
       )}
 
-      {/* Continue Button */}
-      {selectedDate && selectedTimeSlot && (
-        <div className="flex justify-center pt-4 animate-fade-in">
-          <Button 
-            onClick={handleContinue}
-            className="btn-ceramica text-lg px-12"
-          >
-            Continuar al siguiente paso
-          </Button>
-        </div>
-      )}
     </div>
   );
 };
+
+// Exportar con memo para optimización
+export const DateTimeSelection = memo(DateTimeSelectionComponent);

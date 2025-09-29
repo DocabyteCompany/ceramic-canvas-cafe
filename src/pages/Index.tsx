@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import Navigation from '@/components/Navigation';
 import ReservationWizard from '@/components/ReservationWizard';
+import SupabaseTest from '@/components/SupabaseTest';
+import { EmailTest } from '@/components/EmailTest';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
@@ -72,33 +74,41 @@ const Index = () => {
               loop: true,
             }}
           >
-            <CarouselContent className="h-full">
-              {heroImages.map((image, index) => (
-                <CarouselItem key={index} className="h-full">
-                  <div className="relative h-full">
-                    <img 
-                      src={image.src} 
-                      alt={image.alt}
-                      className="hero-image transition-all duration-1500 ease-in-out"
-                    />
-                    
-                    {/* Overlay gradiente */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
+<CarouselContent className="h-full">
+  {heroImages.map((image, index) => (
+    <CarouselItem key={index} className="relative h-full">
+      {/* Este div es CRÍTICO. Le damos un alto y ancho fijos para que el carrusel
+        pueda medirlo, y lo hacemos relativo para posicionar el texto encima.
+      */}
+      <div className="h-full w-full">
+        <img 
+          src={image.src} 
+          alt={image.alt}
+          className="block h-full w-full object-cover object-center"
+        />
+      </div>
+
+      {/* El overlay y el texto ahora van FUERA del div de la imagen,
+        pero DENTRO del CarouselItem relativo. Esto los superpone correctamente.
+      */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+      
+      {/* Contenido de texto original (lo he vuelto a añadir) */}
+      <div className="absolute bottom-0 left-0 p-4 sm:p-5 md:p-14 text-white max-w-2xl">
+        <h1 className="font-display text-4xl sm:text-5xl md:text-7xl font-bold mb-4 leading-tight tracking-tight">
+          Crea y <em className="italic transform skew-x-12 inline-block">Disfruta</em>
+        </h1>
+        <p className="font-body text-base sm:text-lg md:text-xl font-light mb-4 opacity-95 leading-relaxed">
+          La creatividad y el café se encuentran en un solo lugar.
+        </p>
+      </div>
+    </CarouselItem>
+  ))}
+</CarouselContent>
           </Carousel>
           
           {/* Contenido */}
-          <div className="absolute bottom-0 left-0 p-4 sm:p-5 md:p-14 text-white max-w-2xl">
-            <h1 className="font-display text-4xl sm:text-5xl md:text-7xl font-bold mb-4 leading-tight tracking-tight">
-              Crea y <em className="italic transform skew-x-12 inline-block">Disfruta</em>
-            </h1>
-            <p className="font-body text-base sm:text-lg md:text-xl font-light mb-4 opacity-95 leading-relaxed">
-              La creatividad y el café se encuentran en un solo lugar.
-            </p>
-          </div>
+
         </div>
       </section>
 
@@ -390,6 +400,36 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      {/* Prueba de Supabase - Temporal para desarrollo */}
+      <section id="supabase-test" className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <h2 className="font-display text-3xl font-bold text-primary mb-4">
+              Prueba de Conexión Supabase
+            </h2>
+            <p className="text-muted-foreground">
+              Verificación de la configuración de la base de datos (solo para desarrollo)
+            </p>
+          </div>
+          <SupabaseTest />
+        </div>
+      </section>
+
+      {/* Email Test Section - Solo para desarrollo */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Prueba de Correo
+            </h2>
+            <p className="text-muted-foreground">
+              Prueba el envío de correos de confirmación (solo para desarrollo)
+            </p>
+          </div>
+          <EmailTest />
+        </div>
+      </section>
 
       {/* Sticky CTA */}
       <div className="fixed bottom-4 right-4 z-40 md:hidden">

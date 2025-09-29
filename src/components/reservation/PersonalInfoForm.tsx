@@ -3,7 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { User, Mail, Phone, Users, ArrowLeft } from 'lucide-react';
+import { User, Mail, Phone, Users, ArrowLeft, AlertCircle, Loader2 } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useReservations } from '@/hooks/useReservations';
 import type { ReservationData } from '../ReservationWizard';
 
 interface PersonalInfoFormProps {
@@ -22,6 +24,11 @@ export const PersonalInfoForm = ({ reservationData, onComplete, onBack, maxGuest
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [checkingAvailability, setCheckingAvailability] = useState(false);
+  const [availabilityError, setAvailabilityError] = useState<string | null>(null);
+  const [currentAvailability, setCurrentAvailability] = useState<number>(maxGuests);
+
+  const { checkAvailability } = useReservations();
 
   const handleInputChange = (field: string, value: string | number) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -29,6 +36,67 @@ export const PersonalInfoForm = ({ reservationData, onComplete, onBack, maxGuest
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
+
+    // Verificar disponibilidad cuando cambia el número de huéspedes
+    if (field === 'guests' && typeof value === 'number') {
+      checkRealTimeAvailability(value);
+    }
+  };
+
+  // Verificar disponibilidad en tiempo real cuando cambia el número de huéspedes
+  const checkRealTimeAvailability = async (guests: number) => {
+    if (!reservationData.date || !reservationData.timeSlot) {
+      return;
+    }
+
+    try {
+      setCheckingAvailability(true);
+      setAvailabilityError(null);
+
+      // Obtener el time_slot_id real del time slot seleccionado
+      // Por ahora usamos un valor temporal basado en el horario seleccionado
+      // En una implementación completa, esto vendría del time slot seleccionado
+      const timeSlotId = getTimeSlotIdFromTime(reservationData.timeSlot.value);
+      const dateString = reservationData.date.toISOString().split('T')[0];
+      
+      const { available, canReserve, error } = await checkAvailability(timeSlotId, dateString, guests);
+      
+      if (error) {
+        setAvailabilityError(error);
+        return;
+      }
+
+      setCurrentAvailability(available);
+      
+      if (!canReserve) {
+        setErrors(prev => ({ 
+          ...prev, 
+          guests: `Solo hay ${available} lugares disponibles para este horario` 
+        }));
+      }
+    } catch (error: any) {
+      setAvailabilityError(error.message);
+    } finally {
+      setCheckingAvailability(false);
+    }
+  };
+
+  // Función temporal para obtener time_slot_id basado en el horario
+  // En una implementación completa, esto vendría del time slot seleccionado
+  const getTimeSlotIdFromTime = (time: string): number => {
+    // Mapeo temporal de horarios a IDs
+    // En la implementación real, esto vendría del time slot seleccionado
+    const timeToIdMap: Record<string, number> = {
+      '10:00': 1,
+      '12:00': 2,
+      '14:00': 3,
+      '16:00': 4,
+      '18:15': 5,
+      '11:45': 6,
+      '13:30': 7
+    };
+    
+    return timeToIdMap[time] || 1;
   };
 
   const validateForm = () => {
@@ -36,6 +104,8 @@ export const PersonalInfoForm = ({ reservationData, onComplete, onBack, maxGuest
 
     if (!formData.name.trim()) {
       newErrors.name = 'El nombre es requerido';
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = 'El nombre debe tener al menos 2 caracteres';
     }
 
     if (!formData.email.trim()) {
@@ -50,8 +120,12 @@ export const PersonalInfoForm = ({ reservationData, onComplete, onBack, maxGuest
       newErrors.phone = 'Ingresa un número de teléfono válido';
     }
 
-    if (formData.guests > maxGuests) {
-      newErrors.guests = `Solo hay ${maxGuests} lugares disponibles`;
+    if (formData.guests < 1) {
+      newErrors.guests = 'Debe ser al menos 1 persona';
+    } else if (formData.guests > 5) {
+      newErrors.guests = 'Máximo 5 personas por reservación';
+    } else if (formData.guests > currentAvailability) {
+      newErrors.guests = `Solo hay ${currentAvailability} lugares disponibles`;
     }
 
     setErrors(newErrors);
@@ -66,7 +140,7 @@ export const PersonalInfoForm = ({ reservationData, onComplete, onBack, maxGuest
     }
   };
 
-  const isFormValid = formData.name && formData.email && formData.phone && formData.guests <= maxGuests;
+  const isFormValid = formData.name && formData.email && formData.phone && formData.guests <= currentAvailability && formData.guests >= 1 && !checkingAvailability;
 
   return (
     <div className="space-y-8">
@@ -146,16 +220,20 @@ export const PersonalInfoForm = ({ reservationData, onComplete, onBack, maxGuest
           <Label className="flex items-center gap-2 text-base">
             <Users size={18} className="text-primary" />
             Número de personas *
+            {checkingAvailability && (
+              <Loader2 className="h-4 w-4 animate-spin text-primary" />
+            )}
           </Label>
           <Select 
             value={formData.guests.toString()} 
             onValueChange={(value) => handleInputChange('guests', parseInt(value))}
+            disabled={checkingAvailability}
           >
             <SelectTrigger className={`h-12 text-base ${errors.guests ? 'border-destructive' : ''}`}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {Array.from({ length: Math.min(5, maxGuests) }, (_, i) => i + 1).map((num) => (
+              {Array.from({ length: Math.min(5, currentAvailability) }, (_, i) => i + 1).map((num) => (
                 <SelectItem key={num} value={num.toString()}>
                   {num} {num === 1 ? 'persona' : 'personas'}
                 </SelectItem>
@@ -165,8 +243,17 @@ export const PersonalInfoForm = ({ reservationData, onComplete, onBack, maxGuest
           {errors.guests && (
             <p className="text-sm text-destructive">{errors.guests}</p>
           )}
+          {availabilityError && (
+            <Alert className="border-red-200 bg-red-50">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription className="text-sm">
+                {availabilityError}
+              </AlertDescription>
+            </Alert>
+          )}
           <p className="text-sm text-muted-foreground">
-            Lugares disponibles en este horario: {maxGuests}
+            Lugares disponibles en este horario: {currentAvailability}
+            {checkingAvailability && ' (verificando...)'}
           </p>
         </div>
 

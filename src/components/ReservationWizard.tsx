@@ -7,6 +7,7 @@ import { DateTimeSelection } from './reservation/DateTimeSelection';
 import { PersonalInfoForm } from './reservation/PersonalInfoForm';
 import { ConfirmationScreen } from './reservation/ConfirmationScreen';
 import { ConfirmationModal } from './reservation/ConfirmationModal';
+import { useTimeSlots } from '@/hooks/useTimeSlots';
 
 export interface ReservationData {
   date: Date | null;
@@ -15,6 +16,7 @@ export interface ReservationData {
     value: string;
     label: string;
     available: number;
+    id: number;
   } | null;
   name: string;
   email: string;
@@ -25,6 +27,8 @@ export interface ReservationData {
 const ReservationWizard = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [reservationData, setReservationData] = useState<ReservationData>({
     date: null,
     time: '',
@@ -35,20 +39,28 @@ const ReservationWizard = () => {
     guests: 1
   });
 
+  const { loading: timeSlotsLoading, error: timeSlotsError } = useTimeSlots();
+
   const updateReservationData = (data: Partial<ReservationData>) => {
     setReservationData(prev => ({ ...prev, ...data }));
   };
 
   const handleStepComplete = (step: number, data?: Partial<ReservationData>) => {
-    if (data) {
-      updateReservationData(data);
-    }
-    
-    if (step < 3) {
-      setCurrentStep(step + 1);
-    } else {
-      // Step 3 completed - show modal
-      setShowConfirmationModal(true);
+    try {
+      setError(null);
+      
+      if (data) {
+        updateReservationData(data);
+      }
+      
+      if (step < 3) {
+        setCurrentStep(step + 1);
+      } else {
+        // Step 3 completed - show modal
+        setShowConfirmationModal(true);
+      }
+    } catch (err: any) {
+      setError(err.message || 'Error al procesar el paso');
     }
   };
 
@@ -60,6 +72,8 @@ const ReservationWizard = () => {
 
   const handleModalClose = () => {
     setShowConfirmationModal(false);
+    setError(null);
+    setIsLoading(false);
     // Reset wizard to step 1 for new reservation
     setCurrentStep(1);
     setReservationData({
@@ -123,11 +137,41 @@ const ReservationWizard = () => {
         </CardHeader>
         
         <CardContent className="px-8 pb-8">
-          <Alert className="mb-8 border-olive bg-olive/5">
-            <AlertDescription className="text-center">
-              <strong>Vista previa del sistema de reservación.</strong> Este formulario necesita conectarse a Supabase para funcionar completamente con disponibilidad en tiempo real.
-            </AlertDescription>
-          </Alert>
+          {/* Error de time slots */}
+          {timeSlotsError && (
+            <Alert className="mb-8 border-red-200 bg-red-50">
+              <AlertDescription className="text-center">
+                <strong>Error de conexión:</strong> {timeSlotsError}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {/* Error general */}
+          {error && (
+            <Alert className="mb-8 border-red-200 bg-red-50">
+              <AlertDescription className="text-center">
+                <strong>Error:</strong> {error}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {/* Loading state */}
+          {timeSlotsLoading && (
+            <Alert className="mb-8 border-blue-200 bg-blue-50">
+              <AlertDescription className="text-center">
+                <strong>Cargando horarios disponibles...</strong> Por favor espera mientras cargamos la información.
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {/* Success state - solo mostrar si no hay errores y no está cargando */}
+          {!timeSlotsError && !error && !timeSlotsLoading && (
+            <Alert className="mb-8 border-green-200 bg-green-50">
+              <AlertDescription className="text-center">
+                <strong>Sistema de reservación activo.</strong> Ahora puedes hacer reservaciones en tiempo real con disponibilidad actualizada.
+              </AlertDescription>
+            </Alert>
+          )}
 
           <div className="animate-fade-in">
             {renderStep()}

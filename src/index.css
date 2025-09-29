@@ -163,7 +163,7 @@
   }
 
   /* Mobile responsive for hero */
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     .hero-container {
       aspect-ratio: 4/5;
       border-radius: 1rem;
@@ -175,9 +175,23 @@
     }
   }
 
-  /* Desktop enhanced border radius */
-  @media (min-width: 768px) {
+  /* Tablet responsive for hero */
+  @media (min-width: 768px) and (max-width: 1024px) {
     .hero-container {
+      aspect-ratio: 3/2;
+      border-radius: 1.5rem;
+    }
+    
+    .hero-image {
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+
+  /* Desktop enhanced border radius */
+  @media (min-width: 1025px) {
+    .hero-container {
+      aspect-ratio: 16/9;
       border-radius: 1.5rem;
     }
   }
@@ -216,5 +230,18 @@
       opacity: 1;
       transform: translateX(0);
     }
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .shimmer-2-5s {
+    animation: shimmer 2.5s ease-in-out infinite;
   }
 }

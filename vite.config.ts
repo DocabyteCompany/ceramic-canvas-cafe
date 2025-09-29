@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    // Proxy de email eliminado
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
