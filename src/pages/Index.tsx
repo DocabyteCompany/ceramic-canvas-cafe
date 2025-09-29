@@ -1,17 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import ReservationWizard from '@/components/ReservationWizard';
 import SupabaseTest from '@/components/SupabaseTest';
-import { EmailTest } from '@/components/EmailTest';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
-import { Clock, Users, Palette, Coffee, MapPin, Phone, Instagram, MessageCircle, CheckCircle, Heart, Sparkles } from 'lucide-react';
-import heroCoffeeCeramics from '@/assets/hero-coffee-ceramics.jpg';
+import { Clock, Palette, Coffee, MapPin, Phone, Instagram, CheckCircle, Sparkles, ChevronDown } from 'lucide-react';
 import heroImage1 from '@/assets/hero-ceramica-new1.jpg';
 import heroImage2 from '@/assets/hero-ceramica-new2.jpg';
 import heroImage3 from '@/assets/hero-ceramica-new3.jpg';
 import ceramicsWorkshopTools from '@/assets/ceramics-workshop-tools.jpg';
+import imagenDestacada from '@/assets/imagen-destacada.png';
+import imagenPrincipal from '@/assets/imagen-principal.png';
+import imagen2 from '@/assets/imagen-2.jpg';
+import imagen3 from '@/assets/imagen-3.png';
+
 import ceramicoLogo from '@/assets/ceramico-logo-new.png';
 import Autoplay from 'embla-carousel-autoplay';
 
@@ -19,10 +22,9 @@ const Index = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   const heroImages = [
-    { src: heroCoffeeCeramics, alt: "Manos sosteniendo café humeante con piezas de cerámica pintadas en primer plano" },
-    { src: heroImage1, alt: "Madre e hija pintando cerámica juntas mientras disfrutan de café" },
-    { src: ceramicsWorkshopTools, alt: "Taller de cerámica con jarrones artesanales, pinceles y herramientas de trabajo" },
-    { src: heroImage3, alt: "Grupo de amigos creando arte en cerámica mientras comparten café" }
+    { src: heroImage1, alt: "Taller de cerámica artesanal" },
+    { src: ceramicsWorkshopTools, alt: "Herramientas de cerámica" },
+    { src: heroImage3, alt: "Creaciones únicas en cerámica" }
   ];
 
   const scrollToSection = (sectionId: string) => {
@@ -58,8 +60,9 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section id="inicio" className="bg-background ceramic-texture flex items-center justify-center px-4 sm:px-[2vw] md:px-[3vw] py-20 md:py-24">
-        <div className="relative hero-container shadow-[0_20px_60px_rgba(0,0,0,0.18)] animate-fade-in">
+      <section id="inicio" className="relative h-screen w-full overflow-hidden">
+        
+        <div className="relative w-full h-full">
           <Carousel 
             className="w-full h-full"
             plugins={[
@@ -74,74 +77,125 @@ const Index = () => {
               loop: true,
             }}
           >
-<CarouselContent className="h-full">
-  {heroImages.map((image, index) => (
-    <CarouselItem key={index} className="relative h-full">
-      {/* Este div es CRÍTICO. Le damos un alto y ancho fijos para que el carrusel
-        pueda medirlo, y lo hacemos relativo para posicionar el texto encima.
-      */}
-      <div className="h-full w-full">
-        <img 
-          src={image.src} 
-          alt={image.alt}
-          className="block h-full w-full object-cover object-center"
-        />
-      </div>
-
-      {/* El overlay y el texto ahora van FUERA del div de la imagen,
-        pero DENTRO del CarouselItem relativo. Esto los superpone correctamente.
-      */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
-      
-      {/* Contenido de texto original (lo he vuelto a añadir) */}
-      <div className="absolute bottom-0 left-0 p-4 sm:p-5 md:p-14 text-white max-w-2xl">
-        <h1 className="font-display text-4xl sm:text-5xl md:text-7xl font-bold mb-4 leading-tight tracking-tight">
-          Crea y <em className="italic transform skew-x-12 inline-block">Disfruta</em>
-        </h1>
-        <p className="font-body text-base sm:text-lg md:text-xl font-light mb-4 opacity-95 leading-relaxed">
-          La creatividad y el café se encuentran en un solo lugar.
-        </p>
-      </div>
-    </CarouselItem>
-  ))}
-</CarouselContent>
+            <CarouselContent className="h-full">
+              {heroImages.map((image, index) => (
+                <CarouselItem key={index} className="h-full">
+                  <div className="relative h-full">
+                     <img 
+                      src={image.src} 
+                      alt={image.alt}
+                      className="w-full h-full object-cover object-center md:object-[center_20%] transition-opacity duration-1000 ease-in-out"
+                    />
+                    
+                    {/* Dark overlay for text legibility */}
+                    <div className="absolute inset-0 bg-black/40"></div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
           </Carousel>
           
-          {/* Contenido */}
-
+          {/* Centered Content */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4 z-10">
+            <h1 
+              className="font-display text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold leading-tight tracking-tight slide-up-fade mb-6 text-beige/70" 
+              style={{animationDelay: '0.2s'}}
+            >
+              Disfruta y Crea
+            </h1>
+            <p 
+              className="font-body text-lg sm:text-xl md:text-2xl font-light leading-relaxed max-w-2xl slide-up-fade text-beige-dark/60" 
+              style={{animationDelay: '0.6s'}}
+            >
+              La creatividad y el café se encuentran en un solo lugar.
+            </p>
+          </div>
+          
+          {/* Scroll Indicator */}
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
+            <button 
+              onClick={() => scrollToSection('nosotros')}
+              className="text-white hover:text-white/80 transition-colors duration-300 group"
+              aria-label="Scroll hacia abajo"
+            >
+              <ChevronDown className="h-8 w-8 animate-bounce" />
+            </button>
+          </div>
         </div>
       </section>
 
-      {/* Quiénes Somos */}
+      {/* Acerca de Cerámico */}
       <section id="nosotros" className="section-padding ceramic-texture">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <h2 className="font-display text-4xl md:text-5xl font-bold text-primary mb-6">
-                Más que una cafetería, un espacio para expresarte
+          {/* Título y Descripción */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-16">
+            {/* Título - Left side on desktop */}
+            <div className="space-y-2">
+              <h2 className="font-display text-5xl md:text-7xl font-bold text-primary leading-none">
+                Acerca de
               </h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">
+              <h2 className="font-display text-5xl md:text-7xl font-bold text-primary leading-none">
+                Cerámico
+              </h2>
+            </div>
+
+            {/* Descripción - Right side on desktop */}
+            <div className="space-y-6 lg:pt-4">
+              <p className="text-sm md:text-base text-terracotta/80 leading-relaxed font-medium">
                 En Cerámico creemos que la creatividad se mezcla perfectamente con el sabor. 
                 Cada pincelada es un momento para ti, un respiro del mundo exterior donde puedes 
                 conectar contigo mismo y con tus seres queridos.
               </p>
-              <p className="text-lg text-muted-foreground leading-relaxed">
+              
+              <p className="text-sm md:text-base text-terracotta/80 leading-relaxed font-medium">
                 Nuestro taller es un refugio de paz donde las familias se reúnen, los amigos 
                 crean recuerdos y cada persona descubre el artista que lleva dentro. El aroma 
                 del café recién hecho acompaña cada creación, convirtiendo cada visita en una 
                 experiencia sensorial completa.
               </p>
-              <div className="flex items-center gap-2 text-primary font-medium">
-                <Heart className="h-5 w-5" />
-                <span>Aquí la creatividad se mezcla con el sabor, cada pincelada es un momento para ti.</span>
-              </div>
             </div>
-            <div className="relative">
+          </div>
+
+          {/* Layout de imágenes - 2 columnas principales */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Columna izquierda - Imagen destacada con toda la altura */}
+            <div className="rounded-xl shadow-soft overflow-hidden h-[400px] md:h-[500px]">
               <img 
-                src={heroImage2} 
-                alt="Colección de piezas de cerámica artesanales" 
-                className="rounded-2xl shadow-warm w-full"
+                src={imagenDestacada} 
+                alt="Imagen destacada del taller de cerámica"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
               />
+            </div>
+
+            {/* Columna derecha - Imagen principal arriba + 2 imágenes horizontales abajo */}
+            <div className="space-y-4">
+              {/* Imagen principal */}
+              <div className="rounded-xl shadow-soft overflow-hidden h-[240px] md:h-[240px]">
+                <img 
+                  src={imagenPrincipal} 
+                  alt="Imagen principal del taller"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+
+              {/* Imágenes 2 y 3 lado a lado */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="rounded-xl shadow-soft overflow-hidden h-[240px] md:h-[240px]">
+                  <img 
+                    src={imagen2} 
+                    alt="Ambiente del taller de cerámica"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+                
+                <div className="rounded-xl shadow-soft overflow-hidden h-[240px] md:h-[240px]">
+                  <img 
+                    src={imagen3} 
+                    alt="Creaciones de cerámica"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -287,7 +341,7 @@ const Index = () => {
                 className="h-28 mb-6 mx-auto md:mx-0 transition-transform duration-300 hover:scale-105"
               />
               <p className="text-warm-gray-700 mb-8 text-base leading-relaxed font-medium">
-                ¿Tienes alguna pregunta? ¡Nuestro equipo está aquí para ayudarte a vivir una experiencia única!
+                ¿Tienes alguna pregunta? ¡Nuestro equipo está<br className="hidden md:block" /> aquí para ayudarte a vivir una experiencia única!
               </p>
               
               {/* Social Links */}
@@ -416,23 +470,10 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Email Test Section - Solo para desarrollo */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Prueba de Correo
-            </h2>
-            <p className="text-muted-foreground">
-              Prueba el envío de correos de confirmación (solo para desarrollo)
-            </p>
-          </div>
-          <EmailTest />
-        </div>
-      </section>
+      
 
       {/* Sticky CTA */}
-      <div className="fixed bottom-4 right-4 z-40 md:hidden">
+      <div className="sticky-cta fixed bottom-4 right-4 z-40 md:hidden">
         <Button 
           onClick={() => scrollToSection('reservaciones')}
           className="btn-ceramica shadow-warm"

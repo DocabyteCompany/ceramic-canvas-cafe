@@ -11,6 +11,7 @@
     --terracotta-light: 22 42% 50%;     /* Lighter variant */
     --beige: 38 50% 93%;                /* #F5F0E6 - Background */
     --beige-dark: 38 30% 85%;           /* Darker beige for accents */
+    --beige-translucent: 38 50% 93%;    /* For translucent overlays */
     --olive: 54 14% 61%;                /* #A6A48D - Details, hover states */
     --olive-dark: 54 14% 50%;           /* Darker olive */
     --pure-white: 0 0% 100%;            /* #FFFFFF - Clean sections */
@@ -123,11 +124,30 @@
 
   /* Navigation hover effects */
   .nav-link {
-    @apply relative text-foreground font-medium transition-all duration-300 ease-out;
-    @apply after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-primary;
+    @apply relative text-white font-medium transition-all duration-300 ease-out;
+    @apply after:content-[''] after:absolute after:w-full after:h-0.5;
     @apply after:left-0 after:bottom-[-4px] after:scale-x-0 after:origin-right;
     @apply after:transition-transform after:duration-300 after:ease-out;
-    @apply hover:text-primary hover:after:scale-x-100 hover:after:origin-left;
+    @apply hover:text-white/90 hover:after:scale-x-100 hover:after:origin-left;
+    @apply after:bg-white;
+  }
+
+  /* New white outline button for navbar */
+  .btn-ceramica-white-outline {
+    @apply px-6 py-2 border-2 border-white text-white rounded-md font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50;
+    background: transparent !important;
+    border-color: white !important;
+    color: white !important;
+  }
+  
+  .btn-ceramica-white-outline:hover {
+    background: white !important;
+    color: hsl(var(--terracotta)) !important;
+  }
+  
+  .btn-ceramica-white-outline:focus {
+    background: white !important;
+    color: hsl(var(--terracotta)) !important;
   }
 
   /* Smooth animations */
@@ -139,36 +159,37 @@
     animation: slideUp 0.8s ease-out forwards;
   }
 
+  .slide-up-fade {
+    animation: slideUpFade 0.8s ease-out forwards;
+  }
+
   /* Wizard animations */
   .animate-step-transition {
     animation: stepTransition 0.3s ease-out forwards;
   }
 
-  /* Hero Section Containers */
+  /* Hero Section Containers - Full screen layout */
   .hero-container {
     width: 100%;
-    max-width: 1440px;
-    margin: 0 auto;
-    aspect-ratio: 16/9;
+    height: 100vh;
+    height: 100svh; /* Better mobile support */
+    min-height: 100vh;
+    position: relative;
     overflow: hidden;
-    border-radius: 1rem;
   }
 
   .hero-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
-    border-radius: inherit;
+    object-position: center center;
   }
-
   /* Mobile responsive for hero */
   @media (max-width: 767px) {
     .hero-container {
       aspect-ratio: 4/5;
       border-radius: 1rem;
     }
-    
     .hero-image {
       object-fit: cover;
       object-position: center;
@@ -181,10 +202,9 @@
       aspect-ratio: 3/2;
       border-radius: 1.5rem;
     }
-    
     .hero-image {
       object-fit: cover;
-      object-position: center;
+      object-position: center 20%;
     }
   }
 
@@ -194,6 +214,22 @@
       aspect-ratio: 16/9;
       border-radius: 1.5rem;
     }
+    .hero-image {
+      object-fit: cover;
+      object-position: center 20%;
+    }
+  }
+  
+
+  /* Smooth carousel transitions */
+  .embla__container {
+    display: flex;
+    transition: opacity 1s ease-in-out;
+  }
+
+  .embla__slide {
+    flex: 0 0 100%;
+    min-width: 0;
   }
 }
 
@@ -211,6 +247,17 @@
   }
 
   @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUpFade {
     from {
       opacity: 0;
       transform: translateY(40px);
@@ -244,4 +291,14 @@
   .shimmer-2-5s {
     animation: shimmer 2.5s ease-in-out infinite;
   }
+}
+
+/* Hide sticky CTA when mobile menu is open */
+.menu-open .sticky-cta {
+  display: none !important;
+}
+
+/* Mobile menu overlay - force solid terracotta background */
+.mobile-menu-overlay {
+  background-color: #8B5E3C !important;
 }
