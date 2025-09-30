@@ -7,7 +7,7 @@ import { CheckCircle, Calendar, Clock, Users, Mail, Phone, MapPin, Loader2, Aler
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useReservations } from '@/hooks/useReservations';
 import { useNotification } from '@/contexts/NotificationContext';
-// Eliminado envío de correo: no se usa emailService
+import { sendReservationConfirmation, convertToEmailData } from '@/services/brevoEmailService';
 import type { ReservationData } from '../ReservationWizard';
 
 interface ConfirmationScreenProps {
@@ -20,7 +20,9 @@ export const ConfirmationScreen = ({ reservationData, onComplete }: Confirmation
   const [reservationError, setReservationError] = useState<string | null>(null);
   const [reservationSuccess, setReservationSuccess] = useState(false);
   const [createdReservationId, setCreatedReservationId] = useState<string | null>(null);
-  // Envío de correo deshabilitado
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [emailSent, setEmailSent] = useState(false);
 
   const { createReservation } = useReservations();
   const { showSuccess, showError } = useNotification();
@@ -73,12 +75,39 @@ export const ConfirmationScreen = ({ reservationData, onComplete }: Confirmation
       // Salir del estado de carga después del mínimo garantizado
       setIsCreatingReservation(false);
 
-      // Envío de correo deshabilitado: mostramos éxito sin email
-      showSuccess(
-        '¡Reservación confirmada!',
-        `Tu reservación ha sido creada exitosamente. ID: ${data.id}.`,
-        5000
-      );
+      // Enviar correo de confirmación
+      setIsSendingEmail(true);
+      setEmailError(null);
+      
+      try {
+        const emailData = convertToEmailData(reservationData, data.id);
+        const emailResult = await sendReservationConfirmation(emailData);
+        
+        if (emailResult.success) {
+          setEmailSent(true);
+          showSuccess(
+            '¡Reservación confirmada!',
+            `Tu reservación ha sido creada exitosamente. Se ha enviado un correo de confirmación a ${reservationData.email}`,
+            5000
+          );
+        } else {
+          setEmailError(emailResult.error || 'Error al enviar correo');
+          showSuccess(
+            '¡Reservación confirmada!',
+            `Tu reservación ha sido creada exitosamente. ID: ${data.id}. Nota: No se pudo enviar el correo de confirmación.`,
+            5000
+          );
+        }
+      } catch (error: any) {
+        setEmailError(error.message || 'Error al enviar correo');
+        showSuccess(
+          '¡Reservación confirmada!',
+          `Tu reservación ha sido creada exitosamente. ID: ${data.id}. Nota: No se pudo enviar el correo de confirmación.`,
+          5000
+        );
+      } finally {
+        setIsSendingEmail(false);
+      }
 
       // Continuar al cierre/next step
       onComplete();
@@ -234,6 +263,22 @@ export const ConfirmationScreen = ({ reservationData, onComplete }: Confirmation
                 <span className="text-white font-medium">Confirmando...</span>
               </div>
             </>
+          ) : isSendingEmail ? (
+            <>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/20 to-primary/10 animate-pulse" />
+              <div className="relative z-10 flex items-center justify-center w-full">
+                <div className="w-full bg-white/40 rounded-full h-2 mr-4 overflow-hidden">
+                  <div 
+                    className="bg-white h-2 rounded-full transition-all duration-1000 ease-out shimmer-2-5s" 
+                    style={{ 
+                      width: '100%',
+                      background: 'linear-gradient(90deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0.8) 100%)'
+                    }} 
+                  />
+                </div>
+                <span className="text-white font-medium">Enviando correo...</span>
+              </div>
+            </>
           ) : reservationSuccess ? (
             '¡Reservación confirmada!'
           ) : (
@@ -242,7 +287,33 @@ export const ConfirmationScreen = ({ reservationData, onComplete }: Confirmation
         </Button>
       </div>
 
-      {/* Mensajería de email eliminada */}
+      {/* Email Status Messages */}
+      {isSendingEmail && (
+        <div className="flex justify-center pt-4">
+          <div className="text-sm text-muted-foreground flex items-center gap-2">
+            <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+            <span>Enviando correo de confirmación...</span>
+          </div>
+        </div>
+      )}
+
+      {emailSent && (
+        <div className="flex justify-center pt-4">
+          <div className="text-sm text-green-600 flex items-center gap-2">
+            <CheckCircle className="w-4 h-4" />
+            <span>Correo de confirmación enviado exitosamente</span>
+          </div>
+        </div>
+      )}
+
+      {emailError && (
+        <div className="flex justify-center pt-4">
+          <div className="text-sm text-red-600 flex items-center gap-2">
+            <AlertCircle className="w-4 h-4" />
+            <span>Error al enviar correo: {emailError}</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

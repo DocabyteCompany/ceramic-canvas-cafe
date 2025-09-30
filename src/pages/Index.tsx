@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import ReservationWizard from '@/components/ReservationWizard';
 import SupabaseTest from '@/components/SupabaseTest';
+import { EmailTestBrevo } from '@/components/EmailTestBrevo';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
@@ -467,6 +468,21 @@ const Index = () => {
             </p>
           </div>
           <SupabaseTest />
+        </div>
+      </section>
+
+      {/* Email Test Section */}
+      <section id="email-test" className="py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-display font-bold text-foreground mb-4">
+              Prueba de Correos
+            </h2>
+            <p className="text-muted-foreground">
+              Verificación del envío de correos con Brevo (solo para desarrollo)
+            </p>
+          </div>
+          <EmailTestBrevo />
         </div>
       </section>
 
