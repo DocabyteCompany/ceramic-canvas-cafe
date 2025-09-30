@@ -103,26 +103,27 @@ const createEmailTemplate = (data: EmailReservationData): string => {
           border-top: 1px solid #e9ecef;
           color: #6c757d;
         }
-        .reservation-id {
-          background-color: #8B5E3C;
-          color: white;
-          padding: 8px 16px;
-          border-radius: 20px;
-          font-size: 14px;
-          font-weight: bold;
-          display: inline-block;
-          margin: 10px 0;
-        }
-        .cta-button {
-          display: inline-block;
-          background-color: #8B5E3C;
-          color: white;
-          padding: 12px 24px;
-          text-decoration: none;
-          border-radius: 6px;
-          font-weight: bold;
-          margin: 20px 0;
-        }
+                .reservation-id {
+                  background-color: hsl(38, 30%, 85%);
+                  color: #45403b;
+                  padding: 8px 16px;
+                  border-radius: 20px;
+                  font-size: 14px;
+                  font-weight: bold;
+                  display: inline-block;
+                  margin: 10px 0;
+                }
+                .cta-button {
+                  display: inline-block;
+                  background-color: white;
+                  color: hsl(38, 30%, 85%);
+                  padding: 12px 24px;
+                  text-decoration: none;
+                  border-radius: 6px;
+                  font-weight: bold;
+                  margin: 20px 0;
+                  border: 2px solid hsl(38, 30%, 85%);
+                }
       </style>
     </head>
     <body>
@@ -170,10 +171,10 @@ const createEmailTemplate = (data: EmailReservationData): string => {
             <span class="detail-value">1 hora 45 minutos</span>
           </div>
           
-          <div class="detail-row">
-            <span class="detail-label">Ubicación:</span>
-            <span class="detail-value">Calle 47 #463-A x 52 y 54, Centro</span>
-          </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Ubicación:</span>
+                    <span class="detail-value">Av Acueducto 902, Chapultepec Nte., 58260 Morelia, Mich.</span>
+                  </div>
         </div>
 
         <div class="important-info">

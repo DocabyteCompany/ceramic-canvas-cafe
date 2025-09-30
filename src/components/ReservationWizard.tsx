@@ -45,6 +45,19 @@ const ReservationWizard = () => {
     setReservationData(prev => ({ ...prev, ...data }));
   };
 
+  const scrollToWizardTop = (offset: number = 140) => {
+    if (typeof window === 'undefined') return;
+    const card = document.querySelector('.max-w-4xl.mx-auto.shadow-warm');
+    if (card) {
+      const rect = (card as HTMLElement).getBoundingClientRect();
+      const absoluteTop = rect.top + window.scrollY;
+      const targetTop = Math.max(absoluteTop - offset, 0);
+      window.scrollTo({ top: targetTop, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   const handleStepComplete = (step: number, data?: Partial<ReservationData>) => {
     try {
       setError(null);
@@ -55,6 +68,8 @@ const ReservationWizard = () => {
       
       if (step < 3) {
         setCurrentStep(step + 1);
+        // Desplazamiento al inicio con un pequeño offset para ver el título completo
+        scrollToWizardTop(160);
       } else {
         // Step 3 completed - show modal
         setShowConfirmationModal(true);
@@ -67,6 +82,8 @@ const ReservationWizard = () => {
   const handleBack = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
+      // Desplazar al inicio al retroceder de paso con el mismo offset
+      scrollToWizardTop(160);
     }
   };
 

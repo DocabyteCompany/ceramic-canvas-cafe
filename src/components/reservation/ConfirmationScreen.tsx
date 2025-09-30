@@ -217,15 +217,6 @@ export const ConfirmationScreen = ({ reservationData, onComplete }: Confirmation
         </Alert>
       )}
 
-      {/* Success Message */}
-      {reservationSuccess && createdReservationId && (
-        <Alert className="max-w-md mx-auto border-green-200 bg-green-50">
-          <CheckCircle className="h-4 w-4" />
-          <AlertDescription>
-            <strong>¡Éxito!</strong> Tu reservación ha sido creada con el ID: {createdReservationId}
-          </AlertDescription>
-        </Alert>
-      )}
 
       {/* Important Notes */}
       <Card className="max-w-md mx-auto border-olive/30 bg-olive/10">
