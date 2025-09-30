@@ -57,11 +57,11 @@ export const useAvailability = (): UseAvailabilityReturn => {
 
       // Validar que sea un día laboral
       const dayOfWeek = selectedDate.getDay();
-      console.log('🔍 useAvailability - Día de la semana:', dayOfWeek, 'Días permitidos:', [0, 2, 3, 4, 5]);
+      console.log('🔍 useAvailability - Día de la semana:', dayOfWeek, 'Días permitidos:', [0, 2, 3, 4, 5, 6]);
       
-      if (![0, 2, 3, 4, 5].includes(dayOfWeek)) {
+      if (![0, 2, 3, 4, 5, 6].includes(dayOfWeek)) {
         console.log('❌ useAvailability - Día no laboral, retornando array vacío');
-        setError('Solo se permiten reservaciones de martes a viernes y domingos');
+        setError('Solo se permiten reservaciones de martes a sábado y domingo');
         return [];
       }
 
