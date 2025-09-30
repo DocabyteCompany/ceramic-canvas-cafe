@@ -251,8 +251,8 @@ export class ReservationsServiceOptimized {
       return { isValid: false, error: 'El número de teléfono no es válido' };
     }
 
-    if (data.guests < 1 || data.guests > 5) {
-      return { isValid: false, error: 'El número de huéspedes debe estar entre 1 y 5' };
+    if (data.guests < 1 || data.guests > 6) {
+      return { isValid: false, error: 'El número de huéspedes debe estar entre 1 y 6' };
     }
 
     // Validar fecha - CORREGIDO: usar parseISO y startOfDay para evitar problemas de zona horaria
@@ -270,8 +270,8 @@ export class ReservationsServiceOptimized {
     }
 
     const dayOfWeek = reservationDate.getDay();
-    if (![0, 2, 3, 4, 5].includes(dayOfWeek)) {
-      return { isValid: false, error: 'Solo se permiten reservaciones de martes a viernes y domingos' };
+    if (![0, 2, 3, 4, 5, 6].includes(dayOfWeek)) {
+      return { isValid: false, error: 'Solo se permiten reservaciones de martes a sábado y domingos' };
     }
 
     if (!data.time_slot_id || data.time_slot_id < 1) {

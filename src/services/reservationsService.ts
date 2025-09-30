@@ -202,13 +202,13 @@ export class ReservationsService {
       return { isValid: false, error: 'El número de teléfono no puede exceder 20 caracteres' };
     }
 
-    // Validar número de huéspedes - REGLA DE NEGOCIO: máximo 5 personas por reservación
+    // Validar número de huéspedes - REGLA DE NEGOCIO: máximo 6 personas por reservación
     if (data.guests < 1) {
       return { isValid: false, error: 'Debe ser al menos 1 persona' };
     }
 
-    if (data.guests > 5) {
-      return { isValid: false, error: 'Máximo 5 personas por reservación' };
+    if (data.guests > 6) {
+      return { isValid: false, error: 'Máximo 6 personas por reservación' };
     }
 
     // Validar fecha - CORREGIDO: usar parseISO y startOfDay para evitar problemas de zona horaria
@@ -228,8 +228,8 @@ export class ReservationsService {
 
     // Validar que la fecha sea un día laboral
     const dayOfWeek = reservationDate.getDay();
-    if (![0, 2, 3, 4, 5].includes(dayOfWeek)) {
-      return { isValid: false, error: 'Solo se permiten reservaciones de martes a viernes y domingos' };
+    if (![0, 2, 3, 4, 5, 6].includes(dayOfWeek)) {
+      return { isValid: false, error: 'Solo se permiten reservaciones de martes a sábado y domingos' };
     }
 
     // Validar time_slot_id

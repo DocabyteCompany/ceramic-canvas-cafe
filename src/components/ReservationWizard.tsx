@@ -164,14 +164,7 @@ const ReservationWizard = () => {
             </Alert>
           )}
 
-          {/* Success state - solo mostrar si no hay errores y no está cargando */}
-          {!timeSlotsError && !error && !timeSlotsLoading && (
-            <Alert className="mb-8 border-green-200 bg-green-50">
-              <AlertDescription className="text-center">
-                <strong>Sistema de reservación activo.</strong> Ahora puedes hacer reservaciones en tiempo real con disponibilidad actualizada.
-              </AlertDescription>
-            </Alert>
-          )}
+          {/* Mensaje de éxito removido por solicitud */}
 
           <div className="animate-fade-in">
             {renderStep()}

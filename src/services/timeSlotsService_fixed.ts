@@ -199,8 +199,8 @@ export class TimeSlotsService {
 
   // Verificar si un día está disponible
   static isDayAvailable(dayOfWeek: number): boolean {
-    // Días laborales: Domingo (0), Martes (2), Miércoles (3), Jueves (4), Viernes (5)
-    return [0, 2, 3, 4, 5].includes(dayOfWeek);
+    // Días laborales: Domingo (0), Martes (2), Miércoles (3), Jueves (4), Viernes (5), Sábado (6)
+    return [0, 2, 3, 4, 5, 6].includes(dayOfWeek);
   }
 
   // Obtener nombre del día

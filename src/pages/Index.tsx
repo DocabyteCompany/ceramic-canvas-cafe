@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import ReservationWizard from '@/components/ReservationWizard';
-import SupabaseTest from '@/components/SupabaseTest';
-import { EmailTestBrevo } from '@/components/EmailTestBrevo';
+// Eliminado: componentes de debug
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
@@ -295,8 +294,8 @@ const Index = () => {
                       <Clock className="h-5 w-5 text-primary flex-shrink-0" />
                       <div>
                         <p className="font-medium text-foreground">Horarios</p>
-                        <p className="text-muted-foreground">Mar - Vie: 10:00 AM - 8:00 PM, Dom: 10:00 AM - 3:00 PM</p>
-                        <p className="text-muted-foreground text-sm">Lunes y Sábados cerrado</p>
+                        <p className="text-muted-foreground">Mar - Sáb: 10:00 AM - 8:00 PM, Dom: 10:00 AM - 3:00 PM</p>
+                        <p className="text-muted-foreground text-sm">Lunes cerrado</p>
                       </div>
                     </div>
                   </div>
@@ -421,7 +420,7 @@ const Index = () => {
                   <li>
                     <span className="text-warm-gray-600 text-sm font-medium flex items-center gap-2 justify-center md:justify-start">
                       <Clock className="h-4 w-4 text-olive" />
-                      Mar-Vie: 10:00-20:00, Dom: 10:00-15:00
+                      Mar-Sáb: 10:00-20:00, Dom: 10:00-15:00
                     </span>
                   </li>
                   <li>
@@ -456,35 +455,7 @@ const Index = () => {
         </div>
       </footer>
 
-      {/* Prueba de Supabase - Temporal para desarrollo */}
-      <section id="supabase-test" className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
-            <h2 className="font-display text-3xl font-bold text-primary mb-4">
-              Prueba de Conexión Supabase
-            </h2>
-            <p className="text-muted-foreground">
-              Verificación de la configuración de la base de datos (solo para desarrollo)
-            </p>
-          </div>
-          <SupabaseTest />
-        </div>
-      </section>
-
-      {/* Email Test Section */}
-      <section id="email-test" className="py-16 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-display font-bold text-foreground mb-4">
-              Prueba de Correos
-            </h2>
-            <p className="text-muted-foreground">
-              Verificación del envío de correos con Brevo (solo para desarrollo)
-            </p>
-          </div>
-          <EmailTestBrevo />
-        </div>
-      </section>
+      
 
       
 

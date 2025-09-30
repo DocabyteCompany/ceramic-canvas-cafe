@@ -122,8 +122,8 @@ export const PersonalInfoForm = ({ reservationData, onComplete, onBack, maxGuest
 
     if (formData.guests < 1) {
       newErrors.guests = 'Debe ser al menos 1 persona';
-    } else if (formData.guests > 5) {
-      newErrors.guests = 'Máximo 5 personas por reservación';
+    } else if (formData.guests > 6) {
+      newErrors.guests = 'Máximo 6 personas por reservación';
     } else if (formData.guests > currentAvailability) {
       newErrors.guests = `Solo hay ${currentAvailability} lugares disponibles`;
     }
@@ -233,7 +233,7 @@ export const PersonalInfoForm = ({ reservationData, onComplete, onBack, maxGuest
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {Array.from({ length: Math.min(5, currentAvailability) }, (_, i) => i + 1).map((num) => (
+              {Array.from({ length: Math.min(6, currentAvailability) }, (_, i) => i + 1).map((num) => (
                 <SelectItem key={num} value={num.toString()}>
                   {num} {num === 1 ? 'persona' : 'personas'}
                 </SelectItem>

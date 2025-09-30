@@ -63,7 +63,7 @@ const DateTimeSelectionComponent = ({ reservationData, onComplete }: DateTimeSel
     timeSlotsError
   });
 
-  // Disable Mondays and Saturdays (business closed days)
+  // Disable Mondays (business closed day)
   const isDateDisabled = (date: Date) => {
     const dayOfWeek = date.getDay();
     const today = startOfDay(new Date());
@@ -80,8 +80,8 @@ const DateTimeSelectionComponent = ({ reservationData, onComplete }: DateTimeSel
       return true;
     }
     
-    // No permitir lunes (1) y sábados (6)
-    if (dayOfWeek === 1 || dayOfWeek === 6) {
+    // No permitir lunes (1)
+    if (dayOfWeek === 1) {
       return true;
     }
     
@@ -226,17 +226,7 @@ const DateTimeSelectionComponent = ({ reservationData, onComplete }: DateTimeSel
           </div>
         )}
 
-        {/* Información sobre días disponibles */}
-        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <h5 className="text-sm font-medium text-blue-800 mb-2">Días disponibles para reservaciones:</h5>
-          <div className="text-xs text-blue-700 space-y-1">
-            <div>• <strong>Martes a Viernes:</strong> 10:00 AM - 8:00 PM (horarios completos)</div>
-            <div>• <strong>Domingo:</strong> 10:00 AM - 3:00 PM (horarios especiales)</div>
-            <div>• <strong>Lunes y Sábado:</strong> Cerrado</div>
-            <div>• <strong>Anticipación:</strong> Máximo 3 meses</div>
-            <div>• <strong>Capacidad:</strong> 20 personas por sesión (máximo 5 por reservación)</div>
-          </div>
-        </div>
+        {/* Información sobre días disponibles - removida por solicitud */}
       </div>
 
       {/* Time Selection */}

@@ -179,11 +179,11 @@ const createEmailTemplate = (data: EmailReservationData): string => {
         <div class="important-info">
           <h3>📋 Información Importante</h3>
           <ul>
-            <li>La sesión dura 1 hora 45 minutos</li>
-            <li>Las bebidas y postres se pagan por separado</li>
-            <li>Tu pieza estará lista para recoger en 2-3 días</li>
-            <li>Te notificaremos cuando esté lista</li>
-            <li>Llega 5 minutos antes de tu horario</li>
+            <li>Tu reserva dura <strong>1 hora 45 min</strong> para que disfrutes de esta experiencia.</li>
+            <li>Después de pintar, <strong>dejamos tu pieza con nosotros</strong> para esmaltarla y hornearla. El tiempo estimado para que esté completamente finalizada es de <strong>1 a 3 semanas</strong>, dependiendo de la demanda.</li>
+            <li>Para poder entregarte tu pieza, deberás <strong>mostrar una fotografía visible</strong> de la misma en la sucursal. <em>No enviamos avisos por mensaje o correo</em>.</li>
+            <li>Guardaremos tu pieza por <strong>30 días</strong> después del tiempo definido para recogerla.</li>
+            <li>Recuerda que <strong>los postres y bebidas NO están incluidos</strong> en el precio de la cerámica.</li>
           </ul>
         </div>
 

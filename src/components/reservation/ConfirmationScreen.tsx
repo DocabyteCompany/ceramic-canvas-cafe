@@ -232,10 +232,11 @@ export const ConfirmationScreen = ({ reservationData, onComplete }: Confirmation
         <CardContent className="p-6">
           <h5 className="font-semibold mb-3 text-olive-dark">Información importante:</h5>
           <ul className="text-sm space-y-2 text-foreground">
-            <li>• La sesión dura 1 hora 45 minutos</li>
-            <li>• Las bebidas y postres se pagan por separado</li>
-            <li>• Tu pieza estará lista para recoger en 2-3 días</li>
-            <li>• Te notificaremos cuando esté lista</li>
+            <li>• Tu reserva dura 1 hora 45 min para que disfrutes de esta experiencia.</li>
+            <li>• Después de pintar, dejamos tu pieza con nosotros para esmaltarla y hornearla. El tiempo estimado para que esté completamente finalizada es de 1 a 3 semanas, dependiendo de la demanda.</li>
+            <li>• Para poder entregarte tu pieza, deberás mostrar una fotografía visible de la misma en la sucursal. No enviamos avisos por mensaje o correo.</li>
+            <li>• Guardaremos tu pieza por 30 días después del tiempo definido para recogerla.</li>
+            <li>• Recuerda que los postres y bebidas NO están incluidos en el precio de la cerámica.</li>
           </ul>
         </CardContent>
       </Card>
