@@ -41,8 +41,8 @@ export const ConfirmationModal = ({ isOpen, onClose, reservationData }: Confirma
       title: 'Sesión de Cerámica - Cerámico Arte & Café',
       start: startTime.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z',
       end: endTime.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z',
-      description: `Sesión de cerámica para ${reservationData.guests} ${reservationData.guests === 1 ? 'persona' : 'personas'}. Duración: 1h 45m. Las bebidas y postres se pagan por separado.`,
-      location: 'Cerámico Arte & Café, Calle 47 #463-A x 52 y 54, Centro, Mérida, Yucatán'
+      description: `Sesión de cerámica para ${reservationData.guests} ${reservationData.guests === 1 ? 'persona' : 'personas'}. Duración: 1h 45m. ID: ${reservationData.timeSlot ? reservationData.timeSlot.id : ''}`,
+      location: 'Av Acueducto 902, Chapultepec Nte., 58260 Morelia, Mich.'
     };
 
     // Create Google Calendar URL

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X, Instagram } from 'lucide-react';
-import ceramicoLogo from '../assets/ceramico-logo-white.png';
+import ceramicoLogoWhite from '../assets/ceramico-logo-white.png';
+import imagoTerracotta from '../assets/imago_terracota.png';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,7 +44,7 @@ const Navigation = () => {
       isOpen 
         ? 'bg-transparent backdrop-blur-0 border-transparent'
         : isScrolled 
-          ? 'bg-terracotta/90 backdrop-blur-md border-b border-terracotta/20' 
+          ? 'bg-white/90 backdrop-blur-md border-b border-terracotta/20' 
           : 'bg-transparent border-b border-transparent'
     }`}>
       <div className="container mx-auto px-4 py-3">
@@ -52,13 +53,13 @@ const Navigation = () => {
           <div className="flex items-center justify-start space-x-6">
             <button 
               onClick={() => scrollToSection('nosotros')}
-              className="nav-link"
+              className={`nav-link ${isScrolled ? 'nav-link-scrolled' : 'nav-link-transparent'}`}
             >
               Nosotros
             </button>
             <button 
               onClick={() => scrollToSection('experiencia')}
-              className="nav-link"
+              className={`nav-link ${isScrolled ? 'nav-link-scrolled' : 'nav-link-transparent'}`}
             >
               Experiencia
             </button>
@@ -68,12 +69,12 @@ const Navigation = () => {
           <div className="flex items-center justify-center">
             <button 
               onClick={() => scrollToSection('inicio')}
-              className="hover:scale-105 transition-transform duration-200"
+              className="hover:scale-105 transition-transform duration-200 logo-container"
             >
               <img 
-                src={ceramicoLogo} 
+                src={isScrolled ? imagoTerracotta : ceramicoLogoWhite} 
                 alt="Cerámico Logo" 
-                className="h-12 w-auto"
+                className="nav-logo"
               />
             </button>
           </div>
@@ -82,13 +83,13 @@ const Navigation = () => {
           <div className="flex items-center justify-end space-x-6">
             <button 
               onClick={() => scrollToSection('contacto')}
-              className="nav-link"
+              className={`nav-link ${isScrolled ? 'nav-link-scrolled' : 'nav-link-transparent'}`}
             >
               Contacto
             </button>
             <Button 
               onClick={() => scrollToSection('reservaciones')}
-              className="btn-ceramica-white-outline"
+              className={isScrolled ? 'btn-ceramica-white-outline' : 'btn-ceramica-white-outline-transparent'}
             >
               Reservar ahora
             </Button>
@@ -99,18 +100,22 @@ const Navigation = () => {
         <div className="md:hidden flex items-center justify-between">
           <button 
             onClick={() => scrollToSection('inicio')}
-            className="hover:scale-105 transition-transform duration-200"
+            className="hover:scale-105 transition-transform duration-200 logo-container-mobile"
           >
             <img 
-              src={ceramicoLogo} 
+              src={isScrolled ? imagoTerracotta : ceramicoLogoWhite} 
               alt="Cerámico Logo" 
-              className="h-10 w-auto"
+              className="nav-logo-mobile"
             />
           </button>
 
           <button 
             onClick={() => setIsOpen(!isOpen)}
-            className="p-2 text-white hover:text-white/90 transition-all duration-300"
+            className={`p-2 transition-all duration-300 ${
+              isScrolled 
+                ? 'text-terracotta hover:text-terracotta/90' 
+                : 'text-white hover:text-white/90'
+            }`}
             aria-expanded={isOpen}
             aria-label="Toggle menu"
           >
@@ -123,7 +128,9 @@ const Navigation = () => {
 
       {/* Mobile Menu - Full Screen Overlay */}
       <div 
-        className={`md:hidden fixed inset-0 z-[1100] mobile-menu-overlay bg-terracotta w-screen h-[100dvh] overflow-y-auto transition-transform duration-300 ease-out ${
+        className={`md:hidden fixed inset-0 z-[1100] mobile-menu-overlay w-screen h-[100dvh] overflow-y-auto transition-transform duration-300 ease-out ${
+          isScrolled ? 'bg-white' : 'bg-terracotta'
+        } ${
           isOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full pointer-events-none'
         }`}
         role="dialog"
@@ -134,7 +141,11 @@ const Navigation = () => {
           <div className="absolute top-6 right-6 z-10">
             <button 
               onClick={() => setIsOpen(false)}
-              className="p-2 text-white hover:text-white/80 transition-all duration-300"
+              className={`p-2 transition-all duration-300 ${
+                isScrolled 
+                  ? 'text-terracotta hover:text-terracotta/80' 
+                  : 'text-white hover:text-white/80'
+              }`}
               aria-label="Close menu"
             >
               <X size={32} />
@@ -145,12 +156,12 @@ const Navigation = () => {
           <div className="flex justify-center items-center pt-16 mb-12">
             <button 
               onClick={() => scrollToSection('inicio')}
-              className="hover:scale-105 transition-transform duration-200"
+              className="hover:scale-105 transition-transform duration-200 logo-container-mobile-menu"
             >
               <img 
-                src={ceramicoLogo} 
+                src={isScrolled ? imagoTerracotta : ceramicoLogoWhite} 
                 alt="Cerámico Logo" 
-                className="h-16 w-auto"
+                className="nav-logo-mobile-menu"
               />
             </button>
           </div>
@@ -159,31 +170,51 @@ const Navigation = () => {
           <div className="flex-1 flex flex-col justify-center items-center space-y-10 px-6 mb-12">
             <button 
               onClick={() => scrollToSection('inicio')}
-              className="text-white text-4xl font-bold uppercase hover:text-white/80 transition-colors duration-200 tracking-wide"
+              className={`text-4xl font-bold uppercase transition-colors duration-200 tracking-wide ${
+                isScrolled 
+                  ? 'text-terracotta hover:text-terracotta/80' 
+                  : 'text-white hover:text-white/80'
+              }`}
             >
               INICIO
             </button>
             <button 
               onClick={() => scrollToSection('nosotros')}
-              className="text-white text-4xl font-bold uppercase hover:text-white/80 transition-colors duration-200 tracking-wide"
+              className={`text-4xl font-bold uppercase transition-colors duration-200 tracking-wide ${
+                isScrolled 
+                  ? 'text-terracotta hover:text-terracotta/80' 
+                  : 'text-white hover:text-white/80'
+              }`}
             >
               NOSOTROS
             </button>
             <button 
               onClick={() => scrollToSection('experiencia')}
-              className="text-white text-4xl font-bold uppercase hover:text-white/80 transition-colors duration-200 tracking-wide"
+              className={`text-4xl font-bold uppercase transition-colors duration-200 tracking-wide ${
+                isScrolled 
+                  ? 'text-terracotta hover:text-terracotta/80' 
+                  : 'text-white hover:text-white/80'
+              }`}
             >
               EXPERIENCIA
             </button>
             <button 
               onClick={() => scrollToSection('contacto')}
-              className="text-white text-4xl font-bold uppercase hover:text-white/80 transition-colors duration-200 tracking-wide"
+              className={`text-4xl font-bold uppercase transition-colors duration-200 tracking-wide ${
+                isScrolled 
+                  ? 'text-terracotta hover:text-terracotta/80' 
+                  : 'text-white hover:text-white/80'
+              }`}
             >
               CONTACTO
             </button>
             <Button 
               onClick={() => scrollToSection('reservaciones')}
-              className="btn-ceramica-white-outline mt-8 px-12 py-4 text-xl font-bold uppercase tracking-wide"
+              className={`mt-8 px-12 py-4 text-xl font-bold uppercase tracking-wide ${
+                isScrolled 
+                  ? 'btn-ceramica-white-outline' 
+                  : 'btn-ceramica-white-outline-transparent'
+              }`}
             >
               RESERVAR AHORA
             </Button>
@@ -195,7 +226,11 @@ const Navigation = () => {
               href="https://instagram.com" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-white hover:text-white/80 transition-colors duration-200"
+              className={`transition-colors duration-200 ${
+                isScrolled 
+                  ? 'text-terracotta hover:text-terracotta/80' 
+                  : 'text-white hover:text-white/80'
+              }`}
             >
               <Instagram size={40} />
             </a>

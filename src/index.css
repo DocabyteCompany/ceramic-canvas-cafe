@@ -7,19 +7,22 @@
 @layer base {
   :root {
     /* Brand Colors - Cerámico Arte & Café */
-    --terracotta: 22 42% 39%;           /* #8B5E3C - Primary brand color */
+    --terracotta: 22 37% 38%;           /* #835A3E - Primary brand color (Coyote) */
     --terracotta-light: 22 42% 50%;     /* Lighter variant */
-    --beige: 38 50% 93%;                /* #F5F0E6 - Background */
+    --terracotta-hover: 22 43% 61%;     /* #C49474 - Hover state (Tono Rosado) */
+    --beige-warm: 36 33% 98%;           /* #FAF8F5 - Beige cálido para secciones alternas */
+    --beige: 38 50% 93%;                /* #F5F0E6 - Background general */
     --beige-dark: 38 30% 85%;           /* Darker beige for accents */
     --beige-translucent: 38 50% 93%;    /* For translucent overlays */
     --olive: 54 14% 61%;                /* #A6A48D - Details, hover states */
     --olive-dark: 54 14% 50%;           /* Darker olive */
-    --pure-white: 0 0% 100%;            /* #FFFFFF - Clean sections */
+    --accent-mint: 75 26% 84%;          /* #DDE4CE - Pequeños acentos (Beige/Verde Menta) */
+    --pure-white: 0 0% 100%;            /* #FFFFFF - Blanco puro para secciones */
     --warm-gray: 30 8% 25%;             /* Dark text */
     --warm-gray-light: 30 8% 65%;      /* Muted text */
 
     /* Design System Tokens */
-    --background: var(--beige);
+    --background: var(--beige-warm);
     --foreground: var(--warm-gray);
     --card: var(--pure-white);
     --card-foreground: var(--warm-gray);
@@ -124,28 +127,58 @@
 
   /* Navigation hover effects */
   .nav-link {
-    @apply relative text-white font-medium transition-all duration-300 ease-out;
+    @apply relative font-medium transition-all duration-300 ease-out;
     @apply after:content-[''] after:absolute after:w-full after:h-0.5;
     @apply after:left-0 after:bottom-[-4px] after:scale-x-0 after:origin-right;
     @apply after:transition-transform after:duration-300 after:ease-out;
+  }
+
+  /* Navigation link when scrolled (terracotta text) */
+  .nav-link-scrolled {
+    @apply text-terracotta;
+    @apply hover:text-terracotta/90 hover:after:scale-x-100 hover:after:origin-left;
+    @apply after:bg-terracotta;
+  }
+
+  /* Navigation link when transparent (white text) */
+  .nav-link-transparent {
+    @apply text-white;
     @apply hover:text-white/90 hover:after:scale-x-100 hover:after:origin-left;
     @apply after:bg-white;
   }
 
-  /* New white outline button for navbar */
+  /* New terracotta outline button for navbar */
   .btn-ceramica-white-outline {
+    @apply px-6 py-2 border-2 border-terracotta text-terracotta rounded-md font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-terracotta/50;
+    background: transparent !important;
+    border-color: hsl(var(--terracotta)) !important;
+    color: hsl(var(--terracotta)) !important;
+  }
+  
+  .btn-ceramica-white-outline:hover {
+    background: hsl(var(--terracotta)) !important;
+    color: white !important;
+  }
+  
+  .btn-ceramica-white-outline:focus {
+    background: hsl(var(--terracotta)) !important;
+    color: white !important;
+  }
+
+  /* White outline button for transparent navbar */
+  .btn-ceramica-white-outline-transparent {
     @apply px-6 py-2 border-2 border-white text-white rounded-md font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50;
     background: transparent !important;
     border-color: white !important;
     color: white !important;
   }
   
-  .btn-ceramica-white-outline:hover {
+  .btn-ceramica-white-outline-transparent:hover {
     background: white !important;
     color: hsl(var(--terracotta)) !important;
   }
   
-  .btn-ceramica-white-outline:focus {
+  .btn-ceramica-white-outline-transparent:focus {
     background: white !important;
     color: hsl(var(--terracotta)) !important;
   }
@@ -298,7 +331,98 @@
   display: none !important;
 }
 
-/* Mobile menu overlay - force solid terracotta background */
-.mobile-menu-overlay {
-  background-color: #8B5E3C !important;
-}
+  /* Logo sizing consistency */
+  .nav-logo {
+    height: 3rem; /* 48px - equivalente a h-12 */
+    width: auto;
+    min-width: 120px; /* Ancho mínimo para consistencia */
+    max-width: 200px; /* Limitar ancho máximo */
+    object-fit: contain; /* Mantener proporciones */
+    object-position: center; /* Centrar la imagen */
+    display: block; /* Asegurar que sea un elemento de bloque */
+  }
+
+  .nav-logo-mobile {
+    height: 2.5rem; /* 40px - equivalente a h-10 */
+    width: auto;
+    min-width: 100px;
+    max-width: 180px;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+  }
+
+  .nav-logo-mobile-menu {
+    height: 4rem; /* 64px - equivalente a h-16 */
+    width: auto;
+    min-width: 150px;
+    max-width: 250px;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+  }
+
+  /* Asegurar que ambos logos tengan el mismo tamaño visual */
+  .nav-logo[src*="ceramico-logo-white"] {
+    height: 3rem;
+    width: auto;
+    max-width: 200px;
+  }
+
+  .nav-logo[src*="imago_terracota"] {
+    height: 3rem;
+    width: auto;
+    max-width: 200px;
+  }
+
+  .nav-logo-mobile[src*="ceramico-logo-white"] {
+    height: 2.5rem;
+    width: auto;
+    max-width: 180px;
+  }
+
+  .nav-logo-mobile[src*="imago_terracota"] {
+    height: 2.5rem;
+    width: auto;
+    max-width: 180px;
+  }
+
+  .nav-logo-mobile-menu[src*="ceramico-logo-white"] {
+    height: 4rem;
+    width: auto;
+    max-width: 250px;
+  }
+
+  .nav-logo-mobile-menu[src*="imago_terracota"] {
+    height: 4rem;
+    width: auto;
+    max-width: 250px;
+  }
+
+  /* Contenedor para logos con dimensiones fijas */
+  .logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px; /* Ancho fijo */
+    height: 3rem; /* Altura fija */
+  }
+
+  .logo-container-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 180px;
+    height: 2.5rem;
+  }
+
+  .logo-container-mobile-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 250px;
+    height: 4rem;
+  }
+
+  /* Mobile menu overlay - dynamic background based on scroll state */
+/* Background is controlled by Tailwind classes in the component */

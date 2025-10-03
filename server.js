@@ -81,3 +81,4 @@ app.listen(PORT, () => {
   console.log(`🔑 RESEND_API_KEY: ${process.env.RESEND_API_KEY ? 'Configurada' : 'No configurada'}`);
 });
 
+

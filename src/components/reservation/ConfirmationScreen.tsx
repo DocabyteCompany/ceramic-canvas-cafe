@@ -200,7 +200,7 @@ export const ConfirmationScreen = ({ reservationData, onComplete }: Confirmation
               <MapPin size={18} className="text-primary" />
               <div>
                 <p className="font-medium">Cerámico, Arte & Café</p>
-                <p className="text-sm text-muted-foreground">Calle 47 #463-A x 52 y 54, Centro</p>
+                <p className="text-sm text-muted-foreground">Av Acueducto 902, Chapultepec Nte., 58260 Morelia, Mich.</p>
               </div>
             </div>
           </div>

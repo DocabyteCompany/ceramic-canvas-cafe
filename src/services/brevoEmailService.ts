@@ -213,8 +213,17 @@ const createEmailTemplate = (data: EmailReservationData): string => {
 };
 
 // Función principal para enviar correo de confirmación usando Supabase Edge Function
-export const sendReservationConfirmation = async (data: EmailReservationData): Promise<{ success: boolean; error?: string }> => {
+export const sendReservationConfirmation = async (
+  data: EmailReservationData, 
+  reservationType?: string
+): Promise<{ success: boolean; error?: string }> => {
   try {
+    // Validar que no sea un bloqueo administrativo
+    if (reservationType === 'admin_block') {
+      console.log('⏭️ [Admin] Saltando envío de email para bloqueo administrativo');
+      return { success: true }; // Retornar éxito sin enviar email
+    }
+
     console.log('📧 [Cliente] Enviando correo de confirmación a:', data.customerEmail);
     
     // Obtener la URL de la Edge Function desde las variables de entorno
@@ -229,11 +238,11 @@ export const sendReservationConfirmation = async (data: EmailReservationData): P
     const htmlContent = createEmailTemplate(data);
     
     // Preparar los datos para la Edge Function
-    const emailPayload = {
-      to: data.customerEmail,
-      subject: `Reservación confirmada - Cerámico Arte & Café (${data.reservationId})`,
-      html: htmlContent
-    };
+            const emailPayload = {
+              to: data.customerEmail,
+              subject: `Reservación confirmada - Cerámico Arte & Café`,
+              html: htmlContent
+            };
 
     // Llamar a la Edge Function usando Supabase
     const { data: result, error } = await supabase.functions.invoke('send-brevo-email', {

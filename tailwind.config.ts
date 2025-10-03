@@ -21,14 +21,19 @@ export default {
         terracotta: {
           DEFAULT: "hsl(var(--terracotta))",
           light: "hsl(var(--terracotta-light))",
+          hover: "hsl(var(--terracotta-hover))",
         },
         beige: {
           DEFAULT: "hsl(var(--beige))",
+          warm: "hsl(var(--beige-warm))",
           dark: "hsl(var(--beige-dark))",
         },
         olive: {
           DEFAULT: "hsl(var(--olive))",
           dark: "hsl(var(--olive-dark))",
+        },
+        mint: {
+          DEFAULT: "hsl(var(--accent-mint))",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
