@@ -7,6 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useBlockTimeSlots } from '@/hooks/useBlockTimeSlots';
+import { useAdminDateUtils } from '@/hooks/useAdminDateUtils';
 import type { BlockTimeSlotWithAvailability } from '@/services/blockedDatesService';
 
 interface BlockTimeSlotSelectionProps {
@@ -25,6 +26,7 @@ const BlockTimeSlotSelection = ({
   onGuestsPerSlotChange
 }: BlockTimeSlotSelectionProps) => {
   const { timeSlots, loading, error, loadTimeSlotsForDate } = useBlockTimeSlots();
+  const { formatDisplayDate } = useAdminDateUtils();
   const [availabilityErrors, setAvailabilityErrors] = useState<Map<number, string>>(new Map());
 
   // Cargar horarios cuando cambia la fecha
@@ -117,7 +119,7 @@ const BlockTimeSlotSelection = ({
             Seleccionar Horarios
           </CardTitle>
           <CardDescription>
-            Cargando horarios disponibles para {selectedDate}
+            Cargando horarios disponibles para {formatDisplayDate(selectedDate)}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -160,7 +162,7 @@ const BlockTimeSlotSelection = ({
             Seleccionar Horarios
           </CardTitle>
           <CardDescription>
-            No hay horarios disponibles para {selectedDate}
+            No hay horarios disponibles para {formatDisplayDate(selectedDate)}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -182,7 +184,7 @@ const BlockTimeSlotSelection = ({
           Seleccionar Horarios
         </CardTitle>
         <CardDescription className="text-xs sm:text-sm">
-          Selecciona los horarios que quieres bloquear para {selectedDate}
+          Selecciona los horarios que quieres bloquear para {formatDisplayDate(selectedDate)}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4 px-4 sm:px-6">

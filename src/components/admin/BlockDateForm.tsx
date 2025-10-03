@@ -8,8 +8,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import BlockTimeSlotSelection from './BlockTimeSlotSelection';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { useAdminDateUtils } from '@/hooks/useAdminDateUtils';
 
 interface BlockDateFormProps {
   onSuccess: (message: string) => void;
@@ -37,6 +36,16 @@ const BlockDateForm = ({ onSuccess, onError, adminUserId }: BlockDateFormProps) 
   });
 
   const totalSteps = 5;
+  
+  // Hook para manejo de fechas
+  const {
+    getDateInfo,
+    formatDisplayDate,
+    getTodayString,
+    getMaxDateString,
+    isValidDate,
+    isDateAvailable
+  } = useAdminDateUtils();
 
   // Limpiar formulario cuando se desmonta
   useEffect(() => {
@@ -76,26 +85,16 @@ const BlockDateForm = ({ onSuccess, onError, adminUserId }: BlockDateFormProps) 
     }
   };
 
-  // Validar fecha
+  // Validar fecha usando DateUtils
   const validateDate = (): boolean => {
     if (!formData.selectedDate) return false;
     
-    const selectedDate = new Date(formData.selectedDate);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    // No permitir fechas pasadas
-    if (selectedDate < today) return false;
-    
-    // No permitir fechas más de 6 meses en el futuro
-    const maxDate = new Date();
-    maxDate.setMonth(maxDate.getMonth() + 6);
-    if (selectedDate > maxDate) return false;
-    
-    // No permitir lunes (día de cierre)
-    if (selectedDate.getDay() === 1) return false;
-    
-    return true;
+    try {
+      const dateInfo = getDateInfo(formData.selectedDate);
+      return dateInfo.isValid && dateInfo.isAvailable;
+    } catch {
+      return false;
+    }
   };
 
   // Validar horarios específicos
@@ -156,16 +155,12 @@ const BlockDateForm = ({ onSuccess, onError, adminUserId }: BlockDateFormProps) 
       case 1:
         if (!formData.selectedDate) return 'Selecciona una fecha';
         if (!validateDate()) {
-          const selectedDate = new Date(formData.selectedDate);
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-          
-          if (selectedDate < today) return 'No puedes seleccionar fechas pasadas';
-          if (selectedDate.getDay() === 1) return 'Los lunes el negocio está cerrado';
-          
-          const maxDate = new Date();
-          maxDate.setMonth(maxDate.getMonth() + 6);
-          if (selectedDate > maxDate) return 'No puedes bloquear fechas más de 6 meses en el futuro';
+          try {
+            const dateInfo = getDateInfo(formData.selectedDate);
+            return dateInfo.error || 'Fecha inválida';
+          } catch {
+            return 'Fecha inválida';
+          }
         }
         return '';
       case 2:
@@ -257,14 +252,8 @@ const BlockDateForm = ({ onSuccess, onError, adminUserId }: BlockDateFormProps) 
     }
   };
 
-  // Formatear fecha para mostrar
-  const formatDisplayDate = (dateString: string) => {
-    try {
-      return format(new Date(dateString), 'EEEE, d MMMM yyyy', { locale: es });
-    } catch {
-      return dateString;
-    }
-  };
+  // Formatear fecha para mostrar (usando el hook)
+  // const formatDisplayDate ya está disponible desde useAdminDateUtils
 
   // Renderizar contenido del paso actual
   const renderStepContent = () => {
@@ -279,12 +268,8 @@ const BlockDateForm = ({ onSuccess, onError, adminUserId }: BlockDateFormProps) 
                 type="date"
                 value={formData.selectedDate}
                 onChange={(e) => updateFormData({ selectedDate: e.target.value })}
-                min={new Date().toISOString().split('T')[0]}
-                max={(() => {
-                  const maxDate = new Date();
-                  maxDate.setMonth(maxDate.getMonth() + 6);
-                  return maxDate.toISOString().split('T')[0];
-                })()}
+                min={getTodayString()}
+                max={getMaxDateString()}
                 className="mt-1 w-full"
               />
               <div className="text-xs text-gray-600 mt-2 space-y-1">

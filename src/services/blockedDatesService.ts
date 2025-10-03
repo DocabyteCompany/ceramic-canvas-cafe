@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import { TimeSlotsService } from './timeSlotsService';
+import { DateUtils } from '@/lib/dateUtils';
 import type { TimeSlotWithAvailability } from './timeSlotsService';
 
 export interface BlockedDateData {
@@ -320,6 +321,27 @@ export class BlockedDatesService {
     try {
       console.log('🔍 [BlockedDatesService] Obteniendo horarios para bloqueo en fecha:', date);
       
+      // Validar fecha usando DateUtils
+      const dateInfo = DateUtils.getDateInfo(date);
+      console.log('🔍 [BlockedDatesService] Información de fecha:', {
+        date,
+        isValid: dateInfo.isValid,
+        isAvailable: dateInfo.isAvailable,
+        dayOfWeek: dateInfo.dayOfWeek,
+        dayName: dateInfo.dayName,
+        error: dateInfo.error
+      });
+
+      if (!dateInfo.isValid) {
+        console.error('❌ [BlockedDatesService] Fecha inválida:', dateInfo.error);
+        return { data: null, error: dateInfo.error || 'Fecha inválida' };
+      }
+
+      if (!dateInfo.isAvailable) {
+        console.error('❌ [BlockedDatesService] Fecha no disponible:', dateInfo.error);
+        return { data: null, error: dateInfo.error || 'Fecha no disponible para bloqueos' };
+      }
+
       // Obtener horarios con disponibilidad usando el servicio existente
       const { data: timeSlots, error: timeSlotsError } = await TimeSlotsService.getTimeSlotsWithAvailability(date);
       
@@ -389,6 +411,13 @@ export class BlockedDatesService {
   ): Promise<{ available: number; canBlock: boolean; error: string | null }> {
     try {
       console.log('🔍 [BlockedDatesService] Verificando disponibilidad para bloqueo:', { timeSlotId, date, requestedGuests });
+      
+      // Validar fecha usando DateUtils
+      const dateInfo = DateUtils.getDateInfo(date);
+      if (!dateInfo.isValid || !dateInfo.isAvailable) {
+        console.error('❌ [BlockedDatesService] Fecha inválida para bloqueo:', dateInfo.error);
+        return { available: 0, canBlock: false, error: dateInfo.error || 'Fecha inválida para bloqueo' };
+      }
       
       // Obtener información del time slot
       const { data: timeSlot, error: timeSlotError } = await supabase
