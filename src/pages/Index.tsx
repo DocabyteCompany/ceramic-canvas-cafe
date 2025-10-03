@@ -5,7 +5,7 @@ import ReservationWizard from '@/components/ReservationWizard';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
-import { Clock, Palette, Coffee, MapPin, Phone, Instagram, CheckCircle, Sparkles, ChevronDown } from 'lucide-react';
+import { Clock, Palette, Coffee, MapPin, Phone, Instagram, CheckCircle, Sparkles, ChevronDown, ChevronRight } from 'lucide-react';
 import heroImage1 from '@/assets/hero-ceramica-new1.jpg';
 import heroImage2 from '@/assets/hero-ceramica-new2.jpg';
 import heroImage3 from '@/assets/hero-ceramica-new3.jpg';
@@ -445,7 +445,16 @@ const Index = () => {
           <div className="container mx-auto px-6 py-8">
             <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
               <p className="text-sm text-warm-gray-600 text-center sm:text-left font-medium">
-                Designed by Docabyte
+                Designed by{' '}
+                <a 
+                  href="https://www.docabyte.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-terracotta hover:text-terracotta-hover transition-colors duration-200 font-semibold"
+                >
+                  Docabyte
+                  <ChevronRight size={14} className="inline" />
+                </a>
               </p>
               <p className="text-sm text-warm-gray-600 text-center sm:text-right font-medium">
                 © 2025 | All Rights Reserved to Cerámico, Arte & Café
