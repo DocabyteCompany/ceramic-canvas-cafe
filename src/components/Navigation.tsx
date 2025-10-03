@@ -128,9 +128,7 @@ const Navigation = () => {
 
       {/* Mobile Menu - Full Screen Overlay */}
       <div 
-        className={`md:hidden fixed inset-0 z-[1100] mobile-menu-overlay w-screen h-[100dvh] overflow-y-auto transition-transform duration-300 ease-out ${
-          isScrolled ? 'bg-white' : 'bg-terracotta'
-        } ${
+        className={`md:hidden fixed inset-0 z-[1100] mobile-menu-overlay bg-terracotta w-screen h-[100dvh] overflow-y-auto transition-transform duration-300 ease-out ${
           isOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full pointer-events-none'
         }`}
         role="dialog"
@@ -141,11 +139,7 @@ const Navigation = () => {
           <div className="absolute top-6 right-6 z-10">
             <button 
               onClick={() => setIsOpen(false)}
-              className={`p-2 transition-all duration-300 ${
-                isScrolled 
-                  ? 'text-terracotta hover:text-terracotta/80' 
-                  : 'text-white hover:text-white/80'
-              }`}
+              className="p-2 text-terracotta hover:text-terracotta/80 transition-all duration-300"
               aria-label="Close menu"
             >
               <X size={32} />
@@ -159,7 +153,7 @@ const Navigation = () => {
               className="hover:scale-105 transition-transform duration-200 logo-container-mobile-menu"
             >
               <img 
-                src={isScrolled ? imagoTerracotta : ceramicoLogoWhite} 
+                src={imagoTerracotta} 
                 alt="Cerámico Logo" 
                 className="nav-logo-mobile-menu"
               />
@@ -170,51 +164,31 @@ const Navigation = () => {
           <div className="flex-1 flex flex-col justify-center items-center space-y-10 px-6 mb-12">
             <button 
               onClick={() => scrollToSection('inicio')}
-              className={`text-4xl font-bold uppercase transition-colors duration-200 tracking-wide ${
-                isScrolled 
-                  ? 'text-terracotta hover:text-terracotta/80' 
-                  : 'text-white hover:text-white/80'
-              }`}
+              className="text-terracotta text-4xl font-bold uppercase hover:text-terracotta/80 transition-colors duration-200 tracking-wide"
             >
               INICIO
             </button>
             <button 
               onClick={() => scrollToSection('nosotros')}
-              className={`text-4xl font-bold uppercase transition-colors duration-200 tracking-wide ${
-                isScrolled 
-                  ? 'text-terracotta hover:text-terracotta/80' 
-                  : 'text-white hover:text-white/80'
-              }`}
+              className="text-terracotta text-4xl font-bold uppercase hover:text-terracotta/80 transition-colors duration-200 tracking-wide"
             >
               NOSOTROS
             </button>
             <button 
               onClick={() => scrollToSection('experiencia')}
-              className={`text-4xl font-bold uppercase transition-colors duration-200 tracking-wide ${
-                isScrolled 
-                  ? 'text-terracotta hover:text-terracotta/80' 
-                  : 'text-white hover:text-white/80'
-              }`}
+              className="text-terracotta text-4xl font-bold uppercase hover:text-terracotta/80 transition-colors duration-200 tracking-wide"
             >
               EXPERIENCIA
             </button>
             <button 
               onClick={() => scrollToSection('contacto')}
-              className={`text-4xl font-bold uppercase transition-colors duration-200 tracking-wide ${
-                isScrolled 
-                  ? 'text-terracotta hover:text-terracotta/80' 
-                  : 'text-white hover:text-white/80'
-              }`}
+              className="text-terracotta text-4xl font-bold uppercase hover:text-terracotta/80 transition-colors duration-200 tracking-wide"
             >
               CONTACTO
             </button>
             <Button 
               onClick={() => scrollToSection('reservaciones')}
-              className={`mt-8 px-12 py-4 text-xl font-bold uppercase tracking-wide ${
-                isScrolled 
-                  ? 'btn-ceramica-white-outline' 
-                  : 'btn-ceramica-white-outline-transparent'
-              }`}
+              className="btn-ceramica-white-outline mt-8 px-12 py-4 text-xl font-bold uppercase tracking-wide"
             >
               RESERVAR AHORA
             </Button>
@@ -226,11 +200,7 @@ const Navigation = () => {
               href="https://instagram.com" 
               target="_blank" 
               rel="noopener noreferrer"
-              className={`transition-colors duration-200 ${
-                isScrolled 
-                  ? 'text-terracotta hover:text-terracotta/80' 
-                  : 'text-white hover:text-white/80'
-              }`}
+              className="text-terracotta hover:text-terracotta/80 transition-colors duration-200"
             >
               <Instagram size={40} />
             </a>
