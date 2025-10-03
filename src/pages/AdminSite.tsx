@@ -3,8 +3,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { useBlockedDates } from '@/hooks/useBlockedDates';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -13,13 +11,13 @@ import {
   Users, 
   Trash2, 
   LogOut, 
-  Plus, 
   AlertCircle,
   CheckCircle,
   Loader2
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import BlockDateForm from '@/components/admin/BlockDateForm';
 
 const AdminSite = () => {
   const { user, logout } = useAuth();
@@ -32,15 +30,9 @@ const AdminSite = () => {
     blockSpecificTimeSlots 
   } = useBlockedDates();
 
-  // Estados para el formulario de bloqueo
-  const [selectedDate, setSelectedDate] = useState('');
-  const [blockReason, setBlockReason] = useState('');
-  const [showBlockModal, setShowBlockModal] = useState(false);
-  const [blockType, setBlockType] = useState<'full' | 'specific'>('full');
-  const [selectedTimeSlots, setSelectedTimeSlots] = useState<number[]>([]);
-  const [guestsPerSlot, setGuestsPerSlot] = useState<number>(20);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // Estados para mensajes
   const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Limpiar mensajes después de un tiempo
   useEffect(() => {
@@ -50,14 +42,22 @@ const AdminSite = () => {
     }
   }, [successMessage]);
 
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => setErrorMessage(''), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
+
   const handleLogout = async () => {
     try {
       const result = await logout();
       if (!result.success) {
-        alert('Error al cerrar sesión: ' + result.error);
+        setErrorMessage('Error al cerrar sesión: ' + result.error);
       }
     } catch (error) {
       console.error('Error en logout:', error);
+      setErrorMessage('Error inesperado al cerrar sesión');
     }
   };
 
@@ -70,59 +70,16 @@ const AdminSite = () => {
     if (result.success) {
       setSuccessMessage('Bloqueo eliminado exitosamente');
     } else {
-      alert('Error al eliminar bloqueo: ' + result.error);
+      setErrorMessage('Error al eliminar bloqueo: ' + result.error);
     }
   };
 
-  const handleBlockDate = async () => {
-    if (!selectedDate || !blockReason.trim()) {
-      alert('Por favor completa todos los campos requeridos');
-      return;
-    }
+  const handleBlockSuccess = (message: string) => {
+    setSuccessMessage(message);
+  };
 
-    if (isSubmitting) return;
-
-    setIsSubmitting(true);
-
-    try {
-      let result;
-
-      if (blockType === 'full') {
-        // Bloquear día completo
-        result = await blockFullDay(selectedDate, blockReason.trim(), user?.id || '');
-      } else {
-        // Bloquear horarios específicos
-        if (selectedTimeSlots.length === 0) {
-          alert('Selecciona al menos un horario para bloquear');
-          return;
-        }
-        result = await blockSpecificTimeSlots(
-          selectedDate, 
-          selectedTimeSlots, 
-          blockReason.trim(), 
-          user?.id || '', 
-          guestsPerSlot
-        );
-      }
-
-      if (result.success) {
-        setSuccessMessage(
-          blockType === 'full' 
-            ? 'Día completo bloqueado exitosamente' 
-            : 'Horarios específicos bloqueados exitosamente'
-        );
-        setShowBlockModal(false);
-        setSelectedDate('');
-        setBlockReason('');
-        setSelectedTimeSlots([]);
-      } else {
-        alert('Error al crear bloqueo: ' + result.error);
-      }
-    } catch (error: any) {
-      alert('Error inesperado: ' + error.message);
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleBlockError = (error: string) => {
+    setErrorMessage(error);
   };
 
   const formatDate = (dateString: string) => {
@@ -218,123 +175,28 @@ const AdminSite = () => {
         )}
 
         {/* Mensajes de error */}
-        {error && (
+        {(error || errorMessage) && (
           <Alert variant="destructive" className="mb-6">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
-              {error}
+              {error || errorMessage}
             </AlertDescription>
           </Alert>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           {/* Formulario de Bloqueo */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Plus className="h-5 w-5 mr-2" />
-                Bloquear Fechas
-              </CardTitle>
-              <CardDescription>
-                Selecciona fechas para bloquearlas del calendario público
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Fecha */}
-              <div>
-                <Label htmlFor="date">Fecha a bloquear</Label>
-                <Input
-                  id="date"
-                  type="date"
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  min={new Date().toISOString().split('T')[0]}
-                  className="mt-1"
-                />
-              </div>
-
-              {/* Razón del bloqueo */}
-              <div>
-                <Label htmlFor="reason">Razón del bloqueo</Label>
-                <Input
-                  id="reason"
-                  value={blockReason}
-                  onChange={(e) => setBlockReason(e.target.value)}
-                  placeholder="Ej: Mantenimiento, Evento privado..."
-                  className="mt-1"
-                />
-              </div>
-
-              {/* Tipo de bloqueo */}
-              <div>
-                <Label>Tipo de bloqueo</Label>
-                <div className="mt-2 space-y-2">
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="blockType"
-                      value="full"
-                      checked={blockType === 'full'}
-                      onChange={(e) => setBlockType(e.target.value as 'full')}
-                      className="mr-2"
-                    />
-                    <span className="text-sm">Día completo (todos los horarios)</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="blockType"
-                      value="specific"
-                      checked={blockType === 'specific'}
-                      onChange={(e) => setBlockType(e.target.value as 'specific')}
-                      className="mr-2"
-                    />
-                    <span className="text-sm">Horarios específicos</span>
-                  </label>
-                </div>
-              </div>
-
-              {/* Configuración para horarios específicos */}
-              {blockType === 'specific' && (
-                <div className="space-y-3 p-3 bg-gray-50 rounded-md">
-                  <Label>Cupos a bloquear por horario</Label>
-                  <Input
-                    type="number"
-                    min="1"
-                    max="20"
-                    value={guestsPerSlot}
-                    onChange={(e) => setGuestsPerSlot(parseInt(e.target.value) || 20)}
-                    className="w-24"
-                  />
-                  <p className="text-xs text-gray-600">
-                    Nota: Los horarios específicos se seleccionarán en el siguiente paso
-                  </p>
-                </div>
-              )}
-
-              {/* Botón de bloqueo */}
-              <Button 
-                onClick={handleBlockDate}
-                disabled={!selectedDate || !blockReason.trim() || isSubmitting}
-                className="w-full"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Creando bloqueo...
-                  </>
-                ) : (
-                  <>
-                    <Plus className="mr-2 h-4 w-4" />
-                    Crear Bloqueo
-                  </>
-                )}
-              </Button>
-            </CardContent>
-          </Card>
+          <div className="xl:col-span-1">
+            <BlockDateForm
+              onSuccess={handleBlockSuccess}
+              onError={handleBlockError}
+              adminUserId={user?.id || ''}
+            />
+          </div>
 
           {/* Lista de Bloqueos Activos */}
-          <Card>
+          <div className="xl:col-span-1">
+            <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Clock className="h-5 w-5 mr-2" />
@@ -406,7 +268,8 @@ const AdminSite = () => {
                 </div>
               )}
             </CardContent>
-          </Card>
+            </Card>
+          </div>
         </div>
       </main>
     </div>

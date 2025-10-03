@@ -1,4 +1,6 @@
 import { supabase } from '@/lib/supabase';
+import { TimeSlotsService } from './timeSlotsService';
+import type { TimeSlotWithAvailability } from './timeSlotsService';
 
 export interface BlockedDateData {
   time_slot_id: number;
@@ -19,6 +21,11 @@ export interface BlockedDate {
     end_time: string;
     max_capacity: number;
   };
+}
+
+export interface BlockTimeSlotWithAvailability extends TimeSlotWithAvailability {
+  isBlocked: boolean;
+  blockedGuests: number;
 }
 
 export class BlockedDatesService {
@@ -301,6 +308,122 @@ export class BlockedDatesService {
     } catch (error: any) {
       console.error('❌ [BlockedDatesService] Error inesperado verificando bloqueo:', error);
       return false;
+    }
+  }
+
+  /**
+   * Obtener horarios disponibles para bloqueo en una fecha específica
+   * @param date - Fecha para obtener horarios (formato YYYY-MM-DD)
+   * @returns Array de horarios con disponibilidad y estado de bloqueo
+   */
+  static async getTimeSlotsForDate(date: string): Promise<{ data: BlockTimeSlotWithAvailability[] | null; error: string | null }> {
+    try {
+      console.log('🔍 [BlockedDatesService] Obteniendo horarios para bloqueo en fecha:', date);
+      
+      // Obtener horarios con disponibilidad usando el servicio existente
+      const { data: timeSlots, error: timeSlotsError } = await TimeSlotsService.getTimeSlotsWithAvailability(date);
+      
+      if (timeSlotsError) {
+        console.error('❌ [BlockedDatesService] Error obteniendo horarios:', timeSlotsError);
+        return { data: null, error: timeSlotsError };
+      }
+
+      if (!timeSlots || timeSlots.length === 0) {
+        console.log('⚠️ [BlockedDatesService] No hay horarios disponibles para esta fecha');
+        return { data: [], error: null };
+      }
+
+      // Obtener bloqueos existentes para esta fecha
+      const { data: existingBlocks, error: blocksError } = await supabase
+        .from('reservations')
+        .select('time_slot_id, guests')
+        .eq('reservation_date', date)
+        .eq('reservation_type', 'admin_block');
+
+      if (blocksError) {
+        console.error('❌ [BlockedDatesService] Error obteniendo bloqueos existentes:', blocksError.message);
+        return { data: null, error: blocksError.message };
+      }
+
+      // Crear mapa de bloqueos por time_slot_id
+      const blockedSlots = new Map<number, number>();
+      existingBlocks?.forEach(block => {
+        blockedSlots.set(block.time_slot_id, block.guests);
+      });
+
+      // Enriquecer horarios con información de bloqueo
+      const enrichedTimeSlots: BlockTimeSlotWithAvailability[] = timeSlots.map(slot => {
+        const blockedGuests = blockedSlots.get(slot.id) || 0;
+        const isBlocked = blockedGuests > 0;
+        
+        return {
+          ...slot,
+          isBlocked,
+          blockedGuests,
+          // Ajustar disponibilidad considerando bloqueos
+          available: Math.max(0, slot.available - blockedGuests),
+          // Recalcular porcentaje de ocupación
+          occupancyPercentage: Math.round(((slot.max_capacity - slot.available + blockedGuests) / slot.max_capacity) * 100)
+        };
+      });
+
+      console.log(`✅ [BlockedDatesService] Obtenidos ${enrichedTimeSlots.length} horarios para bloqueo`);
+      return { data: enrichedTimeSlots, error: null };
+    } catch (error: any) {
+      console.error('❌ [BlockedDatesService] Error inesperado obteniendo horarios para bloqueo:', error);
+      return { data: null, error: error.message || 'Error inesperado al obtener horarios para bloqueo' };
+    }
+  }
+
+  /**
+   * Verificar disponibilidad para bloquear un horario específico
+   * @param timeSlotId - ID del horario
+   * @param date - Fecha del bloqueo
+   * @param requestedGuests - Cupos que se quieren bloquear
+   * @returns Objeto con disponibilidad y si se puede bloquear
+   */
+  static async checkBlockAvailability(
+    timeSlotId: number, 
+    date: string, 
+    requestedGuests: number
+  ): Promise<{ available: number; canBlock: boolean; error: string | null }> {
+    try {
+      console.log('🔍 [BlockedDatesService] Verificando disponibilidad para bloqueo:', { timeSlotId, date, requestedGuests });
+      
+      // Obtener información del time slot
+      const { data: timeSlot, error: timeSlotError } = await supabase
+        .from('time_slots')
+        .select('max_capacity')
+        .eq('id', timeSlotId)
+        .single();
+
+      if (timeSlotError) {
+        console.error('❌ [BlockedDatesService] Error obteniendo time slot:', timeSlotError.message);
+        return { available: 0, canBlock: false, error: timeSlotError.message };
+      }
+
+      // Obtener reservaciones existentes (normales y bloqueos)
+      const { data: reservations, error: reservationsError } = await supabase
+        .from('reservations')
+        .select('guests, reservation_type')
+        .eq('time_slot_id', timeSlotId)
+        .eq('reservation_date', date);
+
+      if (reservationsError) {
+        console.error('❌ [BlockedDatesService] Error obteniendo reservaciones:', reservationsError.message);
+        return { available: 0, canBlock: false, error: reservationsError.message };
+      }
+
+      // Calcular ocupación total
+      const totalGuests = reservations?.reduce((sum, reservation) => sum + reservation.guests, 0) || 0;
+      const available = Math.max(0, timeSlot.max_capacity - totalGuests);
+      const canBlock = available >= requestedGuests;
+
+      console.log(`✅ [BlockedDatesService] Disponibilidad verificada: ${available} cupos disponibles, puede bloquear: ${canBlock}`);
+      return { available, canBlock, error: null };
+    } catch (error: any) {
+      console.error('❌ [BlockedDatesService] Error inesperado verificando disponibilidad:', error);
+      return { available: 0, canBlock: false, error: error.message || 'Error inesperado al verificar disponibilidad' };
     }
   }
 }
