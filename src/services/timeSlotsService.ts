@@ -69,7 +69,7 @@ export class TimeSlotsService {
         .from('time_slots')
         .select('*')
         .eq('day_of_week', dayOfWeek)
-        .eq('is_active', true)
+        .is('is_active', true)
         .order('start_time');
 
       console.log('🔍 TimeSlotsService - Respuesta de time_slots:', {
