@@ -257,7 +257,7 @@ const DateTimeSelectionComponent = ({ reservationData, onComplete }: DateTimeSel
 
           {/* Time Slots */}
           {!loadingTimeSlots && !timeSlotsError && (
-            <div className="grid gap-4">
+            <div className="time-slots-mobile md:grid md:gap-4">
               {availableTimeSlots.length === 0 ? (
                 <Alert>
                   <AlertCircle className="h-4 w-4" />
@@ -273,9 +273,61 @@ const DateTimeSelectionComponent = ({ reservationData, onComplete }: DateTimeSel
                     const displaySlot = formatTimeSlotForDisplay(slot);
                     
                     return (
-                    <Card
+                    <div
                       key={slot.id || index}
-                      className={`cursor-pointer transition-all duration-150 hover:shadow-md ${
+                      className={`time-slot-card-mobile md:hidden ${
+                        isSelected ? 'selected' : ''
+                      } ${!slot.isAvailable ? 'disabled' : ''}`}
+                      onClick={() => slot.isAvailable && handleTimeSlotSelect(slot)}
+                    >
+                      {/* Mobile Layout */}
+                      <div className="md:hidden">
+                        <div className="time-slot-header-mobile">
+                          <div className="time-slot-time-mobile">{displaySlot.label}</div>
+                          <div className="time-slot-duration-mobile">
+                            {selectedDate?.getDay() === 0 && slot.start_time === '13:30:00' ? '1h 30m' : '1h 45m'}
+                          </div>
+                        </div>
+                        
+                        <div className="time-slot-info-mobile">
+                          <div className="time-slot-availability-mobile">
+                            <Users size={16} className="text-primary" />
+                            <span className="font-medium">{slot.available}</span>
+                            <span className="text-muted-foreground">lugares disponibles</span>
+                          </div>
+                          
+                          <div className="time-slot-progress-mobile">
+                            <div 
+                              className="time-slot-progress-fill-mobile"
+                              style={{ width: `${slot.occupancyPercentage}%` }}
+                            />
+                          </div>
+                        </div>
+                        
+                        <Button
+                          variant={isSelected ? "default" : "outline"}
+                          disabled={!slot.isAvailable}
+                          className={`time-slot-button-mobile ${isSelected ? "bg-primary" : ""}`}
+                        >
+                          {!slot.isAvailable ? 'Lleno' : isSelected ? 'Seleccionado' : 'Reservar'}
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+              
+              {/* Desktop Layout - Keep original */}
+              {availableTimeSlots
+                .filter(slot => slot.start_time && slot.end_time)
+                .map((slot, index) => {
+                  const isSelected = selectedTimeSlot?.value === slot.start_time.substring(0, 5);
+                  const displaySlot = formatTimeSlotForDisplay(slot);
+                  
+                  return (
+                    <Card
+                      key={`desktop-${slot.id || index}`}
+                      className={`hidden md:block cursor-pointer transition-all duration-150 hover:shadow-md ${
                         isSelected ? 'border-primary bg-primary/5' : ''
                       } ${!slot.isAvailable ? 'opacity-50 cursor-not-allowed' : ''}`}
                       onClick={() => slot.isAvailable && handleTimeSlotSelect(slot)}
@@ -318,7 +370,7 @@ const DateTimeSelectionComponent = ({ reservationData, onComplete }: DateTimeSel
                     </Card>
                   );
                 })
-              )}
+              }
             </div>
           )}
         </div>

@@ -14,11 +14,11 @@ const stepLabels = [
 export const ProgressBar = ({ currentStep, totalSteps }: ProgressBarProps) => {
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className="flex items-center justify-between relative">
+      <div className="progress-bar-container">
         {/* Progress line */}
-        <div className="absolute top-4 left-0 w-full h-0.5 bg-muted z-0">
+        <div className="progress-bar-line">
           <div 
-            className="h-full bg-primary transition-all duration-300 ease-out"
+            className="progress-bar-line-fill"
             style={{ width: `${((currentStep - 1) / (totalSteps - 1)) * 100}%` }}
           />
         </div>
@@ -30,12 +30,11 @@ export const ProgressBar = ({ currentStep, totalSteps }: ProgressBarProps) => {
           const isCompleted = stepNumber < currentStep;
           
           return (
-            <div key={stepNumber} className="flex flex-col items-center relative z-10">
+            <div key={stepNumber} className="progress-bar-step">
               {/* Circle */}
               <div
                 className={cn(
-                  "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-150",
-                  "border-2",
+                  "progress-bar-circle",
                   {
                     "bg-primary border-primary text-primary-foreground": isActive || isCompleted,
                     "bg-background border-muted text-muted-foreground": !isActive && !isCompleted
@@ -54,7 +53,7 @@ export const ProgressBar = ({ currentStep, totalSteps }: ProgressBarProps) => {
               {/* Label */}
               <span 
                 className={cn(
-                  "mt-2 text-xs font-medium text-center max-w-20 leading-tight",
+                  "progress-bar-label",
                   {
                     "text-primary": isActive || isCompleted,
                     "text-muted-foreground": !isActive && !isCompleted
