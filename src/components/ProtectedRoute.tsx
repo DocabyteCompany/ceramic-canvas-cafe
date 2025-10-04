@@ -24,13 +24,11 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   // Si no hay usuario, redirigir al login
   if (!user) {
-    console.log('🔒 [ProtectedRoute] No hay usuario autenticado, redirigiendo al login');
     return <Navigate to="/adminsite/login" replace />;
   }
 
   // Si hay usuario pero aún se está verificando si es admin, mostrar loading
   if (user && verifyingAdmin) {
-    console.log('⏳ [ProtectedRoute] Verificando permisos de admin para:', user.email);
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -43,7 +41,6 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   // Si hay usuario pero no es admin (después de verificar), mostrar error
   if (user && !isAdmin && !verifyingAdmin) {
-    console.log('🚫 [ProtectedRoute] Usuario no es administrador:', user.email);
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="max-w-md w-full mx-auto px-4">
@@ -87,7 +84,6 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }
 
   // Si todo está bien, mostrar el contenido protegido
-  console.log('✅ [ProtectedRoute] Acceso autorizado para admin:', user.email);
   return <>{children}</>;
 };
 

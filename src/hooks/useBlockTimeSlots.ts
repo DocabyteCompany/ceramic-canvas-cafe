@@ -11,7 +11,7 @@ export interface UseBlockTimeSlotsReturn {
   refreshTimeSlots: (date: string) => Promise<void>;
 }
 
-export const useBlockTimeSlots = (): UseBlockTimeSlotsReturn => {
+export const useBlockTimeSlots = (adminUserId?: string): UseBlockTimeSlotsReturn => {
   const [timeSlots, setTimeSlots] = useState<BlockTimeSlotWithAvailability[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,7 +32,7 @@ export const useBlockTimeSlots = (): UseBlockTimeSlotsReturn => {
       setError(null);
       console.log('🔍 [useBlockTimeSlots] Cargando horarios para fecha:', date);
 
-      const { data, error: serviceError } = await BlockedDatesService.getTimeSlotsForDate(date);
+      const { data, error: serviceError } = await BlockedDatesService.getTimeSlotsForDate(date, adminUserId);
 
       if (serviceError) {
         console.error('❌ [useBlockTimeSlots] Error del servicio:', serviceError);

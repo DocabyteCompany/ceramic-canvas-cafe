@@ -16,6 +16,7 @@ interface BlockTimeSlotSelectionProps {
   onTimeSlotChange: (timeSlotIds: number[]) => void;
   guestsPerSlot: number;
   onGuestsPerSlotChange: (guests: number) => void;
+  adminUserId?: string;
 }
 
 const BlockTimeSlotSelection = ({
@@ -23,9 +24,10 @@ const BlockTimeSlotSelection = ({
   selectedTimeSlots,
   onTimeSlotChange,
   guestsPerSlot,
-  onGuestsPerSlotChange
+  onGuestsPerSlotChange,
+  adminUserId
 }: BlockTimeSlotSelectionProps) => {
-  const { timeSlots, loading, error, loadTimeSlotsForDate } = useBlockTimeSlots();
+  const { timeSlots, loading, error, loadTimeSlotsForDate } = useBlockTimeSlots(adminUserId);
   const { formatDisplayDate } = useAdminDateUtils();
   const [availabilityErrors, setAvailabilityErrors] = useState<Map<number, string>>(new Map());
 
@@ -71,6 +73,24 @@ const BlockTimeSlotSelection = ({
 
   // Verificar disponibilidad para un horario específico
   const checkSlotAvailability = (slot: BlockTimeSlotWithAvailability) => {
+    console.log('🔍 [BlockTimeSlotSelection] Verificando slot:', {
+      slotId: slot.id,
+      isBlocked: slot.isBlocked,
+      available: slot.available,
+      blockedGuests: slot.blockedGuests,
+      guestsPerSlot,
+      adminUserId
+    });
+
+    // Bloquear selección si no hay cupos configurados
+    if (guestsPerSlot === 0) {
+      return {
+        canBlock: false,
+        available: 0,
+        message: 'Configura los cupos a bloquear'
+      };
+    }
+
     if (slot.isBlocked) {
       return {
         canBlock: false,
@@ -195,11 +215,31 @@ const BlockTimeSlotSelection = ({
           </label>
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
             <input
-              type="number"
-              min="1"
-              max="20"
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               value={guestsPerSlot}
-              onChange={(e) => onGuestsPerSlotChange(parseInt(e.target.value) || 1)}
+              onChange={(e) => {
+                const value = e.target.value;
+                // Permitir campo vacío temporalmente
+                if (value === '') {
+                  onGuestsPerSlotChange(0); // Usar 0 para representar campo vacío
+                } else {
+                  const numValue = parseInt(value);
+                  // Solo aceptar números válidos entre 1 y 20
+                  if (!isNaN(numValue) && numValue >= 1 && numValue <= 20) {
+                    onGuestsPerSlotChange(numValue);
+                  }
+                  // Si es un número inválido, no hacer nada (mantener el valor anterior)
+                }
+              }}
+              onBlur={(e) => {
+                // Al perder el foco, si está vacío o es 0, establecer valor por defecto
+                const value = e.target.value;
+                if (value === '' || value === '0') {
+                  onGuestsPerSlotChange(1);
+                }
+              }}
               className="w-20 px-2 py-1 border border-gray-300 rounded-md text-sm"
             />
             <span className="text-xs sm:text-sm text-gray-600">cupos por horario</span>

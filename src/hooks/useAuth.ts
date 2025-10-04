@@ -20,28 +20,20 @@ export const useAuth = (): UseAuthReturn => {
 
   // Escuchar cambios en el estado de autenticación
   useEffect(() => {
-    console.log('🔧 [useAuth] Configurando listener de autenticación');
-    
     const { data: { subscription } } = AuthService.onAuthStateChange(async (event, session) => {
-      console.log('🔄 [useAuth] Cambio en autenticación:', event, 'Session:', !!session);
-      
       if (session?.user) {
-        console.log('👤 [useAuth] Usuario encontrado:', session.user.email);
         setUser(session.user);
         // NO verificar admin aquí para evitar loops - se hará en useEffect separado
         setIsAdmin(false); // Temporalmente false hasta verificar
       } else {
-        console.log('🔍 [useAuth] No hay usuario autenticado');
         setUser(null);
         setIsAdmin(false);
       }
       
-      console.log('🏁 [useAuth] Finalizando verificación, estableciendo loading: false');
       setLoading(false);
     });
 
     return () => {
-      console.log('🧹 [useAuth] Limpiando listener de autenticación');
       subscription.unsubscribe();
     };
   }, []);
@@ -49,7 +41,6 @@ export const useAuth = (): UseAuthReturn => {
   // Verificar admin cuando el usuario cambie (separado para evitar loops)
   useEffect(() => {
     if (user && !isAdmin) {
-      console.log('🔍 [useAuth] Verificando admin para usuario:', user.email);
       checkAdminStatus();
     }
   }, [user]);
@@ -57,9 +48,7 @@ export const useAuth = (): UseAuthReturn => {
   const checkAdminStatus = async () => {
     try {
       setVerifyingAdmin(true);
-      console.log('🔍 [useAuth] Llamando a AuthService.isCurrentUserAdmin()...');
       const adminStatus = await AuthService.isCurrentUserAdmin();
-      console.log('✅ [useAuth] Resultado verificación admin:', adminStatus);
       setIsAdmin(adminStatus);
     } catch (error) {
       console.error('❌ [useAuth] Error verificando admin:', error);
@@ -80,10 +69,8 @@ export const useAuth = (): UseAuthReturn => {
       if (currentUser) {
         const adminStatus = await AuthService.isCurrentUserAdmin();
         setIsAdmin(adminStatus);
-        console.log('✅ [useAuth] Usuario autenticado:', currentUser.email, 'Admin:', adminStatus);
       } else {
         setIsAdmin(false);
-        console.log('🔍 [useAuth] No hay usuario autenticado');
       }
     } catch (error: any) {
       console.error('❌ [useAuth] Error verificando autenticación:', error);
@@ -100,7 +87,6 @@ export const useAuth = (): UseAuthReturn => {
    */
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
-      console.log('🔐 [useAuth] Iniciando login para:', email);
       setLoading(true);
       
       const { data, error } = await AuthService.login(email, password);
@@ -111,14 +97,11 @@ export const useAuth = (): UseAuthReturn => {
       }
       
       if (data?.user) {
-        console.log('✅ [useAuth] Login exitoso, verificando admin...');
         // Verificar si es admin después del login
         const adminStatus = await AuthService.isCurrentUserAdmin();
-        console.log('🔍 [useAuth] Resultado verificación admin en login:', adminStatus);
         setIsAdmin(adminStatus);
         
         if (!adminStatus) {
-          console.log('❌ [useAuth] Usuario no es admin, cerrando sesión');
           // Si no es admin, cerrar sesión inmediatamente
           await AuthService.logout();
           setUser(null);
@@ -130,7 +113,6 @@ export const useAuth = (): UseAuthReturn => {
         }
         
         setUser(data.user);
-        console.log('✅ [useAuth] Login exitoso para admin:', email);
         return { success: true };
       }
       
@@ -149,7 +131,6 @@ export const useAuth = (): UseAuthReturn => {
    */
   const logout = async (): Promise<{ success: boolean; error?: string }> => {
     try {
-      console.log('🚪 [useAuth] Iniciando logout');
       setLoading(true);
       
       const { error } = await AuthService.logout();
@@ -161,7 +142,6 @@ export const useAuth = (): UseAuthReturn => {
       
       setUser(null);
       setIsAdmin(false);
-      console.log('✅ [useAuth] Logout exitoso');
       return { success: true };
     } catch (error: any) {
       console.error('❌ [useAuth] Error inesperado en logout:', error);

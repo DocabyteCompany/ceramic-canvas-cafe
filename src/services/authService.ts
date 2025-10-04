@@ -15,14 +15,10 @@ export class AuthService {
       });
       
       if (error) {
-        console.error('❌ [AuthService] Error en login:', error.message);
         return { data: null, error: error.message };
       }
-      
-      console.log('✅ [AuthService] Login exitoso para:', email);
       return { data, error: null };
     } catch (error: any) {
-      console.error('❌ [AuthService] Error inesperado en login:', error);
       return { data: null, error: error.message || 'Error inesperado al iniciar sesión' };
     }
   }
@@ -36,14 +32,10 @@ export class AuthService {
       const { error } = await supabase.auth.signOut();
       
       if (error) {
-        console.error('❌ [AuthService] Error en logout:', error.message);
         return { error: error.message };
       }
-      
-      console.log('✅ [AuthService] Logout exitoso');
       return { error: null };
     } catch (error: any) {
-      console.error('❌ [AuthService] Error inesperado en logout:', error);
       return { error: error.message || 'Error inesperado al cerrar sesión' };
     }
   }
@@ -59,7 +51,6 @@ export class AuthService {
       const { data: { user }, error: userError } = await supabase.auth.getUser();
       
       if (userError || !user) {
-        console.log('🔍 [AuthService] No hay usuario autenticado');
         return false;
       }
 
@@ -69,14 +60,10 @@ export class AuthService {
       });
 
       if (error) {
-        console.log('🔍 [AuthService] Usuario no es admin:', error.message);
         return false;
       }
-
-      console.log('✅ [AuthService] Usuario es administrador:', user.email, 'Admin:', data);
       return data === true;
     } catch (error: any) {
-      console.error('❌ [AuthService] Error verificando admin:', error);
       return false;
     }
   }
@@ -90,13 +77,11 @@ export class AuthService {
       const { data: { user }, error } = await supabase.auth.getUser();
       
       if (error) {
-        console.error('❌ [AuthService] Error obteniendo usuario:', error.message);
         return null;
       }
       
       return user;
     } catch (error: any) {
-      console.error('❌ [AuthService] Error inesperado obteniendo usuario:', error);
       return null;
     }
   }
@@ -110,13 +95,11 @@ export class AuthService {
       const { data: { session }, error } = await supabase.auth.getSession();
       
       if (error) {
-        console.error('❌ [AuthService] Error obteniendo sesión:', error.message);
         return null;
       }
       
       return session;
     } catch (error: any) {
-      console.error('❌ [AuthService] Error inesperado obteniendo sesión:', error);
       return null;
     }
   }

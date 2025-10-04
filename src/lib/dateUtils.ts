@@ -6,6 +6,82 @@ import { es } from 'date-fns/locale';
  * Evita problemas de zona horaria usando parseISO y startOfDay
  */
 export class DateUtils {
+  
+  /**
+   * Función de debug para analizar problemas de fechas y zona horaria
+   * @param dateString - Fecha en formato YYYY-MM-DD
+   * @param context - Contexto donde se está usando (ej: 'AdminSite.formatDate')
+   * @returns Objeto con información detallada de la fecha
+   */
+  static debugDate(dateString: string, context: string = 'Unknown') {
+    try {
+      const [year, month, day] = dateString.split('-').map(Number);
+      
+      // Método 1: Parseo por componentes (recomendado)
+      const dateComponents = new Date(year, month - 1, day);
+      
+      // Método 2: Parseo con UTC
+      const dateUTC = new Date(dateString + 'T00:00:00.000Z');
+      
+      // Método 3: Parseo local
+      const dateLocal = new Date(dateString + 'T00:00:00');
+      
+      // Método 4: parseISO (date-fns)
+      const dateParseISO = parseISO(dateString);
+      
+      // Método 5: parseISO + startOfDay (date-fns)
+      const dateParseISOStartOfDay = startOfDay(parseISO(dateString));
+      
+      const debugInfo = {
+        context,
+        originalDateString: dateString,
+        timezoneOffset: new Date().getTimezoneOffset(),
+        methods: {
+          parseComponents: {
+            date: dateComponents,
+            dayOfWeek: dateComponents.getDay(),
+            dayName: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'][dateComponents.getDay()],
+            description: 'new Date(year, month-1, day) - RECOMENDADO'
+          },
+          utcString: {
+            date: dateUTC,
+            dayOfWeek: dateUTC.getDay(),
+            dayName: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'][dateUTC.getDay()],
+            description: 'new Date(dateString + "T00:00:00.000Z") - PROBLEMÁTICO'
+          },
+          localString: {
+            date: dateLocal,
+            dayOfWeek: dateLocal.getDay(),
+            dayName: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'][dateLocal.getDay()],
+            description: 'new Date(dateString + "T00:00:00") - Puede ser problemático'
+          },
+          parseISO: {
+            date: dateParseISO,
+            dayOfWeek: dateParseISO.getDay(),
+            dayName: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'][dateParseISO.getDay()],
+            description: 'parseISO(dateString) - BUENO'
+          },
+          parseISOStartOfDay: {
+            date: dateParseISOStartOfDay,
+            dayOfWeek: dateParseISOStartOfDay.getDay(),
+            dayName: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'][dateParseISOStartOfDay.getDay()],
+            description: 'startOfDay(parseISO(dateString)) - MEJOR'
+          }
+        },
+        recommendation: {
+          best: 'parseISOStartOfDay',
+          worst: 'utcString',
+          reason: 'parseISO + startOfDay evita problemas de zona horaria completamente'
+        }
+      };
+      
+      return debugInfo;
+      
+    } catch (error) {
+      console.error(`❌ [DateUtils.debugDate] Error analizando fecha ${dateString} en ${context}:`, error);
+      return { error: error.message, originalDateString: dateString, context };
+    }
+  }
   /**
    * Convierte una fecha string (YYYY-MM-DD) a objeto Date usando UTC
    * @param dateString - Fecha en formato YYYY-MM-DD

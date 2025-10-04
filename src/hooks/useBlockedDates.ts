@@ -7,7 +7,8 @@ export interface UseBlockedDatesReturn {
   error: string | null;
   loadBlockedDates: () => Promise<void>;
   createBlock: (blockData: BlockedDateData, adminUserId: string) => Promise<{ success: boolean; data?: any; error?: string }>;
-  removeBlock: (blockId: string) => Promise<{ success: boolean; error?: string }>;
+  removeBlock: (blockId: string, reloadList?: boolean) => Promise<{ success: boolean; error?: string }>;
+  removeMultipleBlocks: (blockIds: string[]) => Promise<{ success: boolean; error?: string }>;
   blockFullDay: (date: string, reason: string, adminUserId: string) => Promise<{ success: boolean; data?: any; error?: string }>;
   blockSpecificTimeSlots: (
     date: string, 
@@ -32,7 +33,6 @@ export const useBlockedDates = (): UseBlockedDatesReturn => {
       setLoading(true);
       setError(null);
       
-      console.log('🔄 [useBlockedDates] Cargando bloqueos...');
       const { data, error } = await BlockedDatesService.getBlockedDates();
       
       if (error) {
@@ -42,7 +42,6 @@ export const useBlockedDates = (): UseBlockedDatesReturn => {
       }
       
       setBlockedDates(data || []);
-      console.log(`✅ [useBlockedDates] Cargados ${data?.length || 0} bloqueos`);
     } catch (err: any) {
       const errorMessage = err.message || 'Error inesperado al cargar bloqueos';
       console.error('❌ [useBlockedDates] Error inesperado:', errorMessage);
@@ -53,72 +52,86 @@ export const useBlockedDates = (): UseBlockedDatesReturn => {
   };
 
   /**
-   * Crear un bloqueo específico
+   * Crear un nuevo bloqueo
    * @param blockData - Datos del bloqueo
    * @param adminUserId - ID del administrador
    * @returns Resultado de la operación
    */
-  const createBlock = async (
-    blockData: BlockedDateData, 
-    adminUserId: string
-  ): Promise<{ success: boolean; data?: any; error?: string }> => {
+  const createBlock = async (blockData: BlockedDateData, adminUserId: string): Promise<{ success: boolean; data?: any; error?: string }> => {
     try {
-      setLoading(true);
       setError(null);
       
-      console.log('🔒 [useBlockedDates] Creando bloqueo:', blockData);
       const { data, error } = await BlockedDatesService.createBlock(blockData, adminUserId);
       
       if (error) {
         console.error('❌ [useBlockedDates] Error creando bloqueo:', error);
-        setError(error);
         return { success: false, error };
       }
-      
+
       // Recargar la lista de bloqueos
       await loadBlockedDates();
-      console.log('✅ [useBlockedDates] Bloqueo creado exitosamente');
       return { success: true, data };
     } catch (err: any) {
       const errorMessage = err.message || 'Error inesperado al crear bloqueo';
       console.error('❌ [useBlockedDates] Error inesperado:', errorMessage);
-      setError(errorMessage);
       return { success: false, error: errorMessage };
-    } finally {
-      setLoading(false);
     }
   };
 
   /**
-   * Eliminar un bloqueo
+   * Eliminar un bloqueo específico
    * @param blockId - ID del bloqueo a eliminar
+   * @param reloadList - Si recargar la lista después de eliminar
    * @returns Resultado de la operación
    */
-  const removeBlock = async (blockId: string): Promise<{ success: boolean; error?: string }> => {
+  const removeBlock = async (blockId: string, reloadList: boolean = true): Promise<{ success: boolean; error?: string }> => {
     try {
-      setLoading(true);
       setError(null);
-      
-      console.log('🗑️ [useBlockedDates] Eliminando bloqueo:', blockId);
+
       const { error } = await BlockedDatesService.removeBlock(blockId);
       
       if (error) {
         console.error('❌ [useBlockedDates] Error eliminando bloqueo:', error);
-        setError(error);
         return { success: false, error };
       }
-      
-      // Recargar la lista de bloqueos
-      await loadBlockedDates();
-      console.log('✅ [useBlockedDates] Bloqueo eliminado exitosamente');
+
+      // Recargar la lista si se solicita
+      if (reloadList) {
+        await loadBlockedDates();
+      }
       return { success: true };
     } catch (err: any) {
       const errorMessage = err.message || 'Error inesperado al eliminar bloqueo';
       console.error('❌ [useBlockedDates] Error inesperado:', errorMessage);
-      setError(errorMessage);
       return { success: false, error: errorMessage };
-    } finally {
-      setLoading(false);
+    }
+  };
+
+  /**
+   * Eliminar múltiples bloqueos
+   * @param blockIds - Array de IDs de bloqueos a eliminar
+   * @returns Resultado de la operación
+   */
+  const removeMultipleBlocks = async (blockIds: string[]): Promise<{ success: boolean; error?: string }> => {
+    try {
+      setError(null);
+      
+      // Eliminar cada bloqueo individualmente (sin recargar la lista en cada uno)
+      for (const blockId of blockIds) {
+        const { error } = await BlockedDatesService.removeBlock(blockId);
+        if (error) {
+          console.error(`❌ [useBlockedDates] Error eliminando bloqueo ${blockId}:`, error);
+          return { success: false, error };
+        }
+      }
+
+      // Recargar la lista una sola vez al final
+      await loadBlockedDates();
+      return { success: true };
+    } catch (err: any) {
+      const errorMessage = err.message || 'Error inesperado al eliminar bloqueos';
+      console.error('❌ [useBlockedDates] Error inesperado:', errorMessage);
+      return { success: false, error: errorMessage };
     }
   };
 
@@ -129,35 +142,24 @@ export const useBlockedDates = (): UseBlockedDatesReturn => {
    * @param adminUserId - ID del administrador
    * @returns Resultado de la operación
    */
-  const blockFullDay = async (
-    date: string, 
-    reason: string, 
-    adminUserId: string
-  ): Promise<{ success: boolean; data?: any; error?: string }> => {
+  const blockFullDay = async (date: string, reason: string, adminUserId: string): Promise<{ success: boolean; data?: any; error?: string }> => {
     try {
-      setLoading(true);
       setError(null);
-      
-      console.log('🔒 [useBlockedDates] Bloqueando día completo:', date);
+
       const { data, error } = await BlockedDatesService.blockFullDay(date, reason, adminUserId);
       
       if (error) {
         console.error('❌ [useBlockedDates] Error bloqueando día completo:', error);
-        setError(error);
         return { success: false, error };
       }
-      
+
       // Recargar la lista de bloqueos
       await loadBlockedDates();
-      console.log('✅ [useBlockedDates] Día completo bloqueado exitosamente');
       return { success: true, data };
     } catch (err: any) {
       const errorMessage = err.message || 'Error inesperado al bloquear día completo';
       console.error('❌ [useBlockedDates] Error inesperado:', errorMessage);
-      setError(errorMessage);
       return { success: false, error: errorMessage };
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -167,7 +169,7 @@ export const useBlockedDates = (): UseBlockedDatesReturn => {
    * @param timeSlotIds - IDs de horarios a bloquear
    * @param reason - Razón del bloqueo
    * @param adminUserId - ID del administrador
-   * @param guestsPerSlot - Cupos a bloquear por horario
+   * @param guestsPerSlot - Cupos por horario
    * @returns Resultado de la operación
    */
   const blockSpecificTimeSlots = async (
@@ -178,10 +180,8 @@ export const useBlockedDates = (): UseBlockedDatesReturn => {
     guestsPerSlot?: number
   ): Promise<{ success: boolean; data?: any; error?: string }> => {
     try {
-      setLoading(true);
       setError(null);
-      
-      console.log('🔒 [useBlockedDates] Bloqueando horarios específicos:', { date, timeSlotIds });
+
       const { data, error } = await BlockedDatesService.blockSpecificTimeSlots(
         date, 
         timeSlotIds, 
@@ -192,40 +192,35 @@ export const useBlockedDates = (): UseBlockedDatesReturn => {
       
       if (error) {
         console.error('❌ [useBlockedDates] Error bloqueando horarios específicos:', error);
-        setError(error);
         return { success: false, error };
       }
-      
+
       // Recargar la lista de bloqueos
       await loadBlockedDates();
-      console.log('✅ [useBlockedDates] Horarios específicos bloqueados exitosamente');
       return { success: true, data };
     } catch (err: any) {
       const errorMessage = err.message || 'Error inesperado al bloquear horarios específicos';
       console.error('❌ [useBlockedDates] Error inesperado:', errorMessage);
-      setError(errorMessage);
       return { success: false, error: errorMessage };
-    } finally {
-      setLoading(false);
     }
   };
 
   /**
    * Verificar si una fecha/horario está bloqueado
    * @param date - Fecha a verificar
-   * @param timeSlotId - ID del horario a verificar
-   * @returns true si está bloqueado, false si no
+   * @param timeSlotId - ID del horario
+   * @returns true si está bloqueado
    */
   const isBlocked = async (date: string, timeSlotId: number): Promise<boolean> => {
     try {
       return await BlockedDatesService.isBlocked(date, timeSlotId);
     } catch (err: any) {
-      console.error('❌ [useBlockedDates] Error verificando bloqueo:', err);
+      console.error('❌ [useBlockedDates] Error verificando bloqueo:', err.message);
       return false;
     }
   };
 
-  // Cargar bloqueos al montar el hook
+  // Cargar bloqueos al montar el componente
   useEffect(() => {
     loadBlockedDates();
   }, []);
@@ -237,9 +232,9 @@ export const useBlockedDates = (): UseBlockedDatesReturn => {
     loadBlockedDates,
     createBlock,
     removeBlock,
+    removeMultipleBlocks,
     blockFullDay,
     blockSpecificTimeSlots,
     isBlocked
   };
 };
-

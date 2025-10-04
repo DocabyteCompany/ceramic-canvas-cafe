@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Calendar, Clock, Users, FileText, CheckCircle, ArrowLeft, ArrowRight, Loader2 } from 'lucide-react';
+import { Calendar, Clock, Users, FileText, CheckCircle, ArrowLeft, ArrowRight, Loader2, CalendarIcon, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -7,6 +7,11 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar as CalendarComponent } from '@/components/ui/calendar';
+import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 import BlockTimeSlotSelection from './BlockTimeSlotSelection';
 import { useAdminDateUtils } from '@/hooks/useAdminDateUtils';
 
@@ -17,7 +22,7 @@ interface BlockDateFormProps {
 }
 
 interface FormData {
-  selectedDate: string;
+  selectedDate: Date | null;
   blockType: 'full' | 'specific';
   selectedTimeSlots: number[];
   guestsPerSlot: number;
@@ -28,7 +33,7 @@ const BlockDateForm = ({ onSuccess, onError, adminUserId }: BlockDateFormProps) 
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<FormData>({
-    selectedDate: '',
+    selectedDate: null,
     blockType: 'full',
     selectedTimeSlots: [],
     guestsPerSlot: 20,
@@ -47,11 +52,38 @@ const BlockDateForm = ({ onSuccess, onError, adminUserId }: BlockDateFormProps) 
     isDateAvailable
   } = useAdminDateUtils();
 
+  // Función para deshabilitar fechas (copiada de DateTimeSelection.tsx adaptada para admin)
+  const isDateDisabled = (date: Date) => {
+    const dayOfWeek = date.getDay();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Inicio del día
+    const maxDate = new Date();
+    maxDate.setMonth(maxDate.getMonth() + 6); // Máximo 6 meses en el futuro para admin
+    
+    // No permitir fechas pasadas
+    if (date < today) {
+      return true;
+    }
+    
+    // No permitir fechas más de 6 meses en el futuro
+    if (date > maxDate) {
+      return true;
+    }
+    
+    // No permitir lunes (1)
+    if (dayOfWeek === 1) {
+      return true;
+    }
+    
+    // Verificar si el día está disponible según las reglas de negocio
+    return !isDateAvailable(format(date, 'yyyy-MM-dd'));
+  };
+
   // Limpiar formulario cuando se desmonta
   useEffect(() => {
     return () => {
       setFormData({
-        selectedDate: '',
+        selectedDate: null,
         blockType: 'full',
         selectedTimeSlots: [],
         guestsPerSlot: 20,
@@ -90,7 +122,8 @@ const BlockDateForm = ({ onSuccess, onError, adminUserId }: BlockDateFormProps) 
     if (!formData.selectedDate) return false;
     
     try {
-      const dateInfo = getDateInfo(formData.selectedDate);
+      const dateString = format(formData.selectedDate, 'yyyy-MM-dd');
+      const dateInfo = getDateInfo(dateString);
       return dateInfo.isValid && dateInfo.isAvailable;
     } catch {
       return false;
@@ -109,6 +142,9 @@ const BlockDateForm = ({ onSuccess, onError, adminUserId }: BlockDateFormProps) 
 
   // Validar cupos por horario
   const validateGuestsPerSlot = (): boolean => {
+    // Rechazar valores vacíos o 0
+    if (formData.guestsPerSlot === 0) return false;
+    
     if (formData.guestsPerSlot < 1 || formData.guestsPerSlot > 20) return false;
     
     // Verificar que sea un número entero
@@ -156,7 +192,8 @@ const BlockDateForm = ({ onSuccess, onError, adminUserId }: BlockDateFormProps) 
         if (!formData.selectedDate) return 'Selecciona una fecha';
         if (!validateDate()) {
           try {
-            const dateInfo = getDateInfo(formData.selectedDate);
+            const dateString = format(formData.selectedDate, 'yyyy-MM-dd');
+            const dateInfo = getDateInfo(dateString);
             return dateInfo.error || 'Fecha inválida';
           } catch {
             return 'Fecha inválida';
@@ -173,6 +210,7 @@ const BlockDateForm = ({ onSuccess, onError, adminUserId }: BlockDateFormProps) 
         return '';
       case 4:
         if (formData.blockType === 'specific') {
+          if (formData.guestsPerSlot === 0) return 'Los cupos son requeridos';
           if (formData.guestsPerSlot < 1 || formData.guestsPerSlot > 20) return 'Los cupos deben estar entre 1 y 20';
           if (!Number.isInteger(formData.guestsPerSlot)) return 'Los cupos deben ser un número entero';
         }
@@ -203,19 +241,83 @@ const BlockDateForm = ({ onSuccess, onError, adminUserId }: BlockDateFormProps) 
       // Importar el servicio dinámicamente para evitar problemas de dependencias
       const { BlockedDatesService } = await import('@/services/blockedDatesService');
       
+      const dateString = format(formData.selectedDate!, 'yyyy-MM-dd');
+      
+      console.log('🔍 [BlockDateForm] Fecha seleccionada:', {
+        originalDate: formData.selectedDate,
+        formattedDate: dateString,
+        dayOfWeek: formData.selectedDate!.getDay(),
+        dayName: format(formData.selectedDate!, 'EEEE', { locale: es })
+      });
+      
+      // Verificar bloqueos existentes antes de proceder
+      const { hasBlocks, existingBlocks, blockedTimeSlots, canBlockFullDay, error: checkError } = 
+        await BlockedDatesService.checkExistingBlocks(dateString, adminUserId);
+      
+      if (checkError) {
+        onError('Error verificando bloqueos existentes: ' + checkError);
+        return;
+      }
+
       let result;
       
       if (formData.blockType === 'full') {
+        // Verificar si se puede bloquear día completo
+        if (hasBlocks && !canBlockFullDay) {
+          onError('Ya existen bloqueos en esta fecha creados por otro administrador. No se puede bloquear el día completo.');
+          return;
+        }
+
+        // Mostrar advertencia si hay bloqueos del admin actual
+        if (hasBlocks && canBlockFullDay) {
+          const confirmMessage = `Ya tienes bloqueos en esta fecha.\n\n¿Deseas continuar bloqueando los horarios restantes?\n\nHorarios ya bloqueados: ${blockedTimeSlots.length}\nHorarios a bloquear: ${existingBlocks ? 'Los restantes' : 'Todos'}`;
+          
+          if (!confirm(confirmMessage)) {
+            setIsSubmitting(false);
+            return;
+          }
+        }
+
         // Bloquear día completo
         result = await BlockedDatesService.blockFullDay(
-          formData.selectedDate,
+          dateString,
           formData.blockReason.trim(),
           adminUserId
         );
       } else {
+        // Verificar conflictos para horarios específicos
+        const conflictingSlots = formData.selectedTimeSlots.filter(slotId => 
+          blockedTimeSlots.includes(slotId) && 
+          existingBlocks?.some(block => 
+            block.time_slot_id === slotId && block.blocked_by !== adminUserId
+          )
+        );
+
+        if (conflictingSlots.length > 0) {
+          onError(`Los siguientes horarios ya están bloqueados por otro administrador: ${conflictingSlots.join(', ')}`);
+          return;
+        }
+
+        // Mostrar advertencia si hay horarios ya bloqueados por el admin actual
+        const alreadyBlockedByAdmin = formData.selectedTimeSlots.filter(slotId => 
+          blockedTimeSlots.includes(slotId) && 
+          existingBlocks?.some(block => 
+            block.time_slot_id === slotId && block.blocked_by === adminUserId
+          )
+        );
+
+        if (alreadyBlockedByAdmin.length > 0) {
+          const confirmMessage = `Algunos horarios ya están bloqueados por ti:\n\nHorarios ya bloqueados: ${alreadyBlockedByAdmin.join(', ')}\nHorarios nuevos: ${formData.selectedTimeSlots.filter(id => !alreadyBlockedByAdmin.includes(id)).join(', ')}\n\n¿Deseas continuar?`;
+          
+          if (!confirm(confirmMessage)) {
+            setIsSubmitting(false);
+            return;
+          }
+        }
+
         // Bloquear horarios específicos
         result = await BlockedDatesService.blockSpecificTimeSlots(
-          formData.selectedDate,
+          dateString,
           formData.selectedTimeSlots,
           formData.blockReason.trim(),
           adminUserId,
@@ -228,16 +330,18 @@ const BlockDateForm = ({ onSuccess, onError, adminUserId }: BlockDateFormProps) 
         return;
       }
 
-      const blockCount = result.data?.length || 0;
-      const message = formData.blockType === 'full' 
-        ? `Día completo bloqueado exitosamente (${blockCount} horarios)`
-        : `Horarios específicos bloqueados exitosamente (${blockCount} horarios)`;
+      // Usar mensaje del servicio si está disponible, sino crear uno genérico
+      const message = result.message || (
+        formData.blockType === 'full' 
+          ? `Día completo bloqueado exitosamente (${result.data?.length || 0} horarios)`
+          : `Horarios específicos bloqueados exitosamente (${result.data?.length || 0} horarios)`
+      );
       
       onSuccess(message);
       
       // Limpiar formulario
       setFormData({
-        selectedDate: '',
+        selectedDate: null,
         blockType: 'full',
         selectedTimeSlots: [],
         guestsPerSlot: 20,
@@ -262,16 +366,36 @@ const BlockDateForm = ({ onSuccess, onError, adminUserId }: BlockDateFormProps) 
         return (
           <div className="space-y-4">
             <div>
-              <Label htmlFor="date" className="text-sm font-medium">Fecha a bloquear</Label>
-              <Input
-                id="date"
-                type="date"
-                value={formData.selectedDate}
-                onChange={(e) => updateFormData({ selectedDate: e.target.value })}
-                min={getTodayString()}
-                max={getMaxDateString()}
-                className="mt-1 w-full"
-              />
+              <Label className="text-sm font-medium">Fecha a bloquear</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal mt-1",
+                      !formData.selectedDate && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {formData.selectedDate ? (
+                      format(formData.selectedDate, "PPP", { locale: es })
+                    ) : (
+                      <span>Selecciona una fecha</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <CalendarComponent
+                    mode="single"
+                    selected={formData.selectedDate || undefined}
+                    onSelect={(date) => updateFormData({ selectedDate: date || null })}
+                    disabled={isDateDisabled}
+                    locale={es}
+                    initialFocus
+                    className="pointer-events-auto"
+                  />
+                </PopoverContent>
+              </Popover>
               <div className="text-xs text-gray-600 mt-2 space-y-1">
                 <div>• No se pueden seleccionar fechas pasadas</div>
                 <div>• Los lunes el negocio está cerrado</div>
@@ -290,7 +414,7 @@ const BlockDateForm = ({ onSuccess, onError, adminUserId }: BlockDateFormProps) 
                   <span className={`text-sm font-medium ${
                     validateDate() ? 'text-blue-900' : 'text-red-900'
                   }`}>
-                    Fecha seleccionada: {formatDisplayDate(formData.selectedDate)}
+                    Fecha seleccionada: {formatDisplayDate(format(formData.selectedDate, 'yyyy-MM-dd'))}
                   </span>
                 </div>
                 {!validateDate() && (
@@ -348,20 +472,42 @@ const BlockDateForm = ({ onSuccess, onError, adminUserId }: BlockDateFormProps) 
       case 3: // Horarios específicos
         if (formData.blockType === 'specific') {
           return (
-            <BlockTimeSlotSelection
-              selectedDate={formData.selectedDate}
-              selectedTimeSlots={formData.selectedTimeSlots}
-              onTimeSlotChange={(timeSlots) => updateFormData({ selectedTimeSlots: timeSlots })}
-              guestsPerSlot={formData.guestsPerSlot}
-              onGuestsPerSlotChange={(guests) => updateFormData({ guestsPerSlot: guests })}
-            />
+            <div className="space-y-4">
+              {/* Advertencia sobre bloqueos existentes */}
+              {formData.selectedDate && (
+                <ExistingBlocksWarning 
+                  date={format(formData.selectedDate, 'yyyy-MM-dd')}
+                  adminUserId={adminUserId}
+                />
+              )}
+              
+              <BlockTimeSlotSelection
+                selectedDate={formData.selectedDate ? format(formData.selectedDate, 'yyyy-MM-dd') : ''}
+                selectedTimeSlots={formData.selectedTimeSlots}
+                onTimeSlotChange={(timeSlots) => updateFormData({ selectedTimeSlots: timeSlots })}
+                guestsPerSlot={formData.guestsPerSlot}
+                onGuestsPerSlotChange={(guests) => updateFormData({ guestsPerSlot: guests })}
+                adminUserId={adminUserId}
+              />
+            </div>
           );
         }
         return (
-          <div className="text-center py-8 text-gray-500">
-            <CheckCircle className="h-12 w-12 mx-auto mb-4 text-green-500" />
-            <p>Día completo seleccionado</p>
-            <p className="text-sm">Se bloquearán todos los horarios disponibles</p>
+          <div className="space-y-4">
+            {/* Advertencia sobre bloqueos existentes para día completo */}
+            {formData.selectedDate && (
+              <ExistingBlocksWarning 
+                date={format(formData.selectedDate, 'yyyy-MM-dd')}
+                adminUserId={adminUserId}
+                isFullDay={true}
+              />
+            )}
+            
+            <div className="text-center py-8 text-gray-500">
+              <CheckCircle className="h-12 w-12 mx-auto mb-4 text-green-500" />
+              <p>Día completo seleccionado</p>
+              <p className="text-sm">Se bloquearán todos los horarios disponibles</p>
+            </div>
           </div>
         );
 
@@ -464,7 +610,7 @@ const BlockDateForm = ({ onSuccess, onError, adminUserId }: BlockDateFormProps) 
               <div className={`space-y-1 text-sm ${
                 validateReason() ? 'text-gray-600' : 'text-red-700'
               }`}>
-                <div>• Fecha: {formatDisplayDate(formData.selectedDate)}</div>
+                <div>• Fecha: {formatDisplayDate(format(formData.selectedDate, 'yyyy-MM-dd'))}</div>
                 <div>• Tipo: {formData.blockType === 'full' ? 'Día completo' : 'Horarios específicos'}</div>
                 {formData.blockType === 'specific' && (
                   <>
@@ -591,6 +737,119 @@ const BlockDateForm = ({ onSuccess, onError, adminUserId }: BlockDateFormProps) 
         </div>
       </CardContent>
     </Card>
+  );
+};
+
+// Componente para mostrar advertencias sobre bloqueos existentes
+interface ExistingBlocksWarningProps {
+  date: string;
+  adminUserId: string;
+  isFullDay?: boolean;
+}
+
+const ExistingBlocksWarning = ({ date, adminUserId, isFullDay = false }: ExistingBlocksWarningProps) => {
+  const [existingBlocks, setExistingBlocks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const checkExistingBlocks = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const { BlockedDatesService } = await import('@/services/blockedDatesService');
+        const { hasBlocks, existingBlocks, blockedTimeSlots, canBlockFullDay } = 
+          await BlockedDatesService.checkExistingBlocks(date, adminUserId);
+        
+        if (hasBlocks && existingBlocks) {
+          setExistingBlocks(existingBlocks);
+        } else {
+          setExistingBlocks([]);
+        }
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (date) {
+      checkExistingBlocks();
+    }
+  }, [date, adminUserId]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-3 bg-gray-50 rounded-md">
+        <Loader2 className="h-4 w-4 animate-spin text-gray-400 mr-2" />
+        <span className="text-sm text-gray-600">Verificando bloqueos existentes...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>
+          Error al verificar bloqueos existentes: {error}
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  if (existingBlocks.length === 0) {
+    return null; // No hay bloqueos existentes, no mostrar nada
+  }
+
+  // Agrupar bloqueos por admin
+  const blocksByAdmin = existingBlocks.reduce((acc, block) => {
+    const adminId = block.blocked_by;
+    if (!acc[adminId]) {
+      acc[adminId] = [];
+    }
+    acc[adminId].push(block);
+    return acc;
+  }, {} as Record<string, any[]>);
+
+  const currentAdminBlocks = blocksByAdmin[adminUserId] || [];
+  const otherAdminBlocks = Object.entries(blocksByAdmin)
+    .filter(([adminId]) => adminId !== adminUserId)
+    .flatMap(([, blocks]) => blocks);
+
+  return (
+    <div className="space-y-3">
+      {/* Bloqueos de otros administradores */}
+      {otherAdminBlocks.length > 0 && (
+        <Alert variant="destructive">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription>
+            <div className="font-medium mb-1">
+              {isFullDay ? 'Día completo no disponible' : 'Horarios bloqueados por otros administradores'}
+            </div>
+            <div className="text-sm">
+              {otherAdminBlocks.length} bloqueo{otherAdminBlocks.length > 1 ? 's' : ''} existente{otherAdminBlocks.length > 1 ? 's' : ''}
+              {isFullDay && '. No se puede bloquear el día completo.'}
+            </div>
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {/* Bloqueos del administrador actual */}
+      {currentAdminBlocks.length > 0 && (
+        <Alert className="border-amber-200 bg-amber-50">
+          <AlertTriangle className="h-4 w-4 text-amber-600" />
+          <AlertDescription className="text-amber-800">
+            <div className="font-medium mb-1">Ya tienes bloqueos en esta fecha</div>
+            <div className="text-sm">
+              {currentAdminBlocks.length} bloqueo{currentAdminBlocks.length > 1 ? 's' : ''} existente{currentAdminBlocks.length > 1 ? 's' : ''}
+              {isFullDay ? '. Se bloquearán los horarios restantes.' : '. Puedes editar o agregar más horarios.'}
+            </div>
+          </AlertDescription>
+        </Alert>
+      )}
+    </div>
   );
 };
 
